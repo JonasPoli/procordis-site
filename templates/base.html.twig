@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{{ templateService.pageSeo.homePageTitle|default('Procordis') }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{{ templateService.pageSeo.homePageDescription|default('Ambulatório Cardíaco de Araraquara') }}{% endblock %}">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
+        
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+        
+        <!-- AOS Animation CSS -->
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <link rel="stylesheet" href="{{ asset('assets/styles/rebuild.css') }}">
+            
+            {# Tailwind/Webpack Entry - Commented out for Strict Rebuild #}
+            {# {{ importmap('app') }} #}
+             <style>
+                body { font-family: 'Inter', sans-serif; }
+                h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
+            </style>
+            <link rel="stylesheet" href="{{ asset('assets/styles/super.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ importmap('app') }}
+        {% endblock %}
+        
+        <!-- Global Tags -->
+        {% if templateService.globalTags.ga4 %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ templateService.globalTags.ga4 }}"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '{{ templateService.globalTags.ga4 }}');
+            </script>
+        {% endif %}
+    </head>
+    <body class="flex flex-col min-h-screen font-sans antialiased text-slate-600 bg-white selection:bg-primary-500 selection:text-white"
+          x-data="{ scrolled: false }"
+          @scroll.window="scrolled = (window.pageYOffset > 50)">
+        
+        <!-- Header -->
+        <header 
+            class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out border-b border-transparent"
+            :class="{ 'bg-white/95 backdrop-blur-md shadow-sm py-3 border-slate-100': scrolled, 'bg-transparent py-6': !scrolled }"
+        >
+            {% include 'partials/header.html.twig' %}
+        </header>
+
+        <main class="flex-grow pt-0">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include 'partials/footer.html.twig' %}
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script> 
+    <script>
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+    </script>
+    </body>
+</html>

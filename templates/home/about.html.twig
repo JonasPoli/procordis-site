@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ templateService.pageSeo.aboutPageTitle|default('Sobre a Procordis - Nossa História') }}{% endblock %}
+{% block description %}{{ templateService.pageSeo.aboutPageDescription|default('Conheça a história, missão e valores da Procordis, referência em cardiologia há mais de 20 anos.') }}{% endblock %}
+
+{% block body %}
+    <!-- Hero Small -->
+    <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
+         <div class="absolute inset-0 z-0">
+            <img src="{{ asset('images/layout/about_team.png') }}" class="w-full h-full object-cover opacity-20 filter grayscale">
+            <div class="absolute inset-0 bg-primary-900/80 mix-blend-multiply"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h1 class="super-hero-title text-5xl md:text-6xl mb-4 animate-fade-in-up">Quem Somos</h1>
+            <p class="super-hero-subtitle animate-fade-in-up delay-100">Uma trajetória dedicada a cuidar do ritmo da sua vida.</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <section class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 relative">
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-primary-100/50 rounded-full z-0"></div>
+                    <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-blue-50/50 rounded-full z-0"></div>
+                    <img src="{{ asset('images/layout/about_team.png') }}" alt="Equipe Médica" class="rounded-3xl shadow-2xl relative z-10 w-full object-cover h-[500px]">
+                </div>
+                <div class="lg:w-1/2" data-aos="fade-left">
+                    <span class="super-section-label">Nossa História</span>
+                    <h2 class="super-section-title text-slate-900">Tradição e Inovação em Cardiologia</h2>
+                    
+                    <div class="super-section-text">
+                        <p class="mb-6">
+                            A <strong>Associação Procordis</strong> nasceu do sonho de oferecer um atendimento cardiológico de excelência acessível a toda a comunidade de Araraquara e região.
+                        </p>
+                        <p class="mb-6">
+                            Com uma equipe de especialistas renomados e equipamentos de última geração, nos dedicamos diariamente à prevenção, diagnóstico e tratamento de doenças cardiovasculares.
+                        </p>
+                        <blockquote class="border-l-4 border-primary-500 pl-6 italic text-slate-700 bg-slate-50 py-6 pr-6 rounded-r-lg my-8 shadow-sm">
+                            "Nosso compromisso vai além do diagnóstico; cuidamos de vidas e histórias com o respeito que cada coração merece."
+                        </blockquote>
+                         <p>
+                             Atendemos diversos convênios e mantemos parcerias estratégicas para garantir que o melhor da medicina cardiológica esteja ao seu alcance.
+                         </p>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Values Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
+                 <!-- Mission -->
+                <div class="bg-white p-10 rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 shadow-sm mb-6 group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">Missão</h3>
+                    <p class="text-slate-600 leading-relaxed">Proporcionar saúde cardiovascular de alta qualidade, com diagnósticos precisos e atendimento humanizado.</p>
+                </div>
+
+                <!-- Vision -->
+                <div class="bg-white p-10 rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2">
+                     <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">Visão</h3>
+                    <p class="text-slate-600 leading-relaxed">Ser referência regional em cardiologia, reconhecida pela excelência técnica e pelo cuidado com as pessoas.</p>
+                </div>
+
+                <!-- Values -->
+                <div class="bg-white p-10 rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2">
+                     <div class="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center text-cyan-500 shadow-sm mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">Valores</h3>
+                    <p class="text-slate-600 leading-relaxed">Ética, Transparência, Humanização, Inovação e Compromisso com a Vida.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-24 bg-primary-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-fixed bg-center bg-cover opacity-10" style="background-image: url('{{ asset('images/layout/hero_medical.png') }}'); mix-blend-mode: luminosity;"></div>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+                <div class="p-4">
+                    <span class="block text-5xl font-bold mb-2">20+</span>
+                    <span class="text-primary-200 uppercase tracking-widest text-sm">Anos de História</span>
+                </div>
+                 <div class="p-4">
+                    <span class="block text-5xl font-bold mb-2">15k+</span>
+                    <span class="text-primary-200 uppercase tracking-widest text-sm">Pacientes Atendidos</span>
+                </div>
+                 <div class="p-4">
+                    <span class="block text-5xl font-bold mb-2">12</span>
+                    <span class="text-primary-200 uppercase tracking-widest text-sm">Especialistas</span>
+                </div>
+                 <div class="p-4">
+                    <span class="block text-5xl font-bold mb-2">100%</span>
+                    <span class="text-primary-200 uppercase tracking-widest text-sm">Dedicação</span>
+                </div>
+             </div>
+        </div>
+    </section>
+{% endblock %}
+{% endblock %}

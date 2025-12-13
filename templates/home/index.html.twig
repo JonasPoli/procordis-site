@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Procordis - Ambulatório Cardíaco{% endblock %}
+
+{% block body %}
+    <!-- Hero Section -->
+    <section class="hero" style="background-image: url('{{ asset('images/layout/procordis_hero_medical_team.png') }}');">
+        <div class="hero-Overlay"></div>
+        <div class="container hero-Content">
+            <span class="hero-Subtitle animate-fade-in-up">Bem-vindo à Procordis</span>
+            <h1 class="hero-Title animate-fade-in-up delay-100">Cuidando do ritmo da sua vida</h1>
+            <div class="animate-fade-in-up delay-200" style="margin-top: 40px;">
+                <a href="{{ path('app_contact') }}" class="btn" style="margin-right: 20px;">Agendar Consulta</a>
+                <a href="{{ path('app_services') }}" class="btn" style="background: transparent; color: white;">Nossos Serviços</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (Overlap) -->
+    <section class="features-Section">
+        <div class="container">
+            <div class="features-Grid">
+                <!-- Card 1 -->
+                <div class="feature-Card blue">
+                    <i class="fas fa-ambulance feature-Icon"></i>
+                    <h3 class="feature-Title">Emergência</h3>
+                    <p class="feature-Text">Atendimento prioritário para casos urgentes, com equipe preparada para suporte imediato.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="feature-Card dark">
+                    <i class="fas fa-user-md feature-Icon"></i>
+                    <h3 class="feature-Title">Especialistas</h3>
+                    <p class="feature-Text">Corpo clínico altamente qualificado e pronto para cuidar da sua saúde cardiovascular.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="feature-Card light">
+                     <i class="fas fa-clock feature-Icon"></i>
+                    <h3 class="feature-Title">Horários</h3>
+                    <p class="feature-Text">Segunda a Sexta: 07:00 - 18:00<br>Sábado: 08:00 - 12:00<br>Domingo: Fechado</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Welcome Section (Standard HTML) -->
+    <section class="section" style="padding: 100px 0;">
+        <div class="container" style="display: flex; gap: 60px; align-items: center;">
+            <div style="flex: 1;">
+                 <img src="{{ asset('images/layout/about_team.png') }}" class="rounded-2xl shadow-2xl" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+            </div>
+            <div style="flex: 1;">
+                <span class="hero-Subtitle" style="color: var(--color-primary); font-size: 14px; margin-bottom: 10px;">Sobre Nós</span>
+                <h2 style="font-size: 48px; margin-bottom: 30px;">Bem-vindo à Procordis</h2>
+                <div style="font-size: 18px; color: #64748B; line-height: 1.8;">
+                    <p style="margin-bottom: 20px;">
+                        Somos referência em cardiologia em Araraquara. Nossa missão é oferecer um atendimento humanizado, 
+                        aliando tecnologia de ponta com o cuidado que você merece.
+                    </p>
+                    <ul style="list-style: none; padding: 0;">
+                         <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 600;">
+                            <i class="fas fa-check-circle" style="color: var(--color-primary); margin-right: 15px;"></i>
+                            Equipe Multidisciplinar
+                        </li>
+                         <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 600;">
+                            <i class="fas fa-check-circle" style="color: var(--color-primary); margin-right: 15px;"></i>
+                            Exames de Alta Precisão
+                        </li>
+                         <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 600;">
+                            <i class="fas fa-check-circle" style="color: var(--color-primary); margin-right: 15px;"></i>
+                            Atendimento Humanizado
+                        </li>
+                    </ul>
+                </div>
+                </div>
+                <a href="{{ path('app_news') }}" class="hidden md:inline-flex items-center text-primary-600 font-bold hover:text-primary-800 mt-4 md:mt-0">
+                    Ver todas as notícias <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+    </section>
+
+    <!-- Latest News Section -->
+    <section class="section" style="padding: 80px 0; background-color: #f8fafc;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 50px; font-size: 36px;">Últimas Notícias</h2>
+            
+            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                {% for newItem in news %}
+                     <article style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer;" onclick="window.location='{{ path('app_news_show', {'slug': newItem.slug}) }}'">
+                         <div style="height: 200px; overflow: hidden; position: relative;">
+                             {% if newItem.imageName %}
+                                <img src="{{ asset('images/news/' ~ newItem.imageName) | imagine_filter('news_thumb') }}" alt="{{ newItem.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                             {% else %}
+                                <div style="width: 100%; height: 100%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8;">Sem Imagem</div>
+                             {% endif %}
+                             <div style="position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.95); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #0F172A; text-transform: uppercase;">
+                                 {{ newItem.publishedAt|date('d M') }}
+                             </div>
+                         </div>
+                         <div style="padding: 25px;">
+                             <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 10px; color: #0F172A;">
+                                 {{ newItem.title }}
+                             </h3>
+                             <p style="font-size: 14px; color: #64748B; margin-bottom: 20px; line-height: 1.6;">{{ newItem.summary }}</p>
+                             <span style="color: #00A3C8; font-weight: 700; font-size: 13px; text-transform: uppercase;">Ler Mais</span>
+                         </div>
+                     </article>
+                {% else %}
+                    <p style="grid-column: 1/-1; text-align: center; color: #64748B;">Nenhuma notícia recente.</p>
+                {% endfor %}
+            </div>
+             
+             <!-- Mobile View All Button -->
+             <div style="margin-top: 40px; text-align: center; display: none;" class="mobile-only">
+                 <a href="{{ path('app_news') }}" class="btn">Ver todas as notícias</a>
+             </div>
+        </div>
+    </section>
+
+    <!-- CTA / Contact Preview -->
+    <section class="py-20 bg-primary-900 text-white text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="text-3xl md:text-5xl font-display font-bold mb-6">Pronto para cuidar da sua saúde?</h2>
+            <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">Entre em contato conosco e agende sua consulta. Atendemos diversos convênios.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="{{ path('app_contact') }}" class="bg-white text-primary-900 px-10 py-4 rounded-full font-bold shadow-xl hover:bg-gray-100 transition-colors transform hover:-translate-y-1">
+                    Fale Conosco
+                </a>
+                <a href="tel:{{ templateService.generalData.phone|default('') }}" class="border-2 border-primary-400 text-white px-10 py-4 rounded-full font-bold hover:bg-primary-800 transition-colors">
+                    Ligar Agora
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

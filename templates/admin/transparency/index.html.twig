@@ -1,0 +1,62 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block page_title %}Transparência{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex justify-between items-center">
+        <div></div>
+        <a href="{{ path('admin_transparency_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            + Novo Documento
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
+        <table class="min-w-full w-full table-auto">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">ID</th>
+                     <th class="py-3 px-6 text-left">Título</th>
+                    <th class="py-3 px-6 text-left">Referência</th>
+                    <th class="py-3 px-6 text-left">Arquivo</th>
+                    <th class="py-3 px-6 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for doc in docs %}
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">
+                            <span class="font-medium">{{ doc.id }}</span>
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            {{ doc.title }}
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            {{ doc.month ? doc.month ~ '/' : '' }}{{ doc.year }}
+                        </td>
+                         <td class="py-3 px-6 text-left">
+                            {% if doc.fileName %}
+                                <a href="{{ asset('files/transparency/' ~ doc.fileName) }}" target="_blank" class="text-blue-500 hover:underline">Download</a>
+                            {% else %}
+                                <span class="text-gray-400">Sem arquivo</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex item-center justify-center">
+                                <a href="{{ path('admin_transparency_edit', {'id': doc.id}) }}" class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                </a>
+                                {{ include('admin/transparency/_delete_form.html.twig', {'doc': doc}) }}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                     <tr>
+                        <td colspan="5" class="py-3 px-6 text-center">Nenhum documento encontrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

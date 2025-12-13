@@ -1,0 +1,13 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block page_title %}Editar Médico{% endblock %}
+
+{% block body %}
+    <div class="bg-white shadow rounded-lg p-6">
+        <div class="mb-4">
+            <a href="{{ path('admin_doctor_index') }}" class="text-blue-600 hover:text-blue-800">&larr; Voltar para lista</a>
+        </div>
+        
+        {{ include('admin/doctor/_form.html.twig', {'button_label': 'Atualizar'}) }}
+    </div>
+{% endblock %}

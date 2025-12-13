@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ templateService.pageSeo.newsPageTitle|default('Notícias e Artigos - Procordis') }}{% endblock %}
+
+{% block content %}
+    <!-- Hero Small -->
+    <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-primary-900/40 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/medical-icons.png')] opacity-5"></div>
+        <div class="relative z-10 container mx-auto px-6">
+            <h1 class="super-hero-title text-4xl md:text-5xl mb-4 animate-fade-in-up">Notícias e Artigos</h1>
+            <p class="super-hero-subtitle animate-fade-in-up delay-100">
+                Fique por dentro das últimas notícias, artigos de saúde e novidades da Procordis.
+            </p>
+        </div>
+    </div>
+
+    <!-- News Grid -->
+    <section class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for item in news_list %}
+                    <article class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full border border-slate-100 group" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+                        <a href="{{ path('app_news_show', {'slug': item.slug}) }}" class="block h-64 overflow-hidden relative">
+                             <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 duration-500"></div>
+                             {% if item.imageName %}
+                                <img src="{{ asset('images/news/' ~ item.imageName) | imagine_filter('news_thumb') }}" alt="{{ item.title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                            {% else %}
+                                <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
+                                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                                </div>
+                            {% endif %}
+                            <div class="absolute top-4 left-4 z-20">
+                                <span class="px-3 py-1 bg-white/90 backdrop-blur text-primary-900 text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
+                                    {{ item.publishedAt|date('d M, Y') }}
+                                </span>
+                            </div>
+                        </a>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <h3 class="text-xl font-display font-bold mb-3 text-slate-900 group-hover:text-primary-600 transition-colors leading-snug">
+                                <a href="{{ path('app_news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
+                            </h3>
+                            <p class="text-slate-500 line-clamp-3 mb-6 flex-1 text-sm leading-relaxed">
+                                {{ item.summary }}
+                            </p>
+                            <a href="{{ path('app_news_show', {'slug': item.slug}) }}" class="text-primary-600 font-bold text-sm hover:text-primary-800 mt-auto inline-flex items-center group-hover:translate-x-1 transition-transform">
+                                Ler artigo completo <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
+                        </div>
+                    </article>
+                {% else %}
+                    <div class="col-span-3 text-center py-20">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-700">Nenhuma notícia encontrada</h3>
+                        <p class="text-slate-500 mt-2">Em breve teremos novidades para você.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (if implemented in controller) -->
+            {% if news_list.getPageCount is defined and news_list.getPageCount > 1 %}
+                <div class="mt-12 flex justify-center">
+                    {{ knp_pagination_render(news_list) }}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

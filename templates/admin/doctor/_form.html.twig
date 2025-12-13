@@ -1,0 +1,28 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            {{ form_row(form.name) }}
+        </div>
+        <div>
+            {{ form_row(form.crm) }}
+        </div>
+    </div>
+
+    <div>
+        {{ form_row(form.specialty) }}
+    </div>
+
+    <div>
+        {{ form_row(form.imageFile) }}
+    </div>
+
+    <div>
+        {{ form_row(form.bio) }}
+    </div>
+
+    <div class="flex justify-end">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ button_label|default('Salvar') }}</button>
+    </div>
+
+{{ form_end(form) }}

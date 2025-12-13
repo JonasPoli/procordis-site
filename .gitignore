@@ -1,0 +1,34 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> PHP Storm
+.idea/*
+.idea/
+.DS_Store
+.DS_Store/*
+public/.DS_Store
+public/.DS_Store/*
+
+
+public/images/*
+/public/assets/
+
+###> symfony/asset-mapper ###
+#/assets/vendor/
+###< symfony/asset-mapper ###
+composer.phar
+
+**/._*
+._*
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###

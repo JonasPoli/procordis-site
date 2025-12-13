@@ -1,0 +1,74 @@
+{% use 'form_div_layout.html.twig' %}
+
+{% block form_row %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' mb-6 relative group')|trim})} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {{- form_widget(form, widget_attr) -}}
+        {{- form_help(form) -}}
+    </div>
+{% endblock form_row %}
+
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% if not compound or force_error|default(false) %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' block mb-2 text-sm font-semibold text-slate-600')|trim}) %}
+        {% endif %}
+        {{- parent() -}}
+    {% endif %}
+{% endblock form_label %}
+
+{% block form_widget_simple %}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
+    {{- parent() -}}
+{% endblock form_widget_simple %}
+
+{% block textarea_widget %}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
+    {{- parent() -}}
+{% endblock textarea_widget %}
+
+{% block choice_widget_collapsed %}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm appearance-none')|trim}) -%}
+    {{- parent() -}}
+{% endblock choice_widget_collapsed %}
+
+{% block checkbox_widget %}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-5 h-5 text-blue-600 bg-white/50 border-gray-400 rounded focus:ring-blue-500 focus:ring-2')|trim}) -%}
+    {{- parent() -}}
+{% endblock checkbox_widget %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <ul class="mt-1 text-sm text-red-500 space-y-1">
+            {% for error in errors %}
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ error.message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock form_errors %}
+
+{% block vich_image_widget %}
+    <div class="glass-file-upload">
+        {{- form_widget(form.file, {attr: {class: 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors'}}) -}}
+        {% if download_uri %}
+            <div class="mt-4 relative group w-24 h-24  rounded-lg overflow-hidden shadow-sm border border-slate-200">
+                <img src="{{ download_uri }}" alt="" class="w-full h-full object-cover">
+                <a href="{{ download_uri }}" target="_blank" class="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs font-medium">Ver</a>
+            </div>
+            {% if form.delete is defined %}
+                <div class="mt-2 text-sm text-slate-500 flex items-center">
+                    {{- form_widget(form.delete, {'attr': {'class': 'mr-2 text-red-600 focus:ring-red-500'}}) -}}
+                    {{- form_label(form.delete, null, {'label_attr': {'class': 'mb-0 font-normal text-slate-500'}}) -}}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ news.seoTitle|default(news.title) }} - Procordis{% endblock %}
+{% block description %}{{ news.seoDescription|default(news.summary) }}{% endblock %}
+
+{% block content %}
+    <!-- Header/Breadcrumb -->
+    <div class="bg-white pt-32 pb-12 border-b border-slate-100">
+        <div class="container mx-auto px-6 max-w-4xl text-center">
+            
+            <div class="flex items-center justify-center gap-3 text-sm font-bold uppercase tracking-wider text-primary-600 mb-6">
+                 <span class="px-3 py-1 bg-primary-50 rounded-full">Notícias</span>
+                 <span class="text-slate-300">•</span>
+                 <span>{{ news.publishedAt|date('d de F, Y') }}</span>
+            </div>
+
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-slate-900 leading-tight mb-8">{{ news.title }}</h1>
+            
+             <div class="flex items-center justify-center gap-4">
+                 <!-- Author placeholder or generic -->
+                 <div class="flex items-center text-left">
+                     <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-400 mr-3">
+                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                     </div>
+                     <div>
+                         <p class="text-sm font-bold text-slate-900">Equipe Procordis</p>
+                         <p class="text-xs text-slate-500">Conteúdo Médico</p>
+                     </div>
+                 </div>
+             </div>
+
+        </div>
+    </div>
+
+    <!-- Content -->
+    <section class="py-16 bg-white min-h-screen">
+        <div class="container mx-auto px-6 max-w-4xl">
+            {% if news.imageName %}
+                <div class="rounded-3xl overflow-hidden shadow-2xl mb-12 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <img src="{{ asset('images/news/' ~ news.imageName) }}" alt="{{ news.imageAlt|default(news.title) }}" class="w-full">
+                </div>
+            {% endif %}
+
+            <div class="prose prose-lg prose-slate prose-headings:font-display prose-headings:text-slate-900 prose-p:leading-8 prose-a:text-primary-600 prose-img:rounded-xl max-w-none text-slate-600">
+                {{ news.content|raw }}
+            </div>
+            
+             <!-- Share / Navigation Footer -->
+            <div class="mt-20 pt-10 border-t border-slate-100">
+                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div>
+                         <span class="text-slate-500 font-bold uppercase tracking-wide text-xs mr-4">Compartilhar:</span>
+                         <div class="inline-flex space-x-3">
+                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}" target="_blank" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+                                 <i class="fab fa-facebook-f"></i>
+                             </a>
+                             <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&text={{ news.title }}" target="_blank" class="w-10 h-10 bg-black/5 text-black rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                 <i class="fab fa-x-twitter"></i>
+                             </a>
+                             <a href="https://api.whatsapp.com/send?text={{ news.title }} - {{ app.request.uri }}" target="_blank" class="w-10 h-10 bg-green-50 text-green-600 rounded-full flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors">
+                                 <i class="fab fa-whatsapp"></i>
+                             </a>
+                         </div>
+                    </div>
+                    
+                    <a href="{{ path('app_news') }}" class="px-8 py-4 bg-slate-50 text-slate-700 font-bold rounded-full hover:bg-slate-100 transition-colors flex items-center group">
+                        <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Voltar para Notícias
+                    </a>
+                 </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
