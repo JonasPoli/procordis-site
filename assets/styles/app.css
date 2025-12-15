@@ -55,43 +55,43 @@
     }
 
     .dark {
-        --background: 210 11% 10%;
-        --foreground: 0 0% 95%;
-        --card: 210 11% 15%;
-        --card-foreground: 0 0% 95%;
-        --popover: 210 11% 15%;
-        --popover-foreground: 0 0% 95%;
-        --primary: 199 100% 45%;
+        --background: 220 15% 3%;
+        --foreground: 0 0% 96%;
+        --card: 220 15% 6%;
+        --card-foreground: 0 0% 96%;
+        --popover: 220 15% 6%;
+        --popover-foreground: 0 0% 96%;
+        --primary: 199 100% 55%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 210 11% 20%;
-        --secondary-foreground: 0 0% 95%;
-        --muted: 210 11% 25%;
-        --muted-foreground: 210 11% 65%;
-        --accent: 199 100% 45%;
+        --secondary: 220 15% 10%;
+        --secondary-foreground: 0 0% 96%;
+        --muted: 220 15% 8%;
+        --muted-foreground: 0 0% 88%;
+        --accent: 199 100% 55%;
         --accent-foreground: 0 0% 100%;
         --destructive: 0 62% 30%;
-        --destructive-foreground: 0 0% 95%;
-        --border: 210 11% 25%;
-        --input: 210 11% 25%;
-        --ring: 199 100% 45%;
+        --destructive-foreground: 0 0% 96%;
+        --border: 220 15% 15%;
+        --input: 220 15% 15%;
+        --ring: 199 100% 55%;
 
         /* Custom colors for dark mode */
-        --medical-blue: 199 100% 45%;
-        --medical-blue-light: 199 85% 55%;
-        --medical-blue-dark: 199 100% 38%;
-        --medical-gray: 210 11% 15%;
-        --medical-text: 210 11% 75%;
-        --medical-heading: 0 0% 95%;
-        --topbar-bg: 210 11% 15%;
+        --medical-blue: 199 100% 55%;
+        --medical-blue-light: 199 85% 65%;
+        --medical-blue-dark: 199 100% 45%;
+        --medical-gray: 220 15% 8%;
+        --medical-text: 0 0% 92%;
+        --medical-heading: 0 0% 96%;
+        --topbar-bg: 220 15% 5%;
 
-        --sidebar-background: 210 11% 12%;
-        --sidebar-foreground: 210 11% 85%;
-        --sidebar-primary: 0 0% 98%;
-        --sidebar-primary-foreground: 210 11% 12%;
-        --sidebar-accent: 210 11% 20%;
-        --sidebar-accent-foreground: 0 0% 98%;
-        --sidebar-border: 210 11% 25%;
-        --sidebar-ring: 199 100% 45%;
+        --sidebar-background: 220 15% 5%;
+        --sidebar-foreground: 0 0% 92%;
+        --sidebar-primary: 0 0% 96%;
+        --sidebar-primary-foreground: 220 15% 5%;
+        --sidebar-accent: 220 15% 10%;
+        --sidebar-accent-foreground: 0 0% 96%;
+        --sidebar-border: 220 15% 18%;
+        --sidebar-ring: 199 100% 55%;
     }
 }
 
@@ -115,6 +115,112 @@
     h5,
     h6 {
         font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Dark mode overrides for hardcoded backgrounds - MAXIMUM SPECIFICITY */
+    .dark .bg-white,
+    .dark div.bg-white,
+    .dark section.bg-white,
+    .dark article.bg-white {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    .dark .bg-medical-gray {
+        background-color: hsl(var(--muted)) !important;
+    }
+
+    .dark .bg-slate-50,
+    .dark .bg-slate-100,
+    .dark .bg-gray-50,
+    .dark .bg-gray-100,
+    .dark div.bg-slate-50,
+    .dark div.bg-gray-50,
+    .dark div.bg-gray-100 {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    .dark .bg-blue-50,
+    .dark .bg-cyan-50 {
+        background-color: hsl(var(--card)) !important;
+    }
+
+    /* Dark mode text color overrides */
+    .dark .text-medical-text,
+    .dark .text-slate-600,
+    .dark .text-slate-700,
+    .dark .text-slate-800,
+    .dark .text-gray-600,
+    .dark .text-gray-700,
+    .dark .text-gray-800,
+    .dark p.text-medical-text,
+    .dark p.text-slate-600,
+    .dark p.text-gray-600 {
+        color: hsl(var(--muted-foreground)) !important;
+    }
+
+    .dark .text-medical-heading,
+    .dark .text-slate-900,
+    .dark h1.text-medical-heading,
+    .dark h2.text-medical-heading,
+    .dark h3.text-medical-heading,
+    .dark h4.text-medical-heading {
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    .dark .text-slate-500,
+    .dark .text-gray-500 {
+        color: hsl(0 0% 75%) !important;
+    }
+
+    .dark .text-slate-400,
+    .dark .text-gray-400 {
+        color: hsl(0 0% 65%) !important;
+    }
+
+    /* Border overrides */
+    .dark .border-slate-100,
+    .dark .border-slate-200,
+    .dark .border-gray-100,
+    .dark .border-gray-200 {
+        border-color: hsl(var(--border)) !important;
+    }
+
+    /* Button and interactive element overrides */
+    .dark .hover\:bg-white:hover,
+    .dark div.hover\:bg-white:hover {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    .dark .hover\:bg-slate-50:hover,
+    .dark .hover\:bg-slate-100:hover,
+    .dark .hover\:bg-gray-50:hover {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    /* Primary color text override - use bright blue for readability */
+    .dark .text-primary,
+    .dark .text-primary-600,
+    .dark .text-primary-700,
+    .dark .text-blue-600,
+    .dark .text-cyan-600 {
+        color: hsl(var(--primary)) !important;
+    }
+
+    /* Ensure bg-white buttons have readable text */
+    .dark .bg-white.text-primary {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+
+    /* Icon backgrounds in dark mode */
+    .dark .bg-primary\/10,
+    .dark [class*="bg-blue-"],
+    .dark [class*="bg-cyan-"] {
+        background-color: hsl(var(--primary) / 0.15) !important;
     }
 }
 

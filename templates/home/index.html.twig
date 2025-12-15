@@ -179,7 +179,7 @@
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for service in services %}
-                <div class="group p-6 rounded-2xl border border-transparent hover:border-gray-100 hover:shadow-xl hover:bg-white hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="group p-6 rounded-2xl border border-transparent hover:border-gray-100 dark:hover:border-border hover:shadow-xl hover:bg-white dark:hover:bg-card hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                   <div class="service-icon text-primary mb-4 transition-transform group-hover:scale-110 duration-300 origin-left">
                     {% if service.icon starts with '<svg' or service.icon starts with '<i' %}
                         {{ service.icon|raw }}
@@ -187,8 +187,8 @@
                         <i class="{{ service.icon }} w-12 h-12"></i> 
                     {% endif %}
                   </div>
-                  <h3 class="text-lg font-bold text-medical-heading mb-3 group-hover:text-primary transition-colors">{{ service.title }}</h3>
-                  <p class="text-medical-text text-sm leading-relaxed">{{ service.description }}</p>
+                  <h3 class="text-lg font-bold text-medical-heading dark:text-card-foreground mb-3 group-hover:text-primary transition-colors">{{ service.title }}</h3>
+                  <p class="text-medical-text dark:text-muted-foreground text-sm leading-relaxed">{{ service.description }}</p>
                 </div>
                 {% else %}
                     <p class="text-gray-500 col-span-full text-center">Nenhum serviço destacado no momento.</p>
@@ -243,11 +243,11 @@
 
             <div class="grid grid-cols-2 lg:grid-cols-6 gap-6">
                  {% for specialty in specialties %}
-                    <div class="bg-gray-50 p-6 rounded-xl text-center hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-gray-100 group cursor-default" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+                    <div class="bg-gray-50 dark:bg-card p-6 rounded-xl text-center hover:bg-white dark:hover:bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-gray-100 dark:hover:border-border group cursor-default" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
                         <div class="w-12 h-12 mx-auto mb-4 text-medical-accent group-hover:text-primary transition-colors duration-300 flex items-center justify-center group-hover:scale-110">
                             {{ specialty.svgIcon|raw }}
                         </div>
-                        <h3 class="font-bold text-medical-heading text-sm group-hover:text-primary transition-colors">{{ specialty.name }}</h3>
+                        <h3 class="font-bold text-medical-heading dark:text-card-foreground text-sm group-hover:text-primary transition-colors">{{ specialty.name }}</h3>
                     </div>
                  {% else %}
                     <p class="text-center col-span-full">Em breve...</p>
@@ -257,8 +257,9 @@
         </section>
 
         {# Testimonials / Depoimentos #}
+        {# Testimonials / Depoimentos #}
         {% if testimonies|length > 0 %}
-        <section class="py-16 lg:py-24 bg-primary text-primary-foreground relative overflow-hidden" 
+        <section class="py-16 lg:py-24 bg-primary dark:bg-card text-primary-foreground dark:text-card-foreground relative overflow-hidden" 
                  x-data="{ 
                     currentQuote: 0, 
                     quotes: {{ testimonies|map(t => { text: t.text, author: t.authorName, role: t.authorRole|default('') })|json_encode|e('html_attr') }},
@@ -268,16 +269,16 @@
                  x-init="setInterval(() => next(), 8000)">
           
           <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute top-0 left-0 w-64 h-64 bg-primary-foreground rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-foreground rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+            <div class="absolute top-0 left-0 w-64 h-64 bg-primary-foreground dark:bg-primary rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-foreground dark:bg-primary rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
           </div>
 
           <div class="container mx-auto relative" data-aos="fade-up">
-            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary-foreground/90">O que dizem nossos pacientes</h2>
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary-foreground/90 dark:text-card-foreground">O que dizem nossos pacientes</h2>
 
             <div class="flex items-center justify-center gap-2 md:gap-8">
               {# Left Arrow #}
-              <button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 hover:bg-primary-foreground hover:text-primary transition-colors rounded-full">
+              <button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full">
                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
               </button>
 
@@ -316,17 +317,17 @@
               </div>
 
               {# Right Arrow #}
-              <button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 hover:bg-primary-foreground hover:text-primary transition-colors rounded-full">
+              <button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full">
                 <i data-lucide="chevron-right" class="w-6 h-6"></i>
               </button>
             </div>
             
             {# Mobile Arrows #}
             <div class="flex justify-center gap-4 mt-8 md:hidden">
-              <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 rounded-full">
+              <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
               </button>
-              <button @click="next" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 rounded-full">
+              <button @click="next" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full">
                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
               </button>
             </div>
@@ -336,7 +337,7 @@
                 <template x-for="(quote, index) in quotes" :key="index">
                     <button @click="currentQuote = index" 
                             class="w-2 h-2 rounded-full transition-all duration-300"
-                            :class="currentQuote === index ? 'bg-white w-6' : 'bg-white/40 hover:bg-white/60'">
+                            :class="currentQuote === index ? 'bg-white dark:bg-primary w-6' : 'bg-white/40 dark:bg-primary/30 hover:bg-white/60 dark:hover:bg-primary/50'">
                     </button>
                 </template>
             </div>
@@ -473,11 +474,12 @@
                         {# Grid Container for the items #}
                         <div class="flex flex-col gap-6 transition-all duration-500">
                              {% for item in latestNews %}
-                                 <article class="group bg-white rounded-2xl border border-slate-100 p-4 hover:shadow-lg transition-all duration-300 flex flex-col"
+                                 <article class="group bg-white dark:bg-card rounded-2xl border border-slate-100 dark:border-border p-4 hover:shadow-lg transition-all duration-300 flex flex-col"
                                           x-show="paginatedItems.includes({{ loop.index0 }})"
                                           x-transition:enter="transition ease-out duration-300"
                                           x-transition:enter-start="opacity-0 translate-y-2"
                                           x-transition:enter-end="opacity-100 translate-y-0">
+                                     <div class="flex items-center gap-2 text-xs text-medical-text dark:text-muted-foreground mb-3">
                                      <i data-lucide="calendar" class="w-3 h-3"></i>
                                      <span>{{ item.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
                                     'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
@@ -486,11 +488,11 @@
                                     'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
                                 }) }}</span>
                                    </div>
-                                   <h3 class="text-base font-bold text-medical-heading group-hover:text-primary transition-colors cursor-pointer leading-tight mb-2">
+                                   <h3 class="text-base font-bold text-medical-heading dark:text-card-foreground group-hover:text-primary transition-colors cursor-pointer leading-tight mb-2">
                                      <a href="{{ path('app_news_detail', {'slug': item.slug}) }}">{{ item.title }}</a>
                                    </h3>
-                                   <p class="text-xs text-medical-text line-clamp-2 mb-3">{{ item.summary }}</p>
-                                   <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-medical-heading transition-colors mt-auto">
+                                   <p class="text-xs text-medical-text dark:text-muted-foreground line-clamp-2 mb-3">{{ item.summary }}</p>
+                                   <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-medical-heading dark:hover:text-card-foreground transition-colors mt-auto">
                                      Ler mais
                                      <i data-lucide="arrow-right" class="w-3 h-3"></i>
                                    </a>
