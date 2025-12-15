@@ -4,19 +4,23 @@
 
 {% block content %}
     {# Hero Small #}
-    {# Hero Small #}
-    <section class="bg-primary/5 dark:bg-background py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                <a href="{{ path('app_home') }}" class="hover:text-primary">Início</a>
+    {# Hero Standardized #}
+    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="container mx-auto px-6 relative z-10 text-center">
+            
+            {# Breadcrumb #}
+            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
                 <span class="opacity-50">/</span>
-                <a href="{{ path('app_service_index') }}" class="hover:text-primary">Serviços</a>
+                <a href="{{ path('app_service_index') }}" class="hover:text-white transition-colors">Serviços</a>
                 <span class="opacity-50">/</span>
-                <span class="text-primary font-medium">{{ service.title }}</span>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-foreground">{{ service.title }}</h1>
+                <span class="font-medium text-white">{{ service.title }}</span>
+            </nav>
+
+            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ service.title }}</h1>
         </div>
-    </section>
+    </div>
 
     <section class="py-16 bg-background">
         <div class="container mx-auto px-4">

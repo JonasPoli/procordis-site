@@ -4,9 +4,18 @@
 
 {% block content %}
     {# Hero Small #}
-    <div class="bg-primary/95 text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('assets/images/replica/hero-doctor.jpg') }}'); filter: grayscale(100%);"></div>
+    {# Hero Standardized #}
+    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
          <div class="container mx-auto px-6 relative z-10 text-center">
+            
+            {# Breadcrumb #}
+            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+                <span class="opacity-50">/</span>
+                <span class="font-medium text-white">Quem Somos</span>
+            </nav>
+
             <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ about.mainTitle|default('Quem Somos') }}</h1>
             <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">Uma trajetória dedicada a cuidar do ritmo da sua vida.</p>
         </div>

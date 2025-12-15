@@ -4,15 +4,24 @@
 
 {% block content %}
     {# Hero Section #}
-    {# Hero Section #}
-    <section class="bg-primary/5 dark:bg-background py-16 md:py-24">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-6" data-aos="fade-up">Nossos Serviços</h1>
-            <p class="text-lg text-muted-foreground max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+    {# Hero Standardized #}
+    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="container mx-auto px-6 relative z-10 text-center">
+            
+            {# Breadcrumb #}
+            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+                <span class="opacity-50">/</span>
+                <span class="font-medium text-white">Serviços</span>
+            </nav>
+
+            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">Nossos Serviços</h1>
+            <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
                 Oferecemos uma ampla gama de exames e especialidades cardiológicas com tecnologia de ponta e equipe qualificada.
             </p>
         </div>
-    </section>
+    </div>
 
     {# Services Grid #}
     <section class="py-16 md:py-24 bg-background">

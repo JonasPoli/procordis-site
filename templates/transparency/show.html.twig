@@ -3,17 +3,26 @@
 {% block title %}{{ transparency.title }} - Transparência{% endblock %}
 
 {% block content %}
-    <section class="py-12 bg-primary/5 dark:bg-background">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                <a href="{{ path('app_transparency_index') }}" class="hover:text-primary">Transparência</a>
+    {# Hero Standardized #}
+    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="container mx-auto px-6 relative z-10 text-center">
+            
+            {# Breadcrumb #}
+            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
                 <span class="opacity-50">/</span>
-                <span class="text-primary font-medium">{{ transparency.title }}</span>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">{{ transparency.title }}</h1>
-            <p class="text-muted-foreground text-lg max-w-3xl">{{ transparency.description }}</p>
+                <a href="{{ path('app_transparency_index') }}" class="hover:text-white transition-colors">Transparência</a>
+                <span class="opacity-50">/</span>
+                <span class="font-medium text-white">{{ transparency.title }}</span>
+            </nav>
+
+            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ transparency.title }}</h1>
+            <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                Documentos e informações disponíveis nesta categoria.
+            </p>
         </div>
-    </section>
+    </div>
 
     <section class="py-16 bg-background">
         <div class="container mx-auto px-4">

@@ -4,32 +4,25 @@
 {% block meta_description %}{{ news.seoDescription|default(news.summary) }}{% endblock %}
 
 {% block content %}
-    {# Hero Section with Breadcrumb #}
-    <section class="py-12 bg-primary/5 dark:bg-background">
-        <div class="container mx-auto px-4">
-             <nav class="flex text-sm text-muted-foreground mb-4" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a href="{{ path('app_home') }}" class="hover:text-primary">Home</a>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <span class="opacity-50 mx-1">/</span>
-                            <a href="{{ path('app_news') }}" class="hover:text-primary ml-1 md:ml-2">Notícias</a>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <span class="opacity-50 mx-1">/</span>
-                            <span class="ml-1 md:ml-2 text-primary font-medium truncate max-w-[200px] md:max-w-xs">{{ news.title }}</span>
-                        </div>
-                    </li>
-                </ol>
+    {# Hero Standardized #}
+    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="container mx-auto px-6 relative z-10 text-center">
+            
+            {# Breadcrumb #}
+            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+                <span class="opacity-50">/</span>
+                <a href="{{ path('app_news') }}" class="hover:text-white transition-colors">Notícias</a>
+                <span class="opacity-50">/</span>
+                <span class="font-medium text-white truncate max-w-[200px] md:max-w-xs">{{ news.title }}</span>
             </nav>
-            <h1 class="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4 lh-tight">{{ news.title }}</h1>
-            <div class="flex items-center text-muted-foreground text-sm gap-4">
+
+            <h1 class="font-heading text-3xl md:text-4xl font-bold mb-4 lg:leading-tight max-w-4xl mx-auto" data-aos="fade-up">{{ news.title }}</h1>
+            
+            <div class="flex items-center justify-center text-primary-foreground/90 text-sm gap-4">
                 <span class="flex items-center gap-1">
-                    <i data-lucide="calendar" class="w-4 h-4 text-primary"></i>
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
                     {{ news.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
                         'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
                         'April': 'Abril', 'May': 'Maio', 'June': 'Junho', 
@@ -39,7 +32,7 @@
                 </span>
             </div>
         </div>
-    </section>
+    </div>
 
     <section class="py-12 bg-background">
         <div class="container mx-auto px-4">
