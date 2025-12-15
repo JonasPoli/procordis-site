@@ -4,30 +4,31 @@
 
 {% block content %}
     {# Hero Section #}
-    <section class="bg-primary/5 py-16 md:py-24">
+    {# Hero Section #}
+    <section class="bg-primary/5 dark:bg-background py-16 md:py-24">
         <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-medical-heading mb-6" data-aos="fade-up">Nossos Serviços</h1>
-            <p class="text-lg text-medical-text max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-6" data-aos="fade-up">Nossos Serviços</h1>
+            <p class="text-lg text-muted-foreground max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
                 Oferecemos uma ampla gama de exames e especialidades cardiológicas com tecnologia de ponta e equipe qualificada.
             </p>
         </div>
     </section>
 
     {# Services Grid #}
-    <section class="py-16 md:py-24">
+    <section class="py-16 md:py-24 bg-background">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for service in services %}
-                    <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="group bg-card rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-border flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
                         <div class="w-16 h-16 bg-blue-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                             {{ service.icon|raw }}
                         </div>
                         
-                        <h3 class="text-2xl font-bold text-medical-heading mb-4 group-hover:text-primary transition-colors">
+                        <h3 class="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                             {{ service.title }}
                         </h3>
                         
-                        <p class="text-medical-text mb-6 flex-grow line-clamp-3">
+                        <p class="text-muted-foreground mb-6 flex-grow line-clamp-3">
                             {{ service.description }}
                         </p>
                         

@@ -3,32 +3,32 @@
 {% block title %}Portal da Transparência{% endblock %}
 
 {% block content %}
-    <section class="py-12 bg-primary/5">
+    <section class="py-12 bg-primary/5 dark:bg-background">
         <div class="container mx-auto px-4">
-            <h1 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-4">Portal da Transparência</h1>
-            <p class="text-medical-text text-lg">Acesse documentos e informações públicas.</p>
+            <h1 class="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">Portal da Transparência</h1>
+            <p class="text-muted-foreground text-lg">Acesse documentos e informações públicas.</p>
         </div>
     </section>
 
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-background">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for item in transparencies %}
-                    <a href="{{ path('app_transparency_show', {slug: item.slug}) }}" class="block p-6 bg-white border border-border rounded-xl shadow-sm hover:shadow-md hover:border-primary transition-all group">
+                    <a href="{{ path('app_transparency_show', {slug: item.slug}) }}" class="block p-6 bg-card border border-border rounded-xl shadow-sm hover:shadow-md hover:border-primary transition-all group">
                         <div class="flex items-center gap-4 mb-4">
-                            <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                            <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 text-primary rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
                                 <i data-lucide="file-text" class="w-6 h-6"></i>
                             </div>
-                            <h2 class="text-xl font-bold text-medical-heading group-hover:text-primary transition-colors">{{ item.title }}</h2>
+                            <h2 class="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{{ item.title }}</h2>
                         </div>
-                        <p class="text-medical-text text-sm line-clamp-2">{{ item.description }}</p>
+                        <p class="text-muted-foreground text-sm line-clamp-2">{{ item.description }}</p>
                         <div class="mt-4 text-xs font-semibold text-primary flex items-center gap-1">
                             {{ item.documents|length }} Documentos
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </div>
                     </a>
                 {% else %}
-                    <p class="text-medical-text">Nenhum item de transparência encontrado.</p>
+                    <p class="text-muted-foreground">Nenhum item de transparência encontrado.</p>
                 {% endfor %}
             </div>
         </div>
