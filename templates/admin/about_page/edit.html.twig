@@ -1,0 +1,55 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block page_title %}Editar Quem Somos{% endblock %}
+
+{% block body %}
+    <div class="glass-panel text-sm px-6 py-6 rounded-xl shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-lg font-bold">Conteúdo: Quem Somos</h2>
+            <div class="space-x-2">
+                 <a href="{{ path('admin_timeline_index') }}" class="btn bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 text-xs uppercase tracking-wide">
+                    Gerenciar Linha do Tempo
+                </a>
+            </div>
+        </div>
+
+        {{ form_start(form) }}
+            
+            <div class="mb-8">
+                <h3 class="text-md font-semibold text-gray-800 border-b pb-2 mb-4">Seção na Home Page</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        {{ form_row(form.homeTitle) }}
+                        {{ form_row(form.homeSummary) }}
+                    </div>
+                    <div>
+                        {{ form_row(form.homeImageFile, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-md font-semibold text-gray-800 border-b pb-2 mb-4">Página Interna</h3>
+                {{ form_row(form.mainTitle) }}
+                <div class="mt-4">
+                    {{ form_row(form.mainContent) }}
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-md font-semibold text-gray-800 border-b pb-2 mb-4">Missão, Visão e Valores</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>{{ form_row(form.mission) }}</div>
+                    <div>{{ form_row(form.vision) }}</div>
+                    <div>{{ form_row(form.ourValues) }}</div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button class="btn bg-blue-600 text-white px-6 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition font-medium">
+                    Salvar Conteúdo
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

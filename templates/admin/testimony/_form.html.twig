@@ -1,0 +1,47 @@
+{{ form_start(form) }}
+    <div class="grid gap-6">
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.authorName, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.authorName, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                {{ form_errors(form.authorName) }}
+            </div>
+            <div>
+                {{ form_label(form.authorRole, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.authorRole, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                {{ form_errors(form.authorRole) }}
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+             <div>
+                {{ form_label(form.rating, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.rating, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                {{ form_errors(form.rating) }}
+            </div>
+            <div>
+                {{ form_label(form.createdAt, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.createdAt, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                {{ form_errors(form.createdAt) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.text, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+            {{ form_widget(form.text, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+            {{ form_errors(form.text) }}
+        </div>
+
+        <div>
+            {{ form_widget(form.active) }}
+            {{ form_label(form.active, null, {'label_attr': {'class': 'ml-2 text-sm font-medium text-slate-700'}}) }}
+            {{ form_errors(form.active) }}
+        </div>
+    </div>
+    
+    <div class="mt-8 flex justify-end">
+        <button class="btn bg-blue-600 text-white px-6 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition font-medium focus:ring-4 focus:ring-blue-300">
+            {{ button_label|default('Salvar') }}
+        </button>
+    </div>
+{{ form_end(form) }}

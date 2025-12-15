@@ -3,15 +3,29 @@
 namespace App\Entity;
 
 use App\Repository\NewsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class News
 {
+    // ...
+
+    #[ORM\PrePersist]
+    public function computeSlug(): void
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
+            $this->slug = strtolower($slugger->slug((string) $this->title));
+        }
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -56,9 +70,13 @@ class News
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageAlt = null;
 
+    #[ORM\ManyToMany(targetEntity: NewsCategory::class, inversedBy: 'news')]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTimeImmutable();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +235,30 @@ class News
     public function setImageAlt(?string $imageAlt): static
     {
         $this->imageAlt = $imageAlt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NewsCategory>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(NewsCategory $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(NewsCategory $category): static
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }

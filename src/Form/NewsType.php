@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\News;
+use App\Entity\NewsCategory;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType as BridgeEntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -26,6 +28,14 @@ class NewsType extends AbstractType
                 'help' => 'Deixe vazio para gerar automaticamente (se implementado) ou preencha manual.',
                 'attr' => ['class' => 'form-input']
             ])
+            ->add('categories', BridgeEntityType::class, [
+                'label' => 'Categorias',
+                'class' => NewsCategory::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ])
             ->add('publishedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Data de Publicação',
@@ -38,7 +48,7 @@ class NewsType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Conteúdo Completo (HTML)',
-                'attr' => ['rows' => 10, 'class' => 'form-textarea']
+                'attr' => ['rows' => 10, 'class' => 'form-textarea editor-html']
             ])
             ->add('imageFile', VichImageType::class, [
                 'label' => 'Imagem de Capa',

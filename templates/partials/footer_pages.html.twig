@@ -1,0 +1,5 @@
+{% for page in pages %}
+    <a href="{{ path('app_page_show', {slug: page.slug}) }}" class="hover:text-white transition-colors duration-300">
+        {{ page.title }}
+    </a>
+{% endfor %}

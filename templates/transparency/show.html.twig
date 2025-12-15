@@ -1,0 +1,59 @@
+{% extends 'base_public.html.twig' %}
+
+{% block title %}{{ transparency.title }} - Transparência{% endblock %}
+
+{% block content %}
+    <section class="py-12 bg-primary/5">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-2 text-sm text-medical-text mb-4">
+                <a href="{{ path('app_transparency_index') }}" class="hover:text-primary">Transparência</a>
+                <span class="opacity-50">/</span>
+                <span class="text-primary font-medium">{{ transparency.title }}</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-4">{{ transparency.title }}</h1>
+            <p class="text-medical-text text-lg max-w-3xl">{{ transparency.description }}</p>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-medical-heading mb-8 flex items-center gap-2">
+                <i data-lucide="folder-open" class="w-6 h-6 text-primary"></i> Documentos Disponíveis
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for doc in transparency.documents %}
+                    <div class="p-6 bg-white border border-border rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-start gap-4 mb-4">
+                             <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center shrink-0">
+                                <i data-lucide="file" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-medical-heading leading-tight mb-1">{{ doc.title }}</h3>
+                                {% if doc.updatedAt %}
+                                    <span class="text-xs text-medical-text/60">Atualizado em {{ doc.updatedAt|date('d/m/Y') }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if doc.fileName %}
+                            <a href="{{ vich_uploader_asset(doc, 'file') }}" target="_blank" class="btn w-full btn-primary bg-primary/10 text-primary hover:bg-primary hover:text-white border-0 font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4"></i> Baixar Documento
+                            </a>
+                        {% else %}
+                             <button disabled class="w-full py-3 bg-slate-100 text-slate-400 rounded-lg cursor-not-allowed font-medium text-sm">Arquivo indisponível</button>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="col-span-3 text-medical-text italic">Nenhum documento anexado a este item.</p>
+                {% endfor %}
+            </div>
+
+            <div class="mt-12 text-center">
+                 <a href="{{ path('app_transparency_index') }}" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para a lista
+                 </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

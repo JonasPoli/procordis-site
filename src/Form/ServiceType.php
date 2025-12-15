@@ -37,11 +37,11 @@ class ServiceType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Descrição Curta',
-                'attr' => ['rows' => 3, 'class' => 'form-textarea']
+                'attr' => ['rows' => 3, 'class' => 'form-textarea editor-html']
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Conteúdo Completo (HTML)',
-                'attr' => ['rows' => 10, 'class' => 'form-textarea']
+                'attr' => ['rows' => 10, 'class' => 'form-textarea editor-html']
             ])
         ;
     }

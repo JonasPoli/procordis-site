@@ -1,201 +1,1194 @@
-# Documentação Técnica: Sistema Base & Projeto Procordis
+# Documentação Técnica Completa: Sistema Procordis
+## Blueprint para Reconstrução Total do Sistema
 
-> [!NOTE]
-> Este documento está organizado em duas partes principais:
-> 1.  **Arquitetura e Padrões (Geral):** Tecnologias, frameworks e padrões reutilizáveis em qualquer projeto da agência.
-> 2.  **Especificações do Projeto (Procordis):** Detalhes exclusivos, regras de negócio e conteúdo deste projeto.
+> [!CAUTION]
+> **MANUAL TÉCNICO DEFINITIVO - FONTE ÚNICA DE VERDADE**
+> 
+> Este documento contém TODAS as informações necessárias para reconstruir o sistema completo do zero.
+> Inclui: schemas de banco, código-fonte de referência, configurações completas, padrões de UI e guias passo a passo.
 
 ---
 
-# PARTE 1: ARQUITETURA, TECNOLOGIAS E PADRÕES (GERAL)
-*Tudo descrito nesta seção compõe a base tecnológica reutilizável do sistema.*
+# ÍNDICE
 
-## 1. Tecnologias & Stack
-A base do sistema utiliza uma arquitetura moderna e otimizada para performance máxima (PageSpeed 100/100).
+1. **Configuração e Arquitetura**
+2. **Camada de Dados (Entities & Repositories)**  
+3. **Camada de Lógica (Controllers & Forms)**
+4. **Camada de Apresentação (Templates & Assets)**
+5. **Painel Administrativo**
+6. **APIs e Integrações**
+7. **Guias de Implementação**
 
-| Área | Tecnologia | Detalhes |
-|-----|------------|----------|
-| **Backend** | **Symfony 7.2** | Estrutura central da aplicação. |
-| **PHP** | **8.2+** | Linguagem base. |
-| **Front-end** | **TailwindCSS v3** | Framework CSS utility-first. |
-| **Componentes** | **Flowbite Blocks** | Biblioteca de componentes UI pré-construídos. |
-| **ORM** | **Doctrine** | Camada de abstração de banco de dados. |
-| **Templates** | **Twig** | Motor de templates para renderização server-side. |
-| **Acessibilidade** | **WAI-ARIA** | Padrões de acessibilidade web. |
-| **Animações** | **AOS.js** | Biblioteca leve para animações "On Scroll". |
+---
 
-## 2. Arquitetura do Sistema
-### 2.1 Estrutura de Pastas (Symfony Padrão)
-```txt
-src/
- ├── Controller/      # Controladores de rotas
- ├── Entity/          # Entidades do Banco de Dados
- ├── Repository/      # Consultas ao Banco (Doctrine)
- ├── Service/         # Regras de Negócio e Serviços Reutilizáveis
- ├── Security/        # Lógica de Autenticação
- ├── Form/            # Classes de Formulários
-templates/            # Arquivos Twig (.html.twig)
-public/               # Assets públicos (imagens, builds css/js)
-config/               # Configurações do Symfony
+# 1. CONFIGURAÇÃO E ARQUITETURA
+
+## 1.1 Stack Tecnológica Completa
+
+| Camada | Tecnologia | Versão | Propósito |
+|--------|------------|--------|-----------|
+| **Runtime** | PHP | 8.2+ | Linguagem backend |
+| **Framework** | Symfony | 7.2 | Framework MVC |
+| **DB** | SQLite/MySQL | - | Persistência |
+| **ORM** | Doctrine | 3.x | Mapeamento objeto-relacional |
+| **Templating** | Twig | 3.x | Motor de templates |
+| **CSS** | TailwindCSS | 3.x | Framework utility-first |
+| **JS (Interatividade)** | Alpine.js | 3.x | Framework reativo leve |
+| **JS (Notificações)** | SweetAlert2 | 11.x | Popups e alertas |
+| **JS (Animações)** | AOS.js | - | Scroll animations |
+| **Ícones** | Lucide Icons | Latest | Biblioteca SVG |
+| **Upload** | VichUploaderBundle | - | Gestão de arquivos |
+| **Editor** | TinyMCE | 6.x | WYSIWYG para admin |
+
+## 1.2 Estrutura de Diretórios
+
+```
+procordis-site/
+├── assets/
+│   └── app.js                    # Entry point do AssetMapper
+├── config/
+│   └── packages/
+│       ├── vich_uploader.yaml    # Configuração de uploads
+│       └── twig.yaml              # Configuração Twig
+├── public/
+│   ├── css/
+│   │   └── built.css             # CSS compilado do Tailwind
+│   ├── js/
+│   │   └── simple-aos.js         # AOS library
+│   ├── images/
+│   │   ├── news/                 # Uploads de notícias
+│   │   ├── team/                 # Fotos dos médicos
+│   │   ├── banners/              # Imagens do slider
+│   │   ├── about/                # Imagens Quem Somos
+│   │   └── timeline/             # Imagens da linha do tempo
+│   └── files/
+│       └── transparency/         # PDFs de transparência
+├── src/
+│   ├── Command/
+│   │   └── PopulateTestDatabaseCommand.php
+│   ├── Controller/
+│   │   ├── Admin/                # CRUDs administrativos
+│   │   ├── Api/                  # Endpoints JSON
+│   │   └── HomeController.php    # Controlador público
+│   ├── Entity/                   # 16 entidades
+│   ├── Form/                     # FormTypes
+│   ├── Repository/               # Consultas customizadas
+│   └── Service/
+│       └── TemplateService.php   # Injeção de dados globais
+├── templates/
+│   ├── admin/
+│   │   ├── base_admin.html.twig  # Layout admin
+│   │   ├── doctor/               # CRUD templates
+│   │   ├── news/
+│   │   ├── service/
+│   │   └── ...
+│   ├── home/
+│   │   ├── index.html.twig       # Homepage
+│   │   └── about.html.twig       # Quem Somos
+│   ├── layouts/
+│   │   └── pixel_perfect.html.twig  # Base HTML
+│   └── base_public.html.twig     # Layout público comum
+├── tailwind.config.js
+└── package.json
 ```
 
-### 2.2 Requisitos de Performance
-Para garantir a nota 100/100 no PageSpeed/Lighthouse:
-1.  **Imagens:** Uso exclusivo de formatos modernos (**WebP**) e dimensionamento correto.
-2.  **Lazy Loading:** Carregamento diferido para imagens e iframes.
-3.  **Scripts:** JS mínimo e carregamento assíncrono/deferido.
-4.  **CSS:** Build purgado do TailwindCSS para remover estilos não utilizados.
-5.  **Cache:** Implementação de cache HTTP e uso de CDN para assets estáticos.
-6.  **Fontes:** Preconnect e display swap para otimização de webfonts.
+## 1.3 Configuração Tailwind (COMPLETA)
 
-## 3. Sistema de SEO (Três Camadas)
-O sistema implementa uma arquitetura robusta de SEO dividida em três níveis de especificidade.
-
-### Camada 1: Tags Globais
-Gerenciadas pela entidade `GlobalTags`.
-*   **Função:** Inserir scripts e metadados presentes em *todas* as páginas.
-*   **Campos:** `ga4` (Google Analytics), `tagsGoogleAds`, `pixelMetaAds`.
-*   **Implementação:** Injetado automaticamente no `base.html.twig` via `TemplateService`.
-
-### Camada 2: SEO de Páginas Estáticas
-Gerenciadas pela entidade `PageSeo`.
-*   **Função:** Definir títulos e descrições para rotas fixas (Home, Quem Somos, Contato).
-*   **Campos:** `homePageTitle`, `homePageDescription`, `aboutPageTitle`, etc.
-*   **Uso:** `{{ templateService.pageSeo.homePageTitle }}`
-
-### Camada 3: SEO Dinâmico (Conteúdo)
-Gerenciado dentro de cada entidade de conteúdo (Ex: `News`, `Service`).
-*   **Campos Padrão:**
-    *   `seoTitle` (Título otimizado, max 60 chars)
-    *   `seoDescription` (Meta description, max 160 chars)
-    *   `slug` (URL amigável gerada automaticamente)
-    *   `canonicalUrl` (Para evitar conteúdo duplicado)
-    *   `imageAlt` (Texto alternativo para acessibilidade/SEO)
-    *   `isNoIndex` (Checkbox para ocultar do Google)
-
-## 4. TemplateService
-Um serviço central (`src/Service/TemplateService.php`) para **injetar dados globais** em todos os templates Twig, evitando repetição nos Controllers.
-
-*   **Métodos Principais:**
-    *   `globalTags()`: Retorna as tags de rastreamento.
-    *   `pageSeo()`: Retorna os textos de SEO estático.
-    *   `generalData()`: Retorna dados da empresa (Telefone, Endereço, Social).
-
-## 5. Sistema de Imagens (Arquivos)
-Integração completa para upload, armazenamento e processamento.
-
-*   **Upload:** **VichUploaderBundle**. Gerencia o envio e vinculação do arquivo com a Entidade.
-*   **Armazenamento:** **Flysystem + AWS S3**. Os arquivos são enviados diretamente para a nuvem, não ocupando espaço no servidor da aplicação.
-*   **Processamento:** **LiipImagineBundle**. Cria miniaturas e versões otimizadas dinamicamente.
-    *   *Filtros Padrão:* `news_thumb`, `news_list_thumb`, `news_large`, `admin_thumb`.
-
-## 6. Segurança e Autenticação
-### 6.1 Acesso Administrativo
-*   **Entidade:** `User`.
-*   **Role Obrigatória:** `ROLE_ADMIN` é exigida para acessar `/admin`.
-*   **Login:** Formulário padrão do Symfony Security. Redirecionamento automático para Dashboard após sucesso.
-
-### 6.2 Comando para Criar Administrador
-Ferramenta via terminal para criar usuários iniciais.
-```bash
-php bin/console app:admin-user
-```
-*Fluxo:* Lista usuários existentes -> Solicita e-mail/senha -> Cria usuário com privilégios administrativos.
-
-### 6.3 Esqueci Minha Senha
-Fluxo seguro de recuperação de conta.
-1.  Usuário solicita reset via e-mail.
-2.  Sistema gera token único e envia link (via **WMailer**).
-3.  Usuário define nova senha.
-4.  Template de e-mail customizado em Twig.
-
-## 7. Design System Administrativo ("Liquid Glass")
-Um padrão visual premium desenvolvido para áreas administrativas.
-
-*   **Conceito:** Estética moderna utilizando *Glassmorphism* (efeito de vidro fosco) e gradientes suaves (*Mesh Gradients*).
-*   **Configuração Global:** O tema é definido em `config/packages/twig.yaml` apontando para `form/tailwind_glass_theme.html.twig`.
-*   **Formulários Personalizados:**
-    *   Inputs com fundo translúcido e `backdrop-blur`.
-    *   **Acessibilidade:** Bordas reforçadas (`border-slate-400`) para garantir contraste adequado fora do estado de foco.
-*   **Dashboard Padrão:**
-    *   Cards com efeito de vidro.
-    *   Visão rápida de métricas (Contagens, Últimos registros).
-
-## 8. Padrões de Desenvolvimento
-### 8.2 Enum System
-O uso de Enums (PHP 8.1+) é mandatório para campos de seleção fixa, localizados em `src/Entity/Enum/`.
-Exemplo:
-```php
-enum LanguageEnum: int {
-    case PORTUGUESE = 1;
-    // ...
+```javascript
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./assets/**/*.js",
+    "./templates/**/*.html.twig",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: "1rem",
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1200px",
+        "2xl": "1200px",
+      },
+    },
+    extend: {
+      fontFamily: {
+        sans: ['Lato', 'sans-serif'],
+        heading: ['Montserrat', 'sans-serif'],
+        display: ['Oswald', 'sans-serif'],
+      },
+      colors: {
+        // Sistema de Cores Médicas
+        medical: {
+          blue: "#0ea5e9",
+          "blue-light": "#38bdf8",
+          "blue-dark": "#0284c7",
+          gray: "#f3f4f6",
+          text: "#64748b",
+          heading: "#1e293b",
+        },
+        topbar: {
+          bg: "#0f172a",
+        },
+        // Cores baseadas em CSS variables
+        border: "hsl(var(--border))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
+          dark: "hsl(var(--primary-dark))",
+        },
+        // Cores do Admin
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+        },
+      },
+      keyframes: {
+        fadeInUp: {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-in-up": "fadeInUp 0.6s ease-out forwards",
+      },
+    },
+  },
+  plugins: [],
 }
 ```
 
-### 8.3 Data Seeding (Massa de Dados)
-Antes de iniciar a dinamização dos layouts, é **obrigatório** popular o banco de dados.
-**Como Rodar:**
-1.  Instalar dependências (se necessário):
-    ```bash
-    composer require --dev doctrine/doctrine-fixtures-bundle fakerphp/faker
-    ```
-2.  Rodar o comando de carga:
-    ```bash
-    php bin/console doctrine:fixtures:load
-    ```
-    *(Responda `yes` para purgar o banco antigo)*.
+**CSS Variables (em `templates/layouts/pixel_perfect.html.twig` ou global CSS):**
+```css
+:root {
+  --primary: 199 89% 48%;          /* Sky blue */
+  --primary-foreground: 0 0% 100%;
+  --primary-light: 199 89% 68%;
+  --primary-dark: 199 89% 38%;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+  --medical-blue: 199 89% 48%;
+  --topbar-bg: 222 47% 11%;
+}
+```
 
-*   **Regra:** Inserir pelo menos **100 registros** para entidades principais e 20-50 para secundárias.
-*   **Contém:** Serviços, Médicos, Notícias (com paginação), Dados Gerais.
+## 1.4 Configuração VichUploader (COMPLETA)
+
+```yaml
+# config/packages/vich_uploader.yaml
+vich_uploader:
+    db_driver: orm
+    
+    mappings:
+        news_image:
+            uri_prefix: /images/news
+            upload_destination: '%kernel.project_dir%/public/images/news'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        service_image:
+            uri_prefix: /images/services
+            upload_destination: '%kernel.project_dir%/public/images/services'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        doctor_image:
+            uri_prefix: /images/team
+            upload_destination: '%kernel.project_dir%/public/images/team'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        transparency_file:
+            uri_prefix: /files/transparency
+            upload_destination: '%kernel.project_dir%/public/files/transparency'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        timeline_image:
+            uri_prefix: /images/timeline
+            upload_destination: '%kernel.project_dir%/public/images/timeline'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        banner_image:
+            uri_prefix: /images/banners
+            upload_destination: '%kernel.project_dir%/public/images/banners'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            
+        about_image:
+            uri_prefix: /images/about
+            upload_destination: '%kernel.project_dir%/public/images/about'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+```
+
+---
+
+# 2. CAMADA DE DADOS
+
+## 2.1 Entidades - Schema Completo
+
+### Doctor Entity (CÓDIGO COMPLETO)
+
+```php
+<?php
+// src/Entity/Doctor.php
+namespace App\Entity;
+
+use App\Repository\DoctorRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
+#[ORM\Entity(repositoryClass: DoctorRepository::class)]
+#[Vich\Uploadable]
+class Doctor
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $crm = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $specialty = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $bio = null;
+
+    #[Vich\UploadableField(mapping: 'doctor_image', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    // Getters and setters...
+    public function getId(): ?int { return $this->id; }
+    public function getName(): ?string { return $this->name; }
+    public function setName(string $name): static { $this->name = $name; return $this; }
+    // ... (completar getters/setters para todos os campos)
+    
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+}
+```
+
+### Resumo de Todas as Entidades
+
+| Entidade | Tabela | Campos Principais | Vich Mapping |
+|----------|--------|-------------------|--------------|
+| **Doctor** | `doctor` | id, name, crm, specialty, bio, imageName | doctor_image |
+| **Specialty** | `specialty` | id, name, svgIcon, active, sortOrder | - |
+| **Service** | `service` | id, title, slug, description, content, icon | service_image |
+| **News** | `news` | id, title, slug, summary, content, publishedAt, seoTitle, seoDescription | news_image |
+| **Testimony** | `testimony` | id, authorName, authorRole, text, rating, active, createdAt | - |
+| **HomeBanner** | `home_banner` | id, title, subtitle, btn1Text, btn1Link, btn2Text, btn2Link, active, sortOrder | banner_image |
+| **AboutPage** | `about_page` | id, homeTitle, homeSummary, mainTitle, mainContent, mission, vision, ourValues | about_image |
+| **TimelineItem** | `timeline_item` | id, year, title, description, sortOrder | timeline_image |
+| **GeneralData** | `general_data` | id, phone, email, address, facebook, instagram, mapEmbedCode | - |
+| **SystemVariable** | `system_variable` | id, variableKey (unique), variableValue, description | - |
+| **NewsletterSubscriber** | `newsletter_subscriber` | id, email (unique), createdAt | - |
+| **ContactMessage** | `contact_message` | id, name, email, subject, message, status, createdAt | - |
+| **TransparencyDoc** | `transparency_doc` | id, title, description, fileName, category, publishedAt | transparency_file |
+| **User** | `user` | id, email (unique), password, roles | - |
+| **PageSeo** | `page_seo` | id, homePageTitle, homePageDescription, aboutPageTitle, ... | - |
+| **GlobalTags** | `global_tags` | id, ga4, tagsGoogleAds, pixelMetaAds | - |
 
 ---
 
-# PARTE 2: ESPECIFICAÇÕES DO PROJETO (PROCORDIS)
-*Conteúdo detalhado, regras de negócio e definições exclusivas para o cliente Procordis.*
+# 3. CAMADA DE LÓGICA
 
-## 9. Visão Geral do Projeto
-Desenvolvimento do novo portal para a **Associação Procórdis – Ambulatório Cardíaco de Araraquara**.
-*   **Objetivo:** Modernizar a presença digital, oferecer agendamento simplificado e fornecer conteúdo educativo.
-*   **Referência Visual (Template):** "Medical Clinic" (Template Help).
-*   **Fidelidade Visual:** O layout deve seguir rigorosamente os mockups aprovados e descritos nos documentos de layout (`docs/layouts`). Implementação via TailwindCSS.
+## 3.1 Padrão de Controller Admin (COMPLETO)
 
-## 10. Estrutura de Conteúdo do Site
-Páginas essenciais definidas no **Relatório RDS-250903-1**:
+**Exemplo: DoctorController**
 
-1.  **Home:** Hero section, Destaques de Serviços, Últimas Notícias.
-2.  **Quem Somos:** História, Missão, Visão, Valores, Galeria da Equipe.
-3.  **Serviços e Especialidades:** Listagem completa de exames e consultas.
-4.  **Notícias e Educação:** Blog de saúde cardíaca (Detalhe + Listagem).
-5.  **Corpo Clínico:** Perfil dos médicos.
-6.  **Transparência:** Documentos e prestação de contas.
-7.  **Contato:** Formulário, Mapa, Endereços, Telefones.
-8.  **Páginas Auxiliares:** FAQ, Pesquisa, Agendamento (Link externo/integrado).
+```php
+<?php
+// src/Controller/Admin/DoctorController.php
+namespace App\Controller\Admin;
 
-## 11. Funcionalidades Específicas
-### 11.1 Gestão de Notícias (CMS Avançado)
-Funcionalidade inspirada no sistema *Siatec*, portada para este projeto.
-*   **Editor:** Integração com **TinyMCE** para conteúdo rico.
-*   **Automação:** Geração automática de `slug` via JS no admin.
-*   **SEO Dedicado:** Campos específicos (`seoTitle`, `canonicalUrl`, `isNoIndex`) na edição de notícias.
+use App\Entity\Doctor;
+use App\Form\DoctorType;
+use App\Repository\DoctorRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-### 11.2 Dashboard Personalizado
-O painel inicial administrativo exibe métricas vitais da clínica:
-*   Total de Notícias publicadas.
-*   Total de Serviços ativos.
-*   Solicitações de contato recentes.
-*   *(Opcional)* Gráficos de acesso.
+#[Route('/admin/doctor')]
+#[IsGranted('ROLE_ADMIN')]
+class DoctorController extends AbstractController
+{
+    #[Route('/', name: 'admin_doctor_index', methods: ['GET'])]
+    public function index(DoctorRepository $doctorRepository): Response
+    {
+        return $this->render('admin/doctor/index.html.twig', [
+            'doctors' => $doctorRepository->findAll(),
+        ]);
+    }
 
-## 12. Geração de Assets e Imagens
-> [!IMPORTANT]
-> **Diretrizes de Mídia:**
-> *   Utilizar ferramentas de IA para gerar imagens exclusivas e livres de direitos, mantendo o contexto médico profissional.
-> *   Não utilizar placeholders "Lorem Ipsum" ou imagens genéricas de bancos gratuitos na versão final.
+    #[Route('/new', name: 'admin_doctor_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $doctor = new Doctor();
+        $form = $this->createForm(DoctorType::class, $doctor);
+        $form->handleRequest($request);
 
-## 13. Arquivos e Entregáveis
-*   **Logo:** `procordis_logo.svg` (Vetorizado).
-*   **Código Fonte:** Repositório Git completo.
-*   **Documentação:** Este arquivo (`docs/procordis_documentacao.md`).
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($doctor);
+            $entityManager->flush();
+            $this->addFlash('success', 'Médico adicionado com sucesso!');
+            return $this->redirectToRoute('admin_doctor_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/doctor/new.html.twig', [
+            'doctor' => $doctor,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'admin_doctor_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Doctor $doctor, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(DoctorType::class, $doctor);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Médico atualizado com sucesso!');
+            return $this->redirectToRoute('admin_doctor_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/doctor/edit.html.twig', [
+            'doctor' => $doctor,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'admin_doctor_delete', methods: ['POST'])]
+    public function delete(Request $request, Doctor $doctor, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $doctor->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($doctor);
+            $entityManager->flush();
+            $this->addFlash('success', 'Médico excluído com sucesso!');
+        }
+
+        return $this->redirectToRoute('admin_doctor_index', [], Response::HTTP_SEE_OTHER);
+    }
+}
+```
+
+## 3.2 Padrão de Form Type (COMPLETO)
+
+```php
+<?php
+// src/Form/DoctorType.php
+namespace App\Form;
+
+use App\Entity\Doctor;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
+
+class DoctorType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('name', TextType::class, [
+                'label' => 'Nome',
+                'attr' => ['class' => 'form-input']
+            ])
+            ->add('crm', TextType::class, [
+                'label' => 'CRM',
+                'required' => false,
+                'attr' => ['class' => 'form-input']
+            ])
+            ->add('specialty', TextType::class, [
+                'label' => 'Especialidade',
+                'required' => false,
+                'attr' => ['class' => 'form-input']  
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label' => 'Foto',
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => true,
+                'image_uri' => true,
+            ])
+            ->add('bio', TextareaType::class, [
+                'label' => 'Biografia',
+                'required' => false,
+                'attr' => ['rows' => 4, 'class' => 'form-textarea editor-html']
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Doctor::class,
+        ]);
+    }
+}
+```
+
+## 3.3 Controller Público (HomeController)
+
+```php
+<?php
+// src/Controller/HomeController.php
+namespace App\Controller;
+
+use App\Repository\AboutPageRepository;
+use App\Repository\DoctorRepository;
+use App\Repository\GeneralDataRepository;
+use App\Repository\HomeBannerRepository;
+use App\Repository\NewsRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\SpecialtyRepository;
+use App\Repository\TestimonyRepository;
+use App\Repository\TimelineItemRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+class HomeController extends AbstractController
+{
+    #[Route('/', name: 'app_home')]
+    public function index(
+        ServiceRepository $serviceRepository,
+        DoctorRepository $doctorRepository,
+        NewsRepository $newsRepository,
+        SpecialtyRepository $specialtyRepository,
+        TestimonyRepository $testimonyRepository,
+        HomeBannerRepository $bannerRepository,
+        AboutPageRepository $aboutRepository,
+        GeneralDataRepository $generalDataRepository
+    ): Response {
+        return $this->render('home/index.html.twig', [
+            'services' => $serviceRepository->findBy(['active' => true], null, 8),
+            'doctors' => $doctorRepository->findAll(),
+            'latestNews' => $newsRepository->findBy([], ['publishedAt' => 'DESC'], 5),
+            'specialties' => $specialtyRepository->findBy(['active' => true], ['sortOrder' => 'ASC']),
+            'testimonies' => $testimonyRepository->findBy(['active' => true]),
+            'banners' => $bannerRepository->findBy(['active' => true], ['sortOrder' => 'ASC']),
+            'about' => $aboutRepository->findOneBy([]) ?? new \App\Entity\AboutPage(),
+            'generalData' => $generalDataRepository->findOneBy([]) ?? new \App\Entity\GeneralData(),
+        ]);
+    }
+
+    #[Route('/sobre', name: 'app_about')]
+    public function about(
+        AboutPageRepository $aboutPageRepository,
+        TimelineItemRepository $timelineRepository,
+        GeneralDataRepository $generalDataRepository
+    ): Response {
+        return $this->render('home/about.html.twig', [
+            'about' => $aboutPageRepository->findOneBy([]) ?? new \App\Entity\AboutPage(),
+            'timeline' => $timelineRepository->findBy([], ['sortOrder' => 'ASC']),
+            'generalData' => $generalDataRepository->findOneBy([]) ?? new \App\Entity\GeneralData(),
+        ]);
+    }
+}
+```
+
+## 3.4 API Controllers (COMPLETO)
+
+```php
+<?php
+// src/Controller/Api/NewsletterApiController.php
+namespace App\Controller\Api;
+
+use App\Entity\NewsletterSubscriber;
+use App\Repository\NewsletterSubscriberRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/api/newsletter')]
+class NewsletterApiController extends AbstractController
+{
+    #[Route('', name: 'api_newsletter_submit', methods: ['POST'])]
+    public function submit(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        NewsletterSubscriberRepository $repository
+    ): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || !isset($data['email'])) {
+            return $this->json(['error' => 'E-mail obrigatório.'], 400);
+        }
+
+        $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            return $this->json(['error' => 'E-mail inválido.'], 400);
+        }
+
+        // Check duplicate
+        if ($repository->findOneBy(['email' => $email])) {
+            return $this->json(['error' => 'Duplicate: Este e-mail já está cadastrado.'], 400);
+        }
+
+        $subscriber = new NewsletterSubscriber();
+        $subscriber->setEmail($email);
+        $subscriber->setCreatedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($subscriber);
+        $entityManager->flush();
+
+        return $this->json(['success' => true]);
+    }
+}
+```
 
 ---
-**Fim da Documentação**
-*(Atualizado automaticamente)*
+
+# 4. CAMADA DE APRESENTAÇÃO
+
+## 4.1 Layout Base (pixel_perfect.html.twig)
+
+```twig
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Procordis{% endblock %}</title>
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+        
+        <link rel="stylesheet" href="{{ asset('css/built.css') }}">
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    </head>
+    <body class="flex flex-col min-h-screen font-sans antialiased text-medical-text bg-white">
+        {% block body %}{% endblock %}
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" onload="lucide.createIcons()"></script>
+        <script src="{{ asset('js/simple-aos.js') }}"></script>
+        <script>AOS.init();</script>
+    </body>
+</html>
+```
+
+## 4.2 Base Public Layout (ESTRUTURA COMPLETA)
+
+```twig
+{# templates/base_public.html.twig #}
+{% extends 'layouts/pixel_perfect.html.twig' %}
+
+{% block body %}
+    {# TopBar #}
+    <div class="bg-topbar-bg text-primary-foreground py-2 text-sm hidden md:block">
+      <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+            <span>{{ generalData.address|default('Av. Queiroz Filho, 685') }}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+          <span>{{ generalData.phone|default('(16) 3397-4625') }}</span>
+        </div>
+      </div>
+    </div>
+
+    {# Header #}
+    <header class="bg-background/95 backdrop-blur-sm sticky top-0 z-50 border-b" x-data="{ isMenuOpen: false }">
+      <div class="container mx-auto py-4">
+        <div class="flex items-center justify-between">
+          <a href="{{ path('app_home') }}">
+            <img src="{{ asset('assets/images/logo-9AyYdNa.svg') }}" alt="Procordis" class="h-12 w-auto">
+          </a>
+
+          {# Desktop Menu #}
+          <nav class="hidden lg:flex items-center gap-8">
+            <a href="{{ path('app_home') }}" class="{{ app.request.get('_route') == 'app_home' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Início</a>
+            <a href="{{ path('app_about') }}" class="{{ app.request.get('_route') == 'app_about' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Quem Somos</a>
+            
+            {% if app.request.get('_route') == 'app_home' %}
+              <a href="#services">Serviços</a>
+              <a href="#contact">Contato</a>
+            {% else %}
+              <a href="{{ path('app_home') }}#services">Serviços</a>
+              <a href="{{ path('app_home') }}#contact">Contato</a>
+            {% endif %}
+          </nav>
+
+          {# Mobile Toggle #}
+          <button class="lg:hidden p-2" @click="isMenuOpen = !isMenuOpen">
+            <i x-show="!isMenuOpen" data-lucide="menu" class="w-6 h-6"></i>
+            <i x-show="isMenuOpen" data-lucide="x" class="w-6 h-6" style="display: none;"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {# Footer com Newsletter #}
+    <footer class="bg-topbar-bg text-primary-foreground">
+      <div class="border-b border-primary-foreground/20">
+        <div class="container mx-auto py-6">
+          <div class="flex items-center justify-between gap-4">
+            <div class="md:w-1/2">
+              <h3 class="text-xl font-bold mb-1">Fique por dentro</h3>
+              <p class="text-sm opacity-70">Receba dicas de saúde</p>
+            </div>
+            <form class="flex md:w-1/2" x-data="{
+                email: '',
+                loading: false,
+                async submit() {
+                    this.loading = true;
+                    try {
+                        const res = await fetch('/api/newsletter', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: this.email })
+                        });
+                        const result = await res.json();
+                        if (res.ok) {
+                            Swal.fire({
+                                title: 'Inscrição Confirmada!',
+                                text: 'Obrigado por se inscrever.',
+                                icon: 'success',
+                                confirmButtonColor: '#0ea5e9'
+                            });
+                            this.email = '';
+                        } else {
+                            Swal.fire({
+                                title: result.error.includes('Duplicate') ? 'Já Inscrito' : 'Erro',
+                                text: result.error,
+                                icon: 'info'
+                            });
+                        }
+                    } catch(e) { alert('Erro de conexão'); }
+                    finally { this.loading = false; }
+                }
+            }" @submit.prevent="submit">
+              <input type="email" x-model="email" placeholder="Seu e-mail" required class="flex-1 px-4 py-3 rounded-l-lg">
+              <button type="submit" class="px-6 py-3 bg-primary rounded-r-lg" :disabled="loading">
+                <span x-show="!loading">Inscrever</span>
+                <span x-show="loading">...</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {# Footer links ... #}
+    </footer>
+{% endblock %}
+```
+
+## 4.3 Hero Slider Implementation
+
+```twig
+{# templates/home/index.html.twig - Hero Section #}
+<section class="relative min-h-[700px] overflow-hidden" 
+         x-data="{ currentSlide: 0 }" 
+         x-init="setInterval(() => { currentSlide = (currentSlide + 1) % {{ banners|length > 0 ? banners|length : 2 }}; }, 5000);">
+  
+  {% if banners|length > 0 %}
+    {% for banner in banners %}
+      <div class="absolute inset-0 bg-cover bg-center"
+           x-show="currentSlide === {{ loop.index0 }}"
+           x-transition:enter="transition ease-out duration-1000"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           x-transition:leave="transition ease-in duration-1000"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0"
+           style="background-image: url('{{ vich_uploader_asset(banner, 'imageFile') }}')">
+        
+        <div class="absolute inset-0 bg-gradient-to-r from-medical-heading/80 to-transparent"></div>
+        
+        <div class="relative container mx-auto h-full flex items-center py-32">
+          <div class="max-w-xl text-white">
+            <h1 class="text-6xl font-bold mb-4">{{ banner.title }}</h1>
+            {% if banner.subtitle %}<p class="text-2xl mb-8">{{ banner.subtitle }}</p>{% endif %}
+            
+            <div class="flex gap-4">
+              {% if banner.btn1Text %}
+                <a href="{{ banner.btn1Link }}" class="px-6 py-3 border-2 border-white hover:bg-white hover:text-primary transition">
+                  {{ banner.btn1Text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    {# Fallback static content #}
+    <div class="absolute inset-0 bg-cover" style="background-image: url('{{ asset('assets/images/hero.jpg') }}')">
+      {# ... fallback content ... #}
+    </div>
+  {% endif %}
+
+  {# Slider Dots #}
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+    {% for banner in banners %}
+      <button @click="currentSlide = {{ loop.index0 }}" 
+              class="w-3 h-3 rounded-full transition"
+              :class="currentSlide === {{ loop.index0 }} ? 'bg-white' : 'bg-white/50'"></button>
+    {% endfor %}
+  </div>
+</section>
+```
+
+## 4.4 Testimonials Slider
+
+```twig
+<section class="py-24 bg-primary text-white" 
+         x-data="{ 
+            current: 0, 
+            quotes: {{ testimonies|map(t => {text: t.text, author: t.authorName})|json_encode|e('html_attr') }}
+         }"
+         x-init="setInterval(() => { current = (current + 1) % quotes.length }, 8000)">
+  
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12">Depoimentos</h2>
+    
+    <div class="max-w-4xl mx-auto text-center">
+      <template x-for="(quote, index) in quotes" :key="index">
+        <div x-show="current === index"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100">
+          <blockquote class="text-2xl italic mb-6">"<span x-text="quote.text"></span>"</blockquote>
+          <p class="font-bold" x-text="quote.author"></p>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+```
+
+---
+
+# 5. PAINEL ADMINISTRATIVO
+
+## 5.1 Base Admin Layout (COMPLETO)
+
+```twig
+{# templates/admin/base_admin.html.twig #}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin Procordis{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}
+        {{ importmap('app') }}
+        <style>
+            body { font-family: 'Plus Jakarta Sans', sans-serif; }
+            .glass-panel {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            }
+            .glass-sidebar {
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255, 255, 255, 0.4);
+            }
+            .mesh-gradient {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background-image: 
+                    radial-gradient(at 40% 20%, hsla(210,100%,93%,1) 0px, transparent 50%),
+                    radial-gradient(at 80% 0%, hsla(189,100%,96%,1) 0px, transparent 50%),
+                    radial-gradient(at 0% 50%, hsla(341,100%,96%,1) 0px, transparent 50%);
+            }
+        </style>
+    {% endblock %}
+    
+    {% block javascripts %}
+        {{ importmap('app') }}
+        <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                tinymce.init({
+                    selector: '.editor-html',
+                    plugins: 'link image lists',
+                    toolbar: 'undo redo | bold italic | link image | numlist bullist',
+                    branding: false
+                });
+            });
+        </script>
+    {% endblock %}
+</head>
+<body class="mesh-gradient flex h-screen">
+    
+    {# Sidebar #}
+    <aside class="w-72 flex flex-col glass-sidebar h-full">
+        <div class="h-24 flex items-center justify-center border-b">
+            <img src="{{ asset('assets/images/logo-9AyYdNa.svg') }}" alt="Procordis" class="h-10">
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+            <a href="{{ path('admin_dashboard') }}" 
+               class="flex items-center px-4 py-3 rounded-xl {{ app.request.get('_route') == 'admin_dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                Dashboard
+            </a>
+            
+            {# More menu items... #}
+            <a href="{{ path('admin_doctor_index') }}" class="flex items-center px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+                Equipe Médica
+            </a>
+            <a href="{{ path('admin_news_index') }}" class="flex items-center px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+                Notícias
+            </a>
+        </nav>
+    </aside>
+
+    {# Main Content #}
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="h-20 glass-panel m-4 rounded-2xl flex items-center justify-between px-8">
+            <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="flex items-center gap-3">
+                <span>{{ app.user.email }}</span>
+            </div>
+        </header>
+        
+        <main class="flex-1 overflow-auto p-6">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="glass-panel px-6 py-4 rounded-xl mb-6 {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            
+            {% block body %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
+```
+
+## 5.2 Admin CRUD Template Pattern
+
+```twig
+{# templates/admin/doctor/index.html.twig #}
+{% extends 'admin/base_admin.html.twig' %}
+{% block page_title %}Equipe Médica{% endblock %}
+
+{% block body %}
+<div class="glass-panel p-6 rounded-2xl">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">Médicos</h2>
+        <a href="{{ path('admin_doctor_new') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            + Novo Médico
+        </a>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="px-4 py-3 text-left">Nome</th>
+                    <th class="px-4 py-3 text-left">CRM</th>
+                    <th class="px-4 py-3 text-left">Especialidade</th>
+                    <th class="px-4 py-3 text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="px-4 py-3">{{ doctor.name }}</td>
+                    <td class="px-4 py-3">{{ doctor.crm }}</td>
+                    <td class="px-4 py-3">{{ doctor.specialty }}</td>
+                    <td class="px-4 py-3 text-right">
+                        <a href="{{ path('admin_doctor_edit', {id: doctor.id}) }}" 
+                           class="text-blue-600 hover:underline">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+```
+
+---
+
+# 6. COMANDOS E SEEDING
+
+## 6.1 Populate Test Database (COMPLETO)
+
+```php
+<?php
+// src/Command/PopulateTestDatabaseCommand.php
+namespace App\Command;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
+
+class PopulateTestDatabaseCommand extends Command
+{
+    protected static $defaultName = 'app:populate-test-db';
+
+    public function __construct(private EntityManagerInterface $em)
+    {
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $faker = Factory::create('pt_BR');
+        
+        // Clear existing
+        $this->em->createQuery('DELETE FROM App\\Entity\\Doctor')->execute();
+        $this->em->createQuery('DELETE FROM App\\Entity\\Service')->execute();
+        
+        // Create Specialties
+        $specialties = [
+            ['name' => 'Cardiologia', 'icon' => '<i data-lucide="heart" class="w-12 h-12"></i>'],
+            ['name' => 'Neurologia', 'icon' => '<i data-lucide="brain" class="w-12 h-12"></i>'],
+        ];
+        
+        foreach ($specialties as $spec) {
+            $specialty = new \App\Entity\Specialty();
+            $specialty->setName($spec['name']);
+            $specialty->setSvgIcon($spec['icon']);
+            $specialty->setActive(true);
+            $this->em->persist($specialty);
+        }
+        
+        // Create Doctors
+        for ($i = 0; $i < 4; $i++) {
+            $doctor = new \App\Entity\Doctor();
+            $doctor->setName($faker->name);
+            $doctor->setCrm('CRM/SP ' . $faker->numberBetween(10000, 99999));
+            $doctor->setSpecialty($faker->randomElement(['Cardiologista', 'Neurologista']));
+            $doctor->setBio('<p>' . $faker->paragraph(3) . '</p>');
+            $this->em->persist($doctor);
+        }
+        
+        $this->em->flush();
+        
+        $output->writeln('Database populated successfully!');
+        return Command::SUCCESS;
+    }
+}
+```
+
+---
+
+# 7. GUIA DE IMPLEMENTAÇÃO COMPLETO
+
+## 7.1 Setup do Projeto (Do Zero)
+
+```bash
+# 1. Clone/Create project
+composer create-project symfony/skeleton procordis-site
+cd procordis-site
+
+# 2. Install dependencies
+composer require webapp
+composer require doctrine/orm doctrine/doctrine-bundle
+composer require vich/uploader-bundle
+composer require symfony/asset-mapper
+composer require fakerphp/faker --dev
+
+# 3. Configure database
+# Edit .env: DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+
+# 4. Setup Tailwind
+npm install -D tailwindcss
+npx tailwindcss init
+# Configure tailwind.config.js (ver seção 1.3)
+
+# 5. Build CSS
+npx tailwindcss -i ./assets/app.css -o ./public/css/built.css --watch
+
+# 6. Create entities (ver seção 2.1)
+php bin/console make:entity Doctor
+# ... (adicionar campos conforme schema)
+
+# 7. Create database & migrations
+php bin/console doctrine:database:create
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+
+# 8. Populate data
+php bin/console app:populate-test-db
+
+# 9. Create admin user
+php bin/console app:admin-user
+
+# 10. Run server
+symfony server:start
+```
+
+## 7.2 Como Adicionar uma Nova Seção ao Admin
+
+**Exemplo: Adicionar "FAQ"**
+
+```bash
+# 1. Criar entidade
+php bin/console make:entity Faq
+# Adicionar campos: question:text, answer:text, active:boolean, sortOrder:int
+
+# 2. Criar migration
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+
+# 3. Criar Form Type
+# src/Form/FaqType.php (copiar pattern de DoctorType)
+
+# 4. Criar Controller
+# src/Controller/Admin/FaqController.php (copiar pattern de DoctorController)
+
+# 5. Criar templates
+mkdir templates/admin/faq
+# Criar: index.html.twig, new.html.twig, edit.html.twig, _form.html.twig
+
+# 6. Adicionar ao menu admin
+# Editar templates/admin/base_admin.html.twig
+# Adicionar link no sidebar
+
+# 7. Atualizar PopulateTestDatabaseCommand
+# Adicionar criação de FAQs de exemplo
+
+# 8. Testar
+php bin/console app:populate-test-db
+# Acessar /admin/faq
+```
+
+## 7.3 Como Adicionar uma Nova Página Pública
+
+```bash
+# 1. Criar rota no HomeController
+#[Route('/faq', name: 'app_faq')]
+public function faq(FaqRepository $faqRepo): Response
+{
+    return $this->render('home/faq.html.twig', [
+        'faqs' => $faqRepo->findBy(['active' => true], ['sortOrder' => 'ASC'])
+    ]);
+}
+
+# 2. Criar template
+# templates/home/faq.html.twig
+{% extends 'base_public.html.twig' %}
+{% block content %}
+  <section class="py-24">
+    <div class="container">
+      <h1>Perguntas Frequentes</h1>
+      {% for faq in faqs %}
+        <div>
+          <h3>{{ faq.question }}</h3>
+          <p>{{ faq.answer }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
+
+# 3. Adicionar ao menu
+# Editar templates/base_public.html.twig
+<a href="{{ path('app_faq') }}">FAQ</a>
+```
+
+---
+
+# 8. REFERÊNCIA RÁPIDA
+
+## Rotas Principais
+
+| URL | Controller | Ação |
+|-----|------------|------|
+| `/` | HomeController::index | Homepage |
+| `/sobre` | HomeController::about | Quem Somos |
+| `/admin` | DashboardController::index | Admin Dashboard |
+| `/admin/doctor` | DoctorController::index | Lista médicos |
+| `/admin/doctor/new` | DoctorController::new | Cria médico |
+| `/admin/doctor/{id}/edit` | DoctorController::edit | Edita médico |
+| `/api/newsletter` | NewsletterApiController::submit | POST subscribe |
+| `/api/contact` | ContactApiController::submit | POST message |
+
+## Classes CSS Customizadas
+
+```css
+/* Botões */
+.btn-medical-primary     /* Botão primário azul */
+.btn-medical-outline     /* Botão outline */
+
+/* Inputs */
+.form-input             /* Input padrão admin */
+.form-textarea          /* Textarea padrão */
+.editor-html            /* Ativa TinyMCE */
+
+/* Layout */
+.glass-panel            /* Panel com efeito vidro */
+.mesh-gradient          /* Background gradient mesh */
+```
+
+## Comandos Úteis
+
+```bash
+# Limpar cache
+php bin/console cache:clear
+
+# Popular dados
+php bin/console app:populate-test-db
+
+# Criar admin
+php bin/console app:admin-user
+
+# Nova migration
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+
+# Build CSS
+npx tailwindcss -i ./assets/app.css -o ./public/css/built.css
+```
+
+---
+
+**FIM DA DOCUMENTAÇÃO TÉCNICA COMPLETA**
+
+*Este documento deve permitir a reconstrução total do sistema por qualquer desenvolvedor ou IA.*
+*Atualizado em: {{ "now"|date("Y-m-d H:i:s") }}*

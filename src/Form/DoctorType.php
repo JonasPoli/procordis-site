@@ -39,7 +39,7 @@ class DoctorType extends AbstractType
             ->add('bio', TextareaType::class, [
                 'label' => 'Biografia',
                 'required' => false,
-                'attr' => ['rows' => 4, 'class' => 'form-textarea']
+                'attr' => ['rows' => 4, 'class' => 'form-textarea editor-html']
             ])
         ;
     }

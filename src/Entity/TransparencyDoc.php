@@ -35,8 +35,17 @@ class TransparencyDoc
     #[ORM\Column(nullable: true)]
     private ?string $fileName = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Transparency $transparency = null;
+
+    public function __construct()
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -113,5 +122,31 @@ class TransparencyDoc
     public function setFileName(?string $fileName): static
     {
         $this->fileName = $fileName;
+
+        return $this;
+    }
+
+    public function getTransparency(): ?Transparency
+    {
+        return $this->transparency;
+    }
+
+    public function setTransparency(?Transparency $transparency): static
+    {
+        $this->transparency = $transparency;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

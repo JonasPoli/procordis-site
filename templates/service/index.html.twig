@@ -1,51 +1,54 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
-{% block title %}{{ templateService.pageSeo.servicesPageTitle|default('Nossos Serviços - Procordis') }}{% endblock %}
+{% block title %}Nossos Serviços - Procordis{% endblock %}
 
 {% block content %}
-    <!-- Hero Small -->
-    <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
-        <div class="absolute inset-0 z-0">
-             <!-- Use a generic medical pattern or gradient similar to reference -->
-            <div class="absolute inset-0 bg-primary-900/40 mix-blend-multiply"></div>
-             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/medical-icons.png')] opacity-5"></div>
-        </div>
-        <div class="relative z-10 container mx-auto px-6">
-            <h1 class="super-hero-title text-4xl md:text-5xl mb-4 animate-fade-in-up">Nossos Serviços</h1>
-            <p class="super-hero-subtitle animate-fade-in-up delay-100">
-                Tecnologia avançada e atendimento especializado para cuidar do seu coração.
+    {# Hero Section #}
+    <section class="bg-primary/5 py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-medical-heading mb-6" data-aos="fade-up">Nossos Serviços</h1>
+            <p class="text-lg text-medical-text max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                Oferecemos uma ampla gama de exames e especialidades cardiológicas com tecnologia de ponta e equipe qualificada.
             </p>
         </div>
-    </div>
+    </section>
 
-    <!-- Services Grid -->
-    <section class="py-24 bg-slate-50">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {# Services Grid #}
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for service in services %}
-                    <a href="{{ path('app_service_show', {'slug': service.slug}) }}" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition duration-300 group block" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
-                         <div class="w-20 h-20 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-8 group-hover:bg-primary-600 group-hover:text-white transition duration-300 shadow-sm group-hover:shadow-lg">
-                             {% if service.icon %}
-                                <i class="{{ service.icon }} text-4xl"></i>
-                            {% else %}
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                            {% endif %}
+                    <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <div class="w-16 h-16 bg-blue-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            {{ service.icon|raw }}
                         </div>
-                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3 group-hover:text-primary-600 transition-colors">{{ service.title }}</h3>
-                        <p class="text-slate-500 line-clamp-3 mb-6 text-sm leading-relaxed">{{ service.description }}</p>
-                        <span class="text-primary-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
-                            Saiba mais <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </span>
-                    </a>
-                {% else %}
-                    <div class="text-center col-span-3 py-20">
-                         <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        </div>
-                        <p class="text-slate-500 text-lg">Nenhum serviço disponível no momento.</p>
+                        
+                        <h3 class="text-2xl font-bold text-medical-heading mb-4 group-hover:text-primary transition-colors">
+                            {{ service.title }}
+                        </h3>
+                        
+                        <p class="text-medical-text mb-6 flex-grow line-clamp-3">
+                            {{ service.description }}
+                        </p>
+                        
+                        <a href="{{ path('app_service_show', {slug: service.slug}) }}" class="inline-flex items-center text-primary font-semibold group-hover:gap-2 transition-all mt-auto">
+                            Saiba mais <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </a>
                     </div>
                 {% endfor %}
             </div>
+        </div>
+    </section>
+
+    {# Contact CTA #}
+    <section class="py-16 bg-medical-blue text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Precisa de um atendimento especializado?</h2>
+            <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Agende sua consulta ou exame agora mesmo pelo nosso WhatsApp ou telefone.</p>
+            <a href="https://wa.me/551633974625" class="inline-flex items-center px-8 py-4 bg-white text-medical-blue font-bold rounded-xl hover:bg-slate-100 transition-colors">
+                <i data-lucide="message-circle" class="w-5 h-5 mr-2"></i>
+                Agendar pelo WhatsApp
+            </a>
         </div>
     </section>
 {% endblock %}

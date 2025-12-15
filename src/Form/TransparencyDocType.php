@@ -55,7 +55,7 @@ class TransparencyDocType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'Descrição',
                 'required' => false,
-                'attr' => ['rows' => 2, 'class' => 'form-textarea']
+                'attr' => ['rows' => 2, 'class' => 'form-textarea editor-html']
             ])
         ;
     }

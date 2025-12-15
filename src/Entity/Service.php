@@ -9,9 +9,19 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class Service
 {
+    #[ORM\PrePersist]
+    public function computeSlug(): void
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
+            $this->slug = strtolower($slugger->slug((string) $this->title));
+        }
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

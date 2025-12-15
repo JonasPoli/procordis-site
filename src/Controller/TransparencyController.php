@@ -2,26 +2,33 @@
 
 namespace App\Controller;
 
-use App\Repository\TransparencyDocRepository;
+use App\Repository\TransparencyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/transparencia')]
 class TransparencyController extends AbstractController
 {
-    #[Route('/transparencia', name: 'app_transparency')]
-    public function index(TransparencyDocRepository $docRepository): Response
+    #[Route('/', name: 'app_transparency_index', methods: ['GET'])]
+    public function index(TransparencyRepository $transparencyRepository): Response
     {
-        $docs = $docRepository->findBy([], ['year' => 'DESC', 'month' => 'DESC']);
+        return $this->render('transparency/index.html.twig', [
+            'transparencies' => $transparencyRepository->findActive(),
+        ]);
+    }
 
-        // Group by Year
-        $groupedDocs = [];
-        foreach ($docs as $doc) {
-            $groupedDocs[$doc->getYear()][] = $doc;
+    #[Route('/{slug}', name: 'app_transparency_show', methods: ['GET'])]
+    public function show(string $slug, TransparencyRepository $transparencyRepository): Response
+    {
+        $transparency = $transparencyRepository->findOneBy(['slug' => $slug, 'isActive' => true]);
+
+        if (!$transparency) {
+            throw $this->createNotFoundException('Item de transparência não encontrado.');
         }
 
-        return $this->render('transparency/index.html.twig', [
-            'grouped_docs' => $groupedDocs,
+        return $this->render('transparency/show.html.twig', [
+            'transparency' => $transparency,
         ]);
     }
 }

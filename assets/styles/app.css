@@ -1,5 +1,392 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
 
-body {
-    background-color: skyblue;
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 210 11% 15%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 210 11% 15%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 210 11% 15%;
+
+        --primary: 199 100% 36%;
+        --primary-foreground: 0 0% 100%;
+        --primary-light: 199 85% 45%;
+        --primary-dark: 199 100% 28%;
+
+        --secondary: 210 20% 96%;
+        --secondary-foreground: 210 11% 15%;
+
+        --muted: 210 20% 96%;
+        --muted-foreground: 210 11% 45%;
+
+        --accent: 199 100% 36%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 210 20% 90%;
+        --input: 210 20% 90%;
+        --ring: 199 100% 36%;
+
+        --radius: 0.25rem;
+
+        /* Custom colors */
+        --medical-blue: 199 100% 36%;
+        --medical-blue-light: 199 85% 45%;
+        --medical-blue-dark: 199 100% 28%;
+        --medical-gray: 210 20% 96%;
+        --medical-text: 210 11% 35%;
+        --medical-heading: 210 11% 20%;
+        --topbar-bg: 210 11% 20%;
+
+        --sidebar-background: 0 0% 98%;
+        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 240 5.9% 10%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 240 4.8% 95.9%;
+        --sidebar-accent-foreground: 240 5.9% 10%;
+        --sidebar-border: 220 13% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+
+    .dark {
+        --background: 210 11% 10%;
+        --foreground: 0 0% 95%;
+        --card: 210 11% 15%;
+        --card-foreground: 0 0% 95%;
+        --popover: 210 11% 15%;
+        --popover-foreground: 0 0% 95%;
+        --primary: 199 100% 45%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 210 11% 20%;
+        --secondary-foreground: 0 0% 95%;
+        --muted: 210 11% 25%;
+        --muted-foreground: 210 11% 65%;
+        --accent: 199 100% 45%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 62% 30%;
+        --destructive-foreground: 0 0% 95%;
+        --border: 210 11% 25%;
+        --input: 210 11% 25%;
+        --ring: 199 100% 45%;
+    }
+}
+
+@layer base {
+    * {
+        border-color: hsl(var(--border));
+    }
+
+    body {
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: 'Lato', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Montserrat', sans-serif;
+    }
+}
+
+@layer components {
+    .container {
+        max-width: 80rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid transparent;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        color: white;
+        background-color: #2563eb;
+        transition: all 150ms ease-in-out;
+    }
+
+    .btn:hover {
+        background-color: #1d4ed8;
+    }
+
+    .hero {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .hero-Overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-Content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+    }
+
+    .hero-Subtitle {
+        display: block;
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: #bfdbfe;
+        margin-bottom: 1rem;
+    }
+
+    .hero-Title {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .hero-Title {
+            font-size: 3.75rem;
+        }
+    }
+
+    .features-Section {
+        position: relative;
+        z-index: 20;
+        margin-top: -6rem;
+        padding-bottom: 5rem;
+    }
+
+    .features-Grid {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .features-Grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    .feature-Card {
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transition: transform 300ms;
+    }
+
+    .feature-Card:hover {
+        transform: translateY(-0.5rem);
+    }
+
+    .section-title {
+        position: relative;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 3rem;
+        height: 0.125rem;
+        background-color: hsl(var(--primary));
+    }
+
+    .section-title-center::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* btn-medical base styles included in specific classes to avoid @apply issues */
+    .btn-medical {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 300ms;
+        border-radius: 0.25rem;
+    }
+
+    .btn-medical-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 300ms;
+        border-radius: 0.25rem;
+
+        background-color: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+    }
+
+    .btn-medical-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-medical-outline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 300ms;
+        border-radius: 0.25rem;
+
+        border: 2px solid currentColor;
+        background-color: transparent;
+    }
+
+    .btn-medical-outline:hover {
+        background-color: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+        border-color: hsl(var(--primary));
+    }
+
+    .btn-medical-white {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 300ms;
+        border-radius: 0.25rem;
+
+        border: 2px solid white;
+        color: white;
+        background-color: transparent;
+    }
+
+    .btn-medical-white:hover {
+        background-color: white;
+        color: hsl(var(--primary));
+    }
+
+    .info-card {
+        padding: 1.5rem;
+        transition: all 300ms;
+    }
+
+    .service-icon {
+        width: 4rem;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: hsl(var(--primary));
+        margin-bottom: 1rem;
+    }
+
+    .department-card {
+        text-align: center;
+        padding: 1.5rem;
+        transition: all 300ms;
+        cursor: pointer;
+    }
+
+    .department-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .department-icon {
+        width: 5rem;
+        height: 5rem;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: hsl(var(--primary));
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.6s ease-out forwards;
+    }
+
+    .animate-slide-left {
+        animation: slideLeft 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideLeft {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 }

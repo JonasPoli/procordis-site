@@ -57,20 +57,6 @@
 
 {{ form_end(form) }}
 
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/fcs9plrzts8amx5w8gl9gfzn9qsyg47hdbtc171zu8o9yoqd/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    tinymce.init({
-        selector: 'textarea.editor',
-        menubar: false,
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'blocks | undo redo | fontsize | bold italic underline strikethrough | numlist bullist | removeformat | link image',
-        block_formats: 'Parágrafo=p; Título 2=h2; Título 3=h3; Título 4=h4',
-        height: 500,
-        branding: false
-    });
-</script>
-
 <!-- Slug & SEO Scripts -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -1,73 +1,196 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
 {% block title %}{{ news.seoTitle|default(news.title) }} - Procordis{% endblock %}
-{% block description %}{{ news.seoDescription|default(news.summary) }}{% endblock %}
+{% block meta_description %}{{ news.seoDescription|default(news.summary) }}{% endblock %}
 
 {% block content %}
-    <!-- Header/Breadcrumb -->
-    <div class="bg-white pt-32 pb-12 border-b border-slate-100">
-        <div class="container mx-auto px-6 max-w-4xl text-center">
-            
-            <div class="flex items-center justify-center gap-3 text-sm font-bold uppercase tracking-wider text-primary-600 mb-6">
-                 <span class="px-3 py-1 bg-primary-50 rounded-full">Notícias</span>
-                 <span class="text-slate-300">•</span>
-                 <span>{{ news.publishedAt|date('d de F, Y') }}</span>
-            </div>
-
-            <h1 class="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-slate-900 leading-tight mb-8">{{ news.title }}</h1>
-            
-             <div class="flex items-center justify-center gap-4">
-                 <!-- Author placeholder or generic -->
-                 <div class="flex items-center text-left">
-                     <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-400 mr-3">
-                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                     </div>
-                     <div>
-                         <p class="text-sm font-bold text-slate-900">Equipe Procordis</p>
-                         <p class="text-xs text-slate-500">Conteúdo Médico</p>
-                     </div>
-                 </div>
-             </div>
-
+    {# Breadcrumb #}
+    <div class="bg-slate-50 border-b border-slate-200">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex text-sm text-slate-500" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="{{ path('app_home') }}" class="hover:text-blue-600">Home</a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-3 h-3 text-slate-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                            </svg>
+                            <a href="{{ path('app_news') }}" class="hover:text-blue-600 ml-1 md:ml-2">Notícias</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-3 h-3 text-slate-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                            </svg>
+                            <span class="ml-1 md:ml-2 text-slate-700 font-medium truncate max-w-[200px] md:max-w-xs">{{ news.title }}</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
         </div>
     </div>
 
-    <!-- Content -->
-    <section class="py-16 bg-white min-h-screen">
-        <div class="container mx-auto px-6 max-w-4xl">
-            {% if news.imageName %}
-                <div class="rounded-3xl overflow-hidden shadow-2xl mb-12 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
-                    <img src="{{ asset('images/news/' ~ news.imageName) }}" alt="{{ news.imageAlt|default(news.title) }}" class="w-full">
-                </div>
-            {% endif %}
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="lg:flex gap-12">
+                {# Main Content #}
+                <main class="lg:w-2/3">
+                    {# Main Image #}
+                    {% if news.imageName %}
+                        <div class="rounded-2xl overflow-hidden mb-8 shadow-sm">
+                            <img src="{{ vich_uploader_asset(news, 'imageFile') }}" alt="{{ news.imageAlt|default(news.title) }}" class="w-full object-cover">
+                        </div>
+                    {% endif %}
 
-            <div class="prose prose-lg prose-slate prose-headings:font-display prose-headings:text-slate-900 prose-p:leading-8 prose-a:text-primary-600 prose-img:rounded-xl max-w-none text-slate-600">
-                {{ news.content|raw }}
-            </div>
-            
-             <!-- Share / Navigation Footer -->
-            <div class="mt-20 pt-10 border-t border-slate-100">
-                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div>
-                         <span class="text-slate-500 font-bold uppercase tracking-wide text-xs mr-4">Compartilhar:</span>
-                         <div class="inline-flex space-x-3">
-                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}" target="_blank" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
-                                 <i class="fab fa-facebook-f"></i>
-                             </a>
-                             <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&text={{ news.title }}" target="_blank" class="w-10 h-10 bg-black/5 text-black rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-colors">
-                                 <i class="fab fa-x-twitter"></i>
-                             </a>
-                             <a href="https://api.whatsapp.com/send?text={{ news.title }} - {{ app.request.uri }}" target="_blank" class="w-10 h-10 bg-green-50 text-green-600 rounded-full flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors">
-                                 <i class="fab fa-whatsapp"></i>
-                             </a>
-                         </div>
+                    {# Article Header #}
+                    <header class="mb-8">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for category in news.categories %}
+                                <a href="{{ path('app_news', {'category': category.slug}) }}" class="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors uppercase tracking-wider">
+                                    {{ category.title }}
+                                </a>
+                            {% endfor %}
+                        </div>
+
+                        <h1 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-4 lh-tight">{{ news.title }}</h1>
+                        
+                        <div class="flex items-center text-medical-text text-sm gap-4 border-b border-border pb-6 mb-6">
+                            <span class="flex items-center gap-1">
+                                <i data-lucide="calendar" class="w-4 h-4 text-primary"></i>
+                                {{ news.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
+                                    'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
+                                    'April': 'Abril', 'May': 'Maio', 'June': 'Junho', 
+                                    'July': 'Julho', 'August': 'Agosto', 'September': 'Setembro', 
+                                    'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
+                                }) }}
+                            </span>
+                        </div>
+                    </header>
+
+                    {# Article Content #}
+                    <div class="prose prose-lg max-w-none text-medical-text prose-headings:text-medical-heading prose-headings:font-heading prose-a:text-primary hover:prose-a:text-primary-dark prose-img:rounded-xl mb-12">
+                         {% if news.summary %}
+                            <p class="lead font-medium text-medical-heading mb-8">{{ news.summary }}</p>
+                        {% endif %}
+                        {{ news.content|raw }}
                     </div>
-                    
-                    <a href="{{ path('app_news') }}" class="px-8 py-4 bg-slate-50 text-slate-700 font-bold rounded-full hover:bg-slate-100 transition-colors flex items-center group">
-                        <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        Voltar para Notícias
-                    </a>
-                 </div>
+
+                    {# Share #}
+                    <div class="border-t border-b border-border py-8 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <span class="font-bold text-medical-heading text-lg">Compartilhe este artigo:</span>
+                        <div class="flex gap-3">
+                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}&quote={{ news.title|url_encode }}" target="_blank" class="w-10 h-10 flex items-center justify-center bg-blue-600 text-white rounded-full hover:scale-110 transition-transform shadow-lg shadow-blue-500/20" style="background-color: #1877F2 !important;" aria-label="Facebook">
+                                <i data-lucide="facebook" class="w-5 h-5"></i>
+                             </a>
+                             <a href="https://twitter.com/intent/tweet?text={{ news.title|url_encode }}&url={{ app.request.uri }}" target="_blank" class="w-10 h-10 flex items-center justify-center bg-sky-500 text-white rounded-full hover:scale-110 transition-transform shadow-lg shadow-sky-400/20" style="background-color: #1DA1F2 !important;" aria-label="Twitter">
+                                <i data-lucide="twitter" class="w-5 h-5"></i>
+                             </a>
+                             <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri }}&title={{ news.title|url_encode }}" target="_blank" class="w-10 h-10 flex items-center justify-center bg-blue-700 text-white rounded-full hover:scale-110 transition-transform shadow-lg shadow-blue-700/20" style="background-color: #0A66C2 !important;" aria-label="LinkedIn">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                             </a>
+                             <a href="mailto:?subject={{ news.title|url_encode }}&body={{ app.request.uri }}" class="w-10 h-10 flex items-center justify-center bg-slate-600 text-white rounded-full hover:scale-110 transition-transform shadow-lg shadow-slate-500/20" style="background-color: #475569 !important;" aria-label="Email">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                             </a>
+                        </div>
+                    </div>
+
+                     {# Navigation #}
+                    <div class="flex justify-between items-center py-6 border-t border-border mt-8 gap-4">
+                         {% if previousNews %}
+                            <a href="{{ path('app_news_detail', {'slug': previousNews.slug}) }}" class="flex items-center gap-4 group text-left flex-1">
+                                <div class="w-12 h-12 rounded-full bg-slate-50 border border-border flex items-center justify-center text-medical-text group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all shadow-sm">
+                                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                                </div>
+                                <div class="hidden sm:block">
+                                    <div class="text-xs text-medical-text/60 font-medium uppercase tracking-wider mb-1">Post Anterior</div>
+                                    <div class="text-sm font-bold text-medical-heading group-hover:text-primary line-clamp-1 max-w-[200px]">{{ previousNews.title }}</div>
+                                </div>
+                            </a>
+                        {% else %}
+                            <div class="flex-1"></div>
+                        {% endif %}
+
+                        <a href="{{ path('app_news') }}" class="btn btn-primary bg-primary text-white hover:bg-primary/90 hover:-translate-y-0.5 border-0 font-bold px-6 py-3 rounded-xl transition-all whitespace-nowrap inline-flex items-center gap-2 shadow-md">
+                            Ver todas <i data-lucide="grid" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </main>
+
+                {# Sidebar #}
+                <aside class="lg:w-1/3 mt-12 lg:mt-0">
+                    <div class="sticky top-24 space-y-8">
+                        {# Search Widget #}
+                        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                             <h3 class="text-lg font-bold text-medical-heading mb-4">Buscar</h3>
+                             <form action="{{ path('app_news') }}" method="get" class="relative">
+                                <input type="search" name="q" placeholder="Palavra-chave..." class="w-full pl-12 pr-4 py-3 rounded-full border border-border focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm text-sm text-medical-text" value="{{ app.request.query.get('q') }}">
+                                <i data-lucide="search" class="w-5 h-5 text-medical-placeholder absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                            </form>
+                        </div>
+
+                         {# Recent Posts Widget #}
+                        {% if recentNews %}
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 class="text-lg font-bold text-medical-heading mb-6 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-primary rounded-full"></span>
+                                    Posts Recentes
+                                </h3>
+                                <div class="space-y-6">
+                                    {% for item in recentNews %}
+                                        <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="flex gap-4 group">
+                                            <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-slate-50 relative border border-border">
+                                                {% if item.imageName %}
+                                                    <img src="{{ vich_uploader_asset(item, 'imageFile') }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                                {% else %}
+                                                     <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                                        <i data-lucide="image" class="w-8 h-8"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="text-sm font-bold text-medical-heading group-hover:text-primary line-clamp-2 mb-1 group-hover:underline decoration-primary/30 underline-offset-2 transition-all">
+                                                    {{ item.title }}
+                                                </h4>
+                                                <time class="text-xs text-medical-text/60 block">{{ item.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
+                                    'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
+                                    'April': 'Abril', 'May': 'Maio', 'June': 'Junho', 
+                                    'July': 'Julho', 'August': 'Agosto', 'September': 'Setembro', 
+                                    'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
+                                }) }}</time>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                         {# Categories Widget #}
+                        {% if sidebarCategories %}
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 class="text-lg font-bold text-medical-heading mb-6 flex items-center gap-2">
+                                     <span class="w-1 h-6 bg-secondary rounded-full"></span>
+                                    Categorias
+                                </h3>
+                                <ul class="space-y-2">
+                                    {% for category in sidebarCategories %}
+                                        <li>
+                                            <a href="{{ path('app_news', {'category': category.slug}) }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-medical-text hover:text-primary transition-colors group">
+                                                <span>{{ category.title }}</span>
+                                                <span class="bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                                                    {{ category.news|length }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                </aside>
             </div>
         </div>
     </section>

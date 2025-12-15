@@ -3,6 +3,7 @@ twig:
     form_themes: ['form/tailwind_glass_theme.html.twig']
     globals:
         templateService: '@App\Service\TemplateService'
+        tinymce_api_key: '%env(TINYMCE)%'
 
 when@test:
     twig:

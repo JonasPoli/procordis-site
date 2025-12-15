@@ -1,68 +1,109 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
-{% block title %}{{ templateService.pageSeo.newsPageTitle|default('Notícias e Artigos - Procordis') }}{% endblock %}
+{% block title %}Notícias - Procordis{% endblock %}
+{% block meta_description %}Fique por dentro das últimas notícias, artigos e atualizações da Procordis.{% endblock %}
 
 {% block content %}
-    <!-- Hero Small -->
-    <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-primary-900/40 mix-blend-multiply"></div>
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/medical-icons.png')] opacity-5"></div>
-        <div class="relative z-10 container mx-auto px-6">
-            <h1 class="super-hero-title text-4xl md:text-5xl mb-4 animate-fade-in-up">Notícias e Artigos</h1>
-            <p class="super-hero-subtitle animate-fade-in-up delay-100">
-                Fique por dentro das últimas notícias, artigos de saúde e novidades da Procordis.
-            </p>
-        </div>
-    </div>
-
-    <!-- News Grid -->
-    <section class="py-24 bg-slate-50">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for item in news_list %}
-                    <article class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full border border-slate-100 group" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
-                        <a href="{{ path('app_news_show', {'slug': item.slug}) }}" class="block h-64 overflow-hidden relative">
-                             <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 duration-500"></div>
-                             {% if item.imageName %}
-                                <img src="{{ asset('images/news/' ~ item.imageName) | imagine_filter('news_thumb') }}" alt="{{ item.title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                            {% else %}
-                                <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
-                                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
-                                </div>
-                            {% endif %}
-                            <div class="absolute top-4 left-4 z-20">
-                                <span class="px-3 py-1 bg-white/90 backdrop-blur text-primary-900 text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
-                                    {{ item.publishedAt|date('d M, Y') }}
-                                </span>
-                            </div>
-                        </a>
-                        <div class="p-8 flex-1 flex flex-col">
-                            <h3 class="text-xl font-display font-bold mb-3 text-slate-900 group-hover:text-primary-600 transition-colors leading-snug">
-                                <a href="{{ path('app_news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
-                            </h3>
-                            <p class="text-slate-500 line-clamp-3 mb-6 flex-1 text-sm leading-relaxed">
-                                {{ item.summary }}
-                            </p>
-                            <a href="{{ path('app_news_show', {'slug': item.slug}) }}" class="text-primary-600 font-bold text-sm hover:text-primary-800 mt-auto inline-flex items-center group-hover:translate-x-1 transition-transform">
-                                Ler artigo completo <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </a>
-                        </div>
-                    </article>
+    {# Hero Section #}
+    {# Hero Section #}
+    <section class="relative py-20 overflow-hidden">
+        <div class="absolute inset-0 bg-secondary/30"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="container relative z-10 mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-heading font-bold text-medical-heading mb-6" data-aos="fade-up">
+                {% if searchQuery %}
+                    Resultados para "{{ searchQuery }}"
+                {% elseif currentCategory %}
+                    Categoria: {{ currentCategory.title }}
                 {% else %}
-                    <div class="col-span-3 text-center py-20">
-                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-700">Nenhuma notícia encontrada</h3>
-                        <p class="text-slate-500 mt-2">Em breve teremos novidades para você.</p>
-                    </div>
-                {% endfor %}
-            </div>
+                    Notícias e Artigos
+                {% endif %}
+            </h1>
+            <p class="text-xl text-medical-text max-w-2xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="100">
+                Acompanhe as novidades da Procordis e informações importantes sobre saúde cardiovascular.
+            </p>
 
-            <!-- Pagination (if implemented in controller) -->
-            {% if news_list.getPageCount is defined and news_list.getPageCount > 1 %}
-                <div class="mt-12 flex justify-center">
-                    {{ knp_pagination_render(news_list) }}
+            {# Search & Filter #}
+            <div class="max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <form action="{{ path('app_news') }}" method="get" class="relative">
+                    <input type="search" name="q" value="{{ searchQuery }}" placeholder="Buscar notícias..." class="w-full pl-12 pr-4 py-3 rounded-full border border-border focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm text-medical-text">
+                    <svg class="w-6 h-6 text-medical-placeholder absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </form>
+                {% if searchQuery or currentCategory %}
+                     <div class="mt-4">
+                        <a href="{{ path('app_news') }}" class="text-sm text-primary hover:text-medical-heading underline flex items-center justify-center gap-1">
+                            <i data-lucide="x" class="w-4 h-4"></i> Limpar filtros
+                        </a>
+                     </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    {# Content Section #}
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            {% if allNews|length > 0 %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for news in allNews %}
+                        <article class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-border flex flex-col h-full group" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                            <a href="{{ path('app_news_detail', {'slug': news.slug}) }}" class="block overflow-hidden rounded-t-2xl relative h-56">
+                                {% if news.imageName %}
+                                    <img src="{{ vich_uploader_asset(news, 'imageFile') }}" alt="{{ news.title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                {% else %}
+                                    <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-300">
+                                        <i data-lucide="image" class="w-12 h-12"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </a>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    {% for category in news.categories %}
+                                        <a href="{{ path('app_news', {'category': category.slug}) }}" class="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors uppercase tracking-wider">
+                                            {{ category.title }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                                <div class="text-xs font-semibold text-primary mb-2 flex items-center gap-1">
+                                     <i data-lucide="calendar" class="w-4 h-4"></i>
+                                     {{ news.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
+                                    'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
+                                    'April': 'Abril', 'May': 'Maio', 'June': 'Junho', 
+                                    'July': 'Julho', 'August': 'Agosto', 'September': 'Setembro', 
+                                    'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
+                                }) }}
+                                </div>
+                                <h2 class="text-xl font-heading font-bold text-medical-heading mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                                    <a href="{{ path('app_news_detail', {'slug': news.slug}) }}">{{ news.title }}</a>
+                                </h2>
+                                <p class="text-medical-text text-sm line-clamp-3 mb-4 flex-1">
+                                    {{ news.summary }}
+                                </p>
+                                <a href="{{ path('app_news_detail', {'slug': news.slug}) }}" class="text-primary font-bold text-sm hover:underline inline-flex items-center gap-1 mt-auto group-hover:gap-2 transition-all">
+                                    Ler mais
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-20 bg-slate-50 rounded-3xl border border-border">
+                    <div class="inline-flex items-center justify-center p-4 bg-white rounded-full mb-4 text-slate-400 shadow-sm">
+                        <i data-lucide="search-x" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-medical-heading mb-2">Nenhuma notícia encontrada</h3>
+                    <p class="text-medical-text max-w-md mx-auto mb-6">
+                        {% if searchQuery %}
+                            Não encontramos resultados para sua busca. Tente termos diferentes.
+                        {% else %}
+                            Ainda não há notícias publicadas nesta categoria.
+                        {% endif %}
+                    </p>
+                    <a href="{{ path('app_news') }}" class="btn btn-primary inline-flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Ver todas as notícias
+                    </a>
                 </div>
             {% endif %}
         </div>

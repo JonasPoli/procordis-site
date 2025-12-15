@@ -1,0 +1,61 @@
+{{ form_start(form) }}
+    <div class="grid gap-6">
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.title) }}
+                {{ form_errors(form.title) }}
+            </div>
+             <div>
+                {{ form_label(form.subtitle, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.subtitle) }}
+                {{ form_errors(form.subtitle) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.imageFile, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+            {{ form_widget(form.imageFile, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+            {{ form_errors(form.imageFile) }}
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 border-t pt-4">
+            <div>
+                {{ form_label(form.btn1Text, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.btn1Text) }}
+            </div>
+             <div>
+                {{ form_label(form.btn1Link, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.btn1Link) }}
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.btn2Text, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.btn2Text) }}
+            </div>
+             <div>
+                {{ form_label(form.btn2Link, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.btn2Link) }}
+            </div>
+        </div>
+
+        <div class="flex gap-6 items-center border-t pt-4">
+            <div class="w-32">
+                {{ form_label(form.sortOrder, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-1'}}) }}
+                {{ form_widget(form.sortOrder) }}
+            </div>
+            <div class="pt-6">
+                {{ form_widget(form.active) }}
+                {{ form_label(form.active, null, {'label_attr': {'class': 'ml-2 text-sm font-medium text-slate-700'}}) }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-8 flex justify-end">
+        <button class="btn bg-blue-600 text-white px-6 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition font-medium">
+            {{ button_label|default('Salvar') }}
+        </button>
+    </div>
+{{ form_end(form) }}

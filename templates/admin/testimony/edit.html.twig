@@ -1,0 +1,18 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block page_title %}Editar Depoimento{% endblock %}
+
+{% block body %}
+    <div class="glass-panel text-sm px-6 py-6 rounded-xl shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-lg font-bold">Editar Depoimento</h2>
+            <a href="{{ path('admin_testimony_index') }}" class="text-slate-500 hover:text-slate-700 transition-colors">&larr; Voltar</a>
+        </div>
+        
+        {{ include('admin/testimony/_form.html.twig', {'button_label': 'Atualizar'}) }}
+        
+        <div class="mt-8 border-t border-slate-200 pt-6">
+            {{ include('admin/testimony/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

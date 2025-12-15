@@ -1,58 +1,36 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
-{% block title %}Transparência e Prestação de Contas - Procordis{% endblock %}
+{% block title %}Portal da Transparência{% endblock %}
 
 {% block content %}
-    <!-- Hero Small -->
-    <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/medical-icons.png')] opacity-10"></div>
-        <div class="relative z-10 container mx-auto px-6">
-            <h1 class="text-4xl md:text-5xl font-display font-bold mb-4 animate-fade-in-up">Transparência</h1>
-            <p class="text-primary-200 text-lg max-w-2xl mx-auto animate-fade-in-up delay-100">
-                Acesso aos documentos, relatórios financeiros e prestação de contas da Associação Procordis.
-            </p>
+    <section class="py-12 bg-primary/5">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-4">Portal da Transparência</h1>
+            <p class="text-medical-text text-lg">Acesse documentos e informações públicas.</p>
         </div>
-    </div>
+    </section>
 
-    <!-- Documents List -->
-    <section class="py-24 bg-slate-50">
-        <div class="container mx-auto px-6 max-w-4xl">
-            
-            {% if grouped_docs is empty %}
-                <div class="text-center py-20 bg-white rounded-2xl shadow-sm border border-slate-100">
-                    <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-slate-700">Nenhum documento disponível no momento.</h3>
-                    <p class="text-slate-500 mt-2">Por favor, volte mais tarde.</p>
-                </div>
-            {% else %}
-                {% for year, docs_in_year in grouped_docs %}
-                    <div class="mb-12 last:mb-0" data-aos="fade-up">
-                        <h2 class="text-2xl font-display font-bold text-primary-900 mb-6 flex items-center">
-                            <span class="w-2 h-8 bg-primary-500 rounded-full mr-3"></span>
-                            {{ year }}
-                        </h2>
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden divide-y divide-slate-100">
-                            {% for doc in docs_in_year %}
-                                <div class="p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-slate-50 transition-colors group">
-                                    <div class="mb-4 md:mb-0">
-                                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-primary-600 transition-colors">
-                                            {{ doc.title }}
-                                        </h3>
-                                        <p class="text-slate-500 text-sm mt-1">
-                                            Publicado em: {{ doc.publishedAt|date('d/m/Y') }}
-                                        </p>
-                                    </div>
-                                    <a href="{{ vich_uploader_asset(doc, 'file') }}" target="_blank" class="inline-flex items-center justify-center px-4 py-2 border border-primary-100 text-primary-600 font-bold rounded-lg hover:bg-primary-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                        Baixar PDF
-                                    </a>
-                                </div>
-                            {% endfor %}
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for item in transparencies %}
+                    <a href="{{ path('app_transparency_show', {slug: item.slug}) }}" class="block p-6 bg-white border border-border rounded-xl shadow-sm hover:shadow-md hover:border-primary transition-all group">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                <i data-lucide="file-text" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-medical-heading group-hover:text-primary transition-colors">{{ item.title }}</h2>
                         </div>
-                    </div>
+                        <p class="text-medical-text text-sm line-clamp-2">{{ item.description }}</p>
+                        <div class="mt-4 text-xs font-semibold text-primary flex items-center gap-1">
+                            {{ item.documents|length }} Documentos
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <p class="text-medical-text">Nenhum item de transparência encontrado.</p>
                 {% endfor %}
-            {% endif %}
-
+            </div>
         </div>
     </section>
 {% endblock %}

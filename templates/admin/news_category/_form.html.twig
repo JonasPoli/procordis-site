@@ -1,0 +1,19 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    
+    <div>
+        {{ form_row(form.title) }}
+    </div>
+
+    <div>
+        {{ form_row(form.slug, {'help': 'Deixe em branco para gerar automaticamente do título'}) }}
+    </div>
+
+    <div>
+        {{ form_row(form.active) }}
+    </div>
+
+    <div class="flex justify-end pt-6">
+        <button class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all font-semibold">{{ button_label|default('Salvar') }}</button>
+    </div>
+
+{{ form_end(form) }}
