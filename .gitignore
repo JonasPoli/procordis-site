@@ -24,7 +24,7 @@ public/images/*
 ###> symfony/asset-mapper ###
 #/assets/vendor/
 ###< symfony/asset-mapper ###
-composer.phar
+#composer.phar
 
 **/._*
 ._*
