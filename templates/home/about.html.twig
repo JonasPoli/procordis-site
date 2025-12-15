@@ -56,7 +56,7 @@
                         <i data-lucide="target" class="w-7 h-7"></i>
                     </div>
                     <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Missão</h3>
-                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.mission|default('Proporcionar saúde cardiovascular de alta qualidade.') }}</p>
+                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.mission|default('Proporcionar saúde cardiovascular de alta qualidade.')|raw }}</p>
                 </div>
 
                 {# Vision #}
@@ -65,7 +65,7 @@
                         <i data-lucide="eye" class="w-7 h-7"></i>
                     </div>
                     <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Visão</h3>
-                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.vision|default('Ser referência regional em cardiologia.') }}</p>
+                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.vision|default('Ser referência regional em cardiologia.')|raw }}</p>
                 </div>
 
                 {# Values #}
@@ -74,7 +74,7 @@
                         <i data-lucide="heart-handshake" class="w-7 h-7"></i>
                     </div>
                     <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Valores</h3>
-                    <div class="text-medical-text dark:text-muted-foreground leading-relaxed whitespace-pre-line">{{ about.ourValues|default('Ética\nHumanização')|nl2br }}</div>
+                    <div class="text-medical-text dark:text-muted-foreground leading-relaxed whitespace-pre-line">{{ about.ourValues|default('Ética\nHumanização')|nl2br|raw }}</div>
                 </div>
             </div>
         </div>
@@ -85,11 +85,11 @@
     <section class="py-16 lg:py-24 bg-medical-gray">
         <div class="container mx-auto">
             <h2 class="text-3xl font-heading font-bold text-medical-heading section-title section-title-center text-center mb-16" data-aos="fade-up">Nossa Linha do Tempo</h2>
-            <div class="relative max-w-6xl mx-auto px-4 md:px-8">
+            <div class="relative max-w-6xl mx-auto">
                 {# Central Line #}
                 <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-300 md:-translate-x-1/2"></div>
-
-                {# Timeline Items #}
+                
+                <div class="px-4 md:px-8">
                 {% for item in timelineItems %}
                 <div class="relative mb-12 md:mb-16 last:mb-0">
                     
@@ -141,6 +141,7 @@
                     
                 </div>
                 {% endfor %}
+                </div>
             </div>
         </div>
     </section>

@@ -46,20 +46,28 @@
         updateToggleIcons(newTheme);
     };
 
-    // Initialize on DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTheme);
-    } else {
+    // Initialize on DOM ready and Turbo render
+    const init = () => {
         initTheme();
-    }
-
-    // Attach toggle functionality to all theme toggle buttons
-    document.addEventListener('DOMContentLoaded', () => {
         const toggleButtons = document.querySelectorAll('.theme-toggle-btn');
         toggleButtons.forEach(btn => {
+            // Remove existing listeners to prevent duplicates (optional but safe)
+            btn.removeEventListener('click', toggleTheme);
             btn.addEventListener('click', toggleTheme);
         });
-    });
+    };
+
+    // Standard DOM Load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Turbo Drive Load (covers navigation)
+    document.addEventListener('turbo:render', init);
+    // Also listen to turbo:load directly to be sure
+    document.addEventListener('turbo:load', init);
 
     // Export for global access if needed
     window.themeToggle = {
