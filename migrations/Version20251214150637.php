@@ -19,8 +19,8 @@ final class Version20251214150637 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        // No operation: columns already exist, migration disabled
+        // Add missing columns to news table
+        $this->addSql('ALTER TABLE news ADD canonical_url VARCHAR(255) DEFAULT NULL, ADD image_alt VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
