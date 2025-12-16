@@ -2,6 +2,21 @@
 
 {% block title %}{{ page.title }} - Procordis{% endblock %}
 
+{% block seo_schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "{{ page.title }}",
+  "description": "{{ page.content|striptags|slice(0, 160)|e('js') }}",
+  "publisher": {
+    "@type": "MedicalOrganization",
+    "name": "Procordis"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
     <section class="py-12 bg-primary/5">
         <div class="container mx-auto px-4">

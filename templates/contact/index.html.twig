@@ -3,6 +3,31 @@
 {% block title %}{{ templateService.pageSeo.contactPageTitle|default('Fale Conosco - Procordis') }}{% endblock %}
 {% block description %}{{ templateService.pageSeo.contactPageDescription|default('Entre em contato com a Procordis. Endereço, telefone, WhatsApp e formulário de contato.') }}{% endblock %}
 
+{% block seo_schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Fale Conosco - Procordis",
+  "url": "{{ url('app_contact') }}",
+  "mainEntity": {
+    "@type": "MedicalOrganization",
+    "name": "Procordis",
+    "telephone": "{{ templateService.generalData.phone|default('(16) 3397-4625') }}",
+    "email": "{{ templateService.generalData.email|default('secretaria@procordis.org.br') }}",
+     "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ templateService.generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho') }}",
+        "addressLocality": "Araraquara",
+        "addressRegion": "SP",
+        "postalCode": "14800-000",
+        "addressCountry": "BR"
+      }
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
     <!-- Hero Small -->
     <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">
