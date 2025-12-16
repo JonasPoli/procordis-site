@@ -30,8 +30,8 @@ class SpecialtyType extends AbstractType
             ->add('usedToDiagnose', TextType::class, [
                 'label' => 'Usado para Diagnosticar',
                 'required' => false,
-                'help' => 'Exemplo: "Alterações estruturais e funcionais do coração"',
-                'attr' => ['class' => 'form-input']
+                'help' => 'Máximo 100 caracteres. Ex: "Alterações estruturais e funcionais do coração"',
+                'attr' => ['class' => 'form-input', 'maxlength' => 100]
             ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Descrição Curta (para Cards)',
