@@ -3,6 +3,37 @@
 {% block title %}{{ news.seoTitle|default(news.title) }} - Procordis{% endblock %}
 {% block meta_description %}{{ news.seoDescription|default(news.summary) }}{% endblock %}
 
+{% block seo_schema %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "{{ news.title|e('js') }}",
+    "image": [
+        {% if news.imageName %}
+        "{{ app.request.schemeAndHttpHost ~ vich_uploader_asset(news, 'imageFile') }}"
+        {% endif %}
+    ],
+    "datePublished": "{{ news.publishedAt|date('c') }}",
+    "dateModified": "{{ news.updatedAt|default(news.publishedAt)|date('c') }}",
+    "author": [{
+        "@type": "Organization",
+        "name": "Procordis",
+        "url": "{{ url('app_home') }}"
+    }],
+    "publisher": {
+        "@type": "Organization",
+        "name": "Procordis",
+         "logo": {
+            "@type": "ImageObject",
+            "url": "{{ absolute_url(asset('images/logo_procordis.png')) }}" 
+        }
+    },
+    "description": "{{ news.summary|e('js') }}"
+}
+</script>
+{% endblock %}
+
 {% block content %}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">

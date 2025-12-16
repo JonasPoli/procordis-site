@@ -1,5 +1,42 @@
 {% extends 'base_public.html.twig' %}
 
+{% block seo_schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalOrganization",
+  "name": "Procordis",
+  "alternateName": "Associação Procordis",
+  "url": "{{ url('app_home') }}",
+  "logo": "{{ absolute_url(asset('images/logo_procordis.png')) }}",
+  "telephone": "(16) 3397-4625",
+  "email": "secretaria@procordis.org.br",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Av. Queiroz Filho, 685 - Vila Sedenho",
+    "addressLocality": "Araraquara",
+    "addressRegion": "SP",
+    "postalCode": "14800-000",
+    "addressCountry": "BR"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "07:00",
+      "closes": "18:00"
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
         {# Hero #}
         <section class="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] overflow-hidden" 
