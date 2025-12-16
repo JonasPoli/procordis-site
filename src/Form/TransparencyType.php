@@ -28,7 +28,7 @@ class TransparencyType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'Descrição',
                 'required' => false,
-                'attr' => ['rows' => 3, 'class' => 'form-textarea']
+                'attr' => ['rows' => 8, 'class' => 'form-textarea editor-html']
             ])
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Ativo',
