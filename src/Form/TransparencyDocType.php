@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Transparency;
 use App\Entity\TransparencyDoc;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -17,6 +19,13 @@ class TransparencyDocType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('transparency', EntityType::class, [
+                'class' => Transparency::class,
+                'choice_label' => 'title',
+                'label' => 'Categoria de Transparência',
+                'placeholder' => 'Selecione uma categoria...',
+                'attr' => ['class' => 'form-select']
+            ])
             ->add('title', TextType::class, [
                 'label' => 'Título do Documento',
                 'attr' => ['class' => 'form-input']
