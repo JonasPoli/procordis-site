@@ -7,7 +7,7 @@
         <div>
             <div class="relative">
                  {{ form_row(form.slug, {'attr': {'id': 'slug_input'}}) }}
-                 <button type="button" id="btn-generate-slug" class="absolute top-9 right-3 text-slate-400 hover:text-slate-600" title="Gerar automaticamente">
+                 <button type="button" id="btn-generate-slug" class="absolute top-9 right-3 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300" title="Gerar automaticamente">
                     <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                  </button>
             </div>
@@ -15,12 +15,29 @@
         </div>
     </div>
 
-    <div>
-        {{ form_row(form.publishedAt) }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            {{ form_row(form.publishedAt) }}
+        </div>
+        <div>
+            {{ form_row(form.imageFile) }}
+        </div>
     </div>
 
-    <div>
-        {{ form_row(form.imageFile) }}
+    {# Categories Section - Improved Layout #}
+    <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+            <svg class="w-4 h-4 inline-block mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path></svg>
+            Categorias
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {% for category in form.categories %}
+                <label class="flex items-center gap-2 p-2 bg-white dark:bg-slate-700 rounded-md border border-slate-200 dark:border-slate-600 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors">
+                    {{ form_widget(category, {'attr': {'class': 'rounded border-slate-300 text-blue-600 focus:ring-blue-500'}}) }}
+                    <span class="text-sm text-slate-700 dark:text-slate-200">{{ category.vars.label }}</span>
+                </label>
+            {% endfor %}
+        </div>
     </div>
 
     <div>
@@ -31,8 +48,9 @@
         {{ form_row(form.content, {'attr': {'class': 'editor', 'rows': 20}}) }}
     </div>
 
-    <div class="mt-8 pt-6 border-t border-slate-200">
-        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+    {# SEO Section #}
+    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center">
              <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             SEO & Metadados
         </h3>
@@ -49,10 +67,21 @@
              {{ form_row(form.seoDescription, {'attr': {'class': 'seo-counter', 'data-max': 160}}) }}
              <div class="text-right text-xs text-slate-400 mt-1"><span class="counter-display">0</span>/160</div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div>
+                {{ form_row(form.imageAlt) }}
+            </div>
+            <div>
+                {{ form_row(form.canonicalUrl) }}
+            </div>
+        </div>
     </div>
 
-    <div class="flex justify-end pt-6">
-        <button class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all font-semibold">{{ button_label|default('Salvar Notícia') }}</button>
+    {# Save Button - At the very bottom #}
+    <div class="flex justify-end pt-8 mt-8 border-t border-slate-200 dark:border-slate-700">
+        <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all font-semibold text-lg">
+            {{ button_label|default('Salvar Notícia') }}
+        </button>
     </div>
 
 {{ form_end(form) }}
