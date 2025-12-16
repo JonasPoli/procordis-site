@@ -54,7 +54,7 @@
         <div class="flex items-center justify-between">
           {# Logo #}
           <a href="{{ path('app_home') }}" class="flex items-center gap-2">
-            <img src="{{ asset('assets/images/logo-9AyYdNa.svg') }}" alt="Logo Procordis" class="h-12 w-auto"> 
+            <img src="{{ asset('assets/images/logo-f21ip-9.svg') }}" alt="Logo Procordis" class="h-12 w-auto"> 
           </a>
 
           {# Desktop Menu #}
@@ -189,7 +189,7 @@
           <div>
             <div class="flex items-center gap-2 mb-6">
               <a href="{{ path('app_home') }}" class="flex items-center gap-2">
-                <img src="{{ asset('assets/images/logo-9AyYdNa.svg') }}" alt="Logo Procordis" class="h-12 w-auto"> 
+                <img src="{{ asset('assets/images/logo-f21ip-9.svg') }}" alt="Logo Procordis" class="h-12 w-auto"> 
               </a>
             </div>
             <p class="text-primary-foreground/70 text-sm leading-relaxed mb-4">
@@ -264,11 +264,10 @@
         <div class="container mx-auto py-4">
           <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-primary-foreground/70">
             <div class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <a href="#" class="hover:text-white transition-colors duration-300">Análises Laboratoriais</a>
                 <a href="{{ path('app_transparency_index') }}" class="hover:text-white transition-colors duration-300">Transparência</a>
                 {{ render(controller('App\\Controller\\PartialController::footerPages')) }}
             </div>
-            <p>© 2024 Associação Procordis. Todos os direitos reservados.</p>
+            <p>© {{ 'now'|date('Y') }} Associação Procordis. Todos os direitos reservados.</p>
           </div>
         </div>
       </div>

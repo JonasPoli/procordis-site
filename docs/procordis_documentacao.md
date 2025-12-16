@@ -630,7 +630,7 @@ class NewsletterApiController extends AbstractController
       <div class="container mx-auto py-4">
         <div class="flex items-center justify-between">
           <a href="{{ path('app_home') }}">
-            <img src="{{ asset('assets/images/logo-9AyYdNa.svg') }}" alt="Procordis" class="h-12 w-auto">
+            <img src="{{ asset('assets/images/logo-f21ip-9.svg') }}" alt="Logo Procordis" class="h-12 w-auto"> 
           </a>
 
           {# Desktop Menu #}
