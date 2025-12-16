@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SpecialtyRepository::class)]
 #[Vich\Uploadable]
@@ -36,6 +37,11 @@ class Specialty
     private ?string $fullText = null;
 
     #[Vich\UploadableField(mapping: 'specialty_image', fileNameProperty: 'imageName')]
+    #[Assert\File(
+        maxSize: '10M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Por favor, envie uma imagem válida (JPEG, PNG, WEBP).'
+    )]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]

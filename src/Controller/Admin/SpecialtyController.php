@@ -70,7 +70,7 @@ class SpecialtyController extends AbstractController
         return $this->render('admin/specialty/edit.html.twig', [
             'specialty' => $specialty,
             'form' => $form,
-        ]);
+        ], new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK));
     }
 
     #[Route('/{id}', name: 'admin_specialty_delete', methods: ['POST'])]
