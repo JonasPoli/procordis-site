@@ -83,7 +83,7 @@
                         <i data-lucide="heart-handshake" class="w-7 h-7"></i>
                     </div>
                     <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Valores</h3>
-                    <div class="text-medical-text dark:text-muted-foreground leading-relaxed whitespace-pre-line">{{ about.ourValues|default('Ética\nHumanização')|nl2br|raw }}</div>
+                    <div class="text-medical-text dark:text-muted-foreground leading-relaxed whitespace-pre-line">{{ about.ourValues|default('Ética\nHumanização')|raw }}</div>
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
                         <div class="flex-1 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="200">
                             <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
                             <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                            <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description }}</p>
+                            <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@
                                 <div class="w-1/2 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="300">
                                     <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
                                     <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description }}</p>
+                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
                                 </div>
                             </div>
                         {% else %}
@@ -138,7 +138,7 @@
                                 <div class="w-1/2 rounded-xl shadow-xl p-6 text-white text-right border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-right" data-aos-delay="300">
                                     <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
                                     <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description }}</p>
+                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
                                 </div>
                                 <div class="relative flex-shrink-0">
                                     <div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
