@@ -1,0 +1,17 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Nova Categoria de Transparência - Admin{% endblock %}
+{% block page_title %}Nova Categoria de Transparência{% endblock %}
+
+{% block body %}
+<div class="glass-panel rounded-2xl p-6 max-w-2xl">
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ path('admin_transparency_category_index') }}" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        </a>
+        <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Nova Categoria de Transparência</h1>
+    </div>
+
+    {{ include('admin/transparency_category/_form.html.twig', {button_label: 'Criar Categoria'}) }}
+</div>
+{% endblock %}

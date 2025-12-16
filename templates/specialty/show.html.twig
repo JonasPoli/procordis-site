@@ -1,0 +1,88 @@
+{% extends 'base_public.html.twig' %}
+
+{% block title %}{{ specialty.name }} - Procordis{% endblock %}
+
+{% block seo_schema %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "MedicalTest",
+    "name": "{{ specialty.name }}",
+    "usedToDiagnose": "{{ specialty.usedToDiagnose|default(specialty.shortDescription|default(''))|e('js') }}"
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<main class="bg-background min-h-screen">
+    {# Hero Section #}
+    <section class="bg-primary/5 dark:bg-primary/10 py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                {# Icon #}
+                <div class="w-24 h-24 flex items-center justify-center text-primary bg-white dark:bg-card rounded-2xl shadow-lg">
+                    {{ specialty.svgIcon|raw }}
+                </div>
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-heading font-bold text-medical-heading dark:text-white mb-4">
+                        {{ specialty.name }}
+                    </h1>
+                    {% if specialty.usedToDiagnose %}
+                    <p class="text-lg text-medical-text dark:text-slate-300">
+                        <strong>Usado para diagnosticar:</strong> {{ specialty.usedToDiagnose }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Content Section #}
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-3 gap-12">
+                {# Main Content #}
+                <div class="lg:col-span-2">
+                    <div class="prose prose-lg dark:prose-invert max-w-none">
+                        {{ specialty.fullText|raw }}
+                    </div>
+                </div>
+
+                {# Sidebar #}
+                <div class="space-y-8">
+                    {% if specialty.imageName %}
+                    <div class="rounded-xl overflow-hidden shadow-lg">
+                        <img src="{{ vich_uploader_asset(specialty, 'imageFile') }}" 
+                             alt="{{ specialty.name }}" 
+                             class="w-full h-auto">
+                    </div>
+                    {% endif %}
+
+                    {# Contact Card #}
+                    <div class="bg-white dark:bg-card rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                        <h3 class="font-bold text-lg text-medical-heading dark:text-white mb-4">Agende sua Consulta</h3>
+                        <p class="text-medical-text dark:text-slate-300 mb-4">
+                            Entre em contato conosco para agendar uma consulta com nossos especialistas.
+                        </p>
+                        <a href="{{ path('app_contact') }}" class="btn-medical-primary w-full text-center block">
+                            Entrar em Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Back Link #}
+    <section class="pb-16">
+        <div class="container mx-auto px-4">
+            <a href="{{ path('app_home') }}#specialties" class="inline-flex items-center text-primary hover:underline">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Voltar para Especialidades
+            </a>
+        </div>
+    </section>
+</main>
+{% endblock %}

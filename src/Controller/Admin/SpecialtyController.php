@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/specialty')]
 #[IsGranted('ROLE_ADMIN')]
@@ -25,13 +26,16 @@ class SpecialtyController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_specialty_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $specialty = new Specialty();
         $form = $this->createForm(SpecialtyType::class, $specialty);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (empty($specialty->getSlug())) {
+                $specialty->setSlug($this->generateSlug($specialty->getName(), $slugger));
+            }
             $entityManager->persist($specialty);
             $entityManager->flush();
 
@@ -47,12 +51,15 @@ class SpecialtyController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_specialty_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Specialty $specialty, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Specialty $specialty, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(SpecialtyType::class, $specialty);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (empty($specialty->getSlug())) {
+                $specialty->setSlug($this->generateSlug($specialty->getName(), $slugger));
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Especialidade atualizada com sucesso!');
@@ -76,5 +83,10 @@ class SpecialtyController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_specialty_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function generateSlug(string $name, SluggerInterface $slugger): string
+    {
+        return strtolower($slugger->slug($name)->toString());
     }
 }
