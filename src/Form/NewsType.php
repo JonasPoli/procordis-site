@@ -25,7 +25,8 @@ class NewsType extends AbstractType
             ])
             ->add('slug', TextType::class, [
                 'label' => 'Slug (URL)',
-                'help' => 'Deixe vazio para gerar automaticamente (se implementado) ou preencha manual.',
+                'required' => false,
+                'help' => 'Deixe vazio para gerar automaticamente a partir do título.',
                 'attr' => ['class' => 'form-input']
             ])
             ->add('categories', BridgeEntityType::class, [

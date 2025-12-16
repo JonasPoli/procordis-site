@@ -48,13 +48,20 @@
 
     // Initialize on DOM ready and Turbo render
     const init = () => {
+        console.log('Theme Toggle Initialized'); // Debug log
         initTheme();
-        const toggleButtons = document.querySelectorAll('.theme-toggle-btn');
-        toggleButtons.forEach(btn => {
-            // Remove existing listeners to prevent duplicates (optional but safe)
-            btn.removeEventListener('click', toggleTheme);
-            btn.addEventListener('click', toggleTheme);
-        });
+
+        // Use event delegation for robustness
+        document.body.removeEventListener('click', handleThemeClick);
+        document.body.addEventListener('click', handleThemeClick);
+    };
+
+    const handleThemeClick = (e) => {
+        const btn = e.target.closest('.theme-toggle-btn');
+        if (btn) {
+            console.log('Theme Toggle Clicked'); // Debug log
+            toggleTheme();
+        }
     };
 
     // Standard DOM Load

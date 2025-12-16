@@ -81,8 +81,8 @@
         });
 
         // Slug Generation Logic
-        const titleInput = document.getElementById('news_title'); // Symfony generates ID based on form name
-        const slugInput = document.getElementById('news_slug');
+        const titleInput = document.getElementById('news_title') || document.querySelector('[name="news[title]"]');
+        const slugInput = document.getElementById('news_slug') || document.querySelector('[name="news[slug]"]');
         const generateBtn = document.getElementById('btn-generate-slug');
 
         const generateSlug = (text) => {
