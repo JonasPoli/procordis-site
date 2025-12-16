@@ -27,8 +27,12 @@ class SpecialtyController extends AbstractController
             throw $this->createNotFoundException('Especialidade não encontrada.');
         }
 
+        // Get all active specialties for sidebar menu
+        $specialties = $specialtyRepository->findBy(['active' => true], ['sortOrder' => 'ASC']);
+
         return $this->render('specialty/show.html.twig', [
             'specialty' => $specialty,
+            'specialties' => $specialties,
         ]);
     }
 }

@@ -15,6 +15,7 @@
             <thead class="bg-gray-50/50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-white/10">
                 <tr>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Ícone</th>
+                    <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Imagem</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Nome</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Ordem</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Ativo</th>
@@ -31,6 +32,13 @@
                             </div>
                         {% else %}
                             <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4">
+                        {% if specialty.imageName %}
+                            <img src="{{ vich_uploader_asset(specialty, 'imageFile') }}" alt="{{ specialty.name }}" class="w-12 h-12 object-cover rounded-lg">
+                        {% else %}
+                            <span class="text-gray-400 text-xs">Sem imagem</span>
                         {% endif %}
                     </td>
                     <td class="p-4 font-medium text-gray-900 dark:text-gray-200">{{ specialty.name }}</td>

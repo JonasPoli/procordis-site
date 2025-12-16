@@ -15,20 +15,41 @@
 
 {% block body %}
 <main class="bg-background min-h-screen">
-    {# Hero Section #}
-    <section class="bg-primary/5 dark:bg-primary/10 py-16">
-        <div class="container mx-auto px-4">
+    {# Hero Section with Image Background #}
+    <section class="relative py-24 overflow-hidden">
+        {# Background Image #}
+        {% if specialty.imageName %}
+        <div class="absolute inset-0 z-0">
+            <img src="{{ vich_uploader_asset(specialty, 'imageFile') }}" 
+                 alt="{{ specialty.name }}" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/60 dark:from-slate-900/95 dark:via-slate-900/85 dark:to-slate-900/70"></div>
+        </div>
+        {% else %}
+        <div class="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 dark:from-slate-900 dark:to-slate-800"></div>
+        {% endif %}
+        
+        <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col md:flex-row items-center gap-8">
                 {# Icon #}
-                <div class="w-24 h-24 flex items-center justify-center text-primary bg-white dark:bg-card rounded-2xl shadow-lg">
+                <div class="w-20 h-20 flex items-center justify-center text-primary bg-white rounded-2xl shadow-xl">
                     {{ specialty.svgIcon|raw }}
                 </div>
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-heading font-bold text-medical-heading dark:text-white mb-4">
+                <div class="text-center md:text-left">
+                    {# Breadcrumb #}
+                    <nav class="flex items-center gap-2 text-sm text-white/70 mb-4 justify-center md:justify-start">
+                        <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+                        <span class="opacity-50">/</span>
+                        <a href="{{ path('app_home') }}#specialties" class="hover:text-white transition-colors">Especialidades</a>
+                        <span class="opacity-50">/</span>
+                        <span class="text-white font-medium">{{ specialty.name }}</span>
+                    </nav>
+                    
+                    <h1 class="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
                         {{ specialty.name }}
                     </h1>
                     {% if specialty.usedToDiagnose %}
-                    <p class="text-lg text-medical-text dark:text-slate-300">
+                    <p class="text-lg text-white/90 max-w-2xl">
                         <strong>Usado para diagnosticar:</strong> {{ specialty.usedToDiagnose }}
                     </p>
                     {% endif %}
@@ -40,48 +61,81 @@
     {# Content Section #}
     <section class="py-16">
         <div class="container mx-auto px-4">
-            <div class="grid lg:grid-cols-3 gap-12">
-                {# Main Content #}
-                <div class="lg:col-span-2">
-                    <div class="prose prose-lg dark:prose-invert max-w-none">
-                        {{ specialty.fullText|raw }}
+            <div class="grid lg:grid-cols-4 gap-12">
+                
+                {# Sidebar - Menu de Especialidades #}
+                <div class="lg:col-span-1 order-2 lg:order-1">
+                    <div class="sticky top-8 space-y-6">
+                        {# Specialties Menu #}
+                        <div class="bg-white dark:bg-card rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                            <h3 class="font-bold text-lg text-medical-heading dark:text-white mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                Especialidades
+                            </h3>
+                            <nav class="space-y-1">
+                                {% for item in specialties %}
+                                <a href="{{ path('app_specialty_show', {slug: item.slug}) }}" 
+                                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all {{ item.id == specialty.id ? 'bg-primary/10 text-primary font-semibold' : 'text-medical-text dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                                    <div class="w-6 h-6 flex items-center justify-center shrink-0 {{ item.id == specialty.id ? 'text-primary' : 'text-slate-400' }}">
+                                        {{ item.svgIcon|raw }}
+                                    </div>
+                                    <span>{{ item.name }}</span>
+                                </a>
+                                {% endfor %}
+                            </nav>
+                        </div>
+
+                        {# Info Card - Referral Notice #}
+                        <div class="bg-gradient-to-br from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 rounded-xl p-6 shadow-lg text-white">
+                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Atendimento por Encaminhamento
+                            </h3>
+                            <p class="text-white/90 text-sm mb-4">
+                                Nosso ambulatório atende exclusivamente pacientes encaminhados pelo sistema de saúde ou médico assistente.
+                            </p>
+                            <a href="{{ path('app_about') }}" class="block w-full text-center bg-white text-amber-600 font-semibold py-3 rounded-lg hover:bg-white/90 transition-colors">
+                                Saiba Mais
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                {# Sidebar #}
-                <div class="space-y-8">
-                    {% if specialty.imageName %}
-                    <div class="rounded-xl overflow-hidden shadow-lg">
-                        <img src="{{ vich_uploader_asset(specialty, 'imageFile') }}" 
-                             alt="{{ specialty.name }}" 
-                             class="w-full h-auto">
+                {# Main Content #}
+                <div class="lg:col-span-3 order-1 lg:order-2">
+                    {% if specialty.shortDescription %}
+                    <div class="bg-primary/5 dark:bg-primary/10 border-l-4 border-primary rounded-r-xl p-6 mb-8">
+                        <p class="text-lg text-medical-text dark:text-slate-300 italic">
+                            {{ specialty.shortDescription }}
+                        </p>
                     </div>
                     {% endif %}
 
-                    {# Contact Card #}
-                    <div class="bg-white dark:bg-card rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
-                        <h3 class="font-bold text-lg text-medical-heading dark:text-white mb-4">Agende sua Consulta</h3>
-                        <p class="text-medical-text dark:text-slate-300 mb-4">
-                            Entre em contato conosco para agendar uma consulta com nossos especialistas.
-                        </p>
-                        <a href="{{ path('app_contact') }}" class="btn-medical-primary w-full text-center block">
-                            Entrar em Contato
+                    <div class="prose prose-lg dark:prose-invert max-w-none 
+                                prose-headings:text-medical-heading dark:prose-headings:text-white
+                                prose-p:text-medical-text dark:prose-p:text-slate-300
+                                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                prose-strong:text-medical-heading dark:prose-strong:text-white
+                                prose-ul:text-medical-text dark:prose-ul:text-slate-300
+                                prose-ol:text-medical-text dark:prose-ol:text-slate-300">
+                        {{ specialty.fullText|raw }}
+                    </div>
+
+                    {# Back Link #}
+                    <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+                        <a href="{{ path('app_home') }}#specialties" class="inline-flex items-center text-primary hover:underline font-medium">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            Voltar para Especialidades
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    {# Back Link #}
-    <section class="pb-16">
-        <div class="container mx-auto px-4">
-            <a href="{{ path('app_home') }}#specialties" class="inline-flex items-center text-primary hover:underline">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Voltar para Especialidades
-            </a>
         </div>
     </section>
 </main>
