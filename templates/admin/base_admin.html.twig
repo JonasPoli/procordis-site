@@ -14,8 +14,14 @@
                 
                 /* Admin specific overrides handled by .admin-layout scope in app.css */
                 html.dark body {
-                    /* Fallback only - main styling via CSS variables */
-                    background-image: none !important;
+                    /* Restore mesh gradient */
+                }
+                
+                html.dark .mesh-gradient {
+                    background-image: 
+                        radial-gradient(at 0% 0%, hsla(233, 74%, 56%, 0.15) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, hsla(210, 100%, 25%, 0.15) 0px, transparent 50%) !important;
+                    background-color: #0F1828; /* Fallback matches --background */
                 }
                 
                 /* Ensure Glass Panels match the requested dark tone if needed, or stick to TailAdmin #24303F */
@@ -35,16 +41,34 @@
         {% block javascripts %}
             {{ importmap('app') }}
             <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+            <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key|default('no-api-key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
             <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    tinymce.init({
-                        selector: '.editor-html',
-                        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                        branding: false,
-                        promotion: false
-                    });
-                });
+                const initTinyMCE = () => {
+                   if (window.tinymce) {
+                        try {
+                            tinymce.remove('.editor-html');
+                        } catch(e) {}
+
+                        tinymce.init({
+                            selector: '.editor-html',
+                            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+                            branding: false,
+                            promotion: false,
+                            height: 500,
+                            setup: function (editor) {
+                                editor.on('change', function () {
+                                    editor.save();
+                                });
+                            }
+                        });
+                   }
+                };
+
+                // Support both standard load and Turbo navigation
+                document.addEventListener("DOMContentLoaded", initTinyMCE);
+                document.addEventListener("turbo:load", initTinyMCE);
+                document.addEventListener("turbo:render", initTinyMCE);
             </script>
         {% endblock %}
     </head>

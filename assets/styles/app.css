@@ -495,7 +495,9 @@
     }
 
     .admin-layout.dark .mesh-gradient {
-        background-image: none;
+        background-image:
+            radial-gradient(at 0% 0%, hsla(233, 74%, 56%, 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, hsla(210, 100%, 25%, 0.15) 0px, transparent 50%);
     }
 }
 
