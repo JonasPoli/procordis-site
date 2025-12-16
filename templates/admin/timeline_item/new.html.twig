@@ -5,8 +5,8 @@
 {% block body %}
     <div class="glass-panel text-sm px-6 py-6 rounded-xl shadow-sm">
         <div class="mb-6 flex items-center justify-between">
-            <h2 class="text-lg font-bold">Novo Evento</h2>
-            <a href="{{ path('admin_timeline_index') }}" class="text-slate-500 hover:text-slate-700 transition-colors">&larr; Voltar</a>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Novo Evento</h2>
+            <a href="{{ path('admin_timeline_index') }}" class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">&larr; Voltar</a>
         </div>
         
         {{ include('admin/timeline_item/_form.html.twig') }}

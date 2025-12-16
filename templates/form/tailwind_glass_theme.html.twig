@@ -16,24 +16,24 @@
 {% block form_label %}
     {% if label is not same as(false) %}
         {% if not compound or force_error|default(false) %}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' block mb-2 text-sm font-semibold text-slate-600')|trim}) %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' block mb-2 text-sm font-semibold text-slate-600 dark:text-slate-300')|trim}) %}
         {% endif %}
         {{- parent() -}}
     {% endif %}
 {% endblock form_label %}
 
 {% block form_widget_simple %}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 dark:bg-[#1D2A39] backdrop-blur-sm border border-slate-400 dark:border-[#3d4d60] rounded-xl px-4 py-3 text-slate-700 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-[#3C50E0] focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
     {{- parent() -}}
 {% endblock form_widget_simple %}
 
 {% block textarea_widget %}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 dark:bg-[#1D2A39] backdrop-blur-sm border border-slate-400 dark:border-[#3d4d60] rounded-xl px-4 py-3 text-slate-700 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-[#3C50E0] focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm')|trim}) -%}
     {{- parent() -}}
 {% endblock textarea_widget %}
 
 {% block choice_widget_collapsed %}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 backdrop-blur-sm border border-slate-400 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm appearance-none')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full bg-white/50 dark:bg-[#1D2A39] backdrop-blur-sm border border-slate-400 dark:border-[#3d4d60] rounded-xl px-4 py-3 text-slate-700 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-[#3C50E0] focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm appearance-none')|trim}) -%}
     {{- parent() -}}
 {% endblock choice_widget_collapsed %}
 
