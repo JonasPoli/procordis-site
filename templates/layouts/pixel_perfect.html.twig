@@ -18,7 +18,7 @@
             body { font-family: 'Lato', sans-serif; }
         </style>
     </head>
-    <body class="flex flex-col min-h-screen font-sans antialiased text-foreground bg-background">
+    <body class="flex flex-col min-h-screen font-sans antialiased text-foreground bg-background" data-turbo="false">
         {% block body %}{% endblock %}
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -30,7 +30,39 @@
                 if (window.lucide) lucide.createIcons();
             });
         </script>
-        <script src="{{ asset('js/theme-toggle.js') }}"></script>
+        <script>
+            // Theme Toggle - Simple reload-based approach to avoid Turbo conflicts
+            (function () {
+                'use strict';
+                const getTheme = () => localStorage.getItem('theme') || 'light';
+                
+                // Apply theme immediately on page load (before render)
+                const theme = getTheme();
+                if (theme === 'dark') document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+
+                const updateIcons = () => {
+                    const sunIcons = document.querySelectorAll('.theme-toggle-sun');
+                    const moonIcons = document.querySelectorAll('.theme-toggle-moon');
+                    const isDark = getTheme() === 'dark';
+                    sunIcons.forEach(i => i.classList.toggle('hidden', !isDark));
+                    moonIcons.forEach(i => i.classList.toggle('hidden', isDark));
+                };
+
+                // Wait for DOM then update icons and bind click
+                document.addEventListener('DOMContentLoaded', () => {
+                    updateIcons();
+                    document.body.addEventListener('click', (e) => {
+                        const btn = e.target.closest('.theme-toggle-btn');
+                        if (btn) {
+                            const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
+                            localStorage.setItem('theme', newTheme);
+                            window.location.reload(); // Force full page reload
+                        }
+                    });
+                });
+            })();
+        </script>
         <script src="{{ asset('js/simple-aos.js') }}"></script>
         <script>
             AOS.init();
