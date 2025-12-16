@@ -1,0 +1,26 @@
+{{ form_start(form) }}
+    <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                {{ form_row(form.title) }}
+            </div>
+            <div>
+                {{ form_row(form.slug) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_row(form.isActive) }}
+        </div>
+
+        <div>
+            {{ form_row(form.content) }}
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-gray-200 dark:border-white/10">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-lg transform active:scale-95 transition-all">
+                {{ button_label|default('Salvar') }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}
