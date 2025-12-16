@@ -2,6 +2,10 @@
 @config "../../tailwind.config.js";
 
 @layer base {
+
+    /* =========================================
+       THEME: Public / Medical (Default)
+       ========================================= */
     :root {
         --background: 0 0% 100%;
         --foreground: 210 11% 15%;
@@ -54,7 +58,8 @@
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
 
-    .dark {
+    /* Public Dark Mode */
+    .dark:not(.admin-layout) {
         --background: 222 47% 11%;
         --foreground: 0 0% 96%;
         --card: 217 33% 17%;
@@ -75,7 +80,6 @@
         --input: 220 15% 15%;
         --ring: 199 100% 55%;
 
-        /* Custom colors for dark mode */
         --medical-blue: 199 100% 55%;
         --medical-blue-light: 199 85% 65%;
         --medical-blue-dark: 199 100% 45%;
@@ -92,6 +96,65 @@
         --sidebar-accent-foreground: 0 0% 96%;
         --sidebar-border: 220 15% 18%;
         --sidebar-ring: 199 100% 55%;
+    }
+
+    /* =========================================
+       THEME: Admin / Dashboard (Scoped)
+       ========================================= */
+    .admin-layout {
+        /* Admin Light Mode */
+        --background: 210 20% 98%;
+        /* F3F4F6 */
+        --foreground: 215 25% 27%;
+        /* Slate-700 */
+        --card: 0 0% 100%;
+        --card-foreground: 215 25% 27%;
+        --border: 210 20% 90%;
+        --input: 210 20% 90%;
+        --primary: 221 83% 53%;
+        /* Blue-600 #2563EB */
+        --primary-foreground: 0 0% 100%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+    }
+
+    .admin-layout.dark {
+        /* TailAdmin Dark Mode Palette */
+        /* Background: #0F1828 -> HSL 218 45% 11% */
+        --background: 218 45% 11%;
+
+        /* Foreground: #AEB7C0 -> HSL 210 11% 71% */
+        --foreground: 210 11% 71%;
+
+        /* Card/Panel: #24303F -> HSL 215 27% 19% */
+        --card: 215 27% 19%;
+        --card-foreground: 0 0% 100%;
+
+        /* Popover matches Card */
+        --popover: 215 27% 19%;
+        --popover-foreground: 0 0% 100%;
+
+        /* Primary: #3C50E0 -> HSL 233 74% 56% */
+        --primary: 233 74% 56%;
+        --primary-foreground: 0 0% 100%;
+
+        /* Secondary/Muted: Darker panel elements */
+        --secondary: 217 33% 17%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 217 33% 17%;
+        --muted-foreground: 215 20% 65%;
+
+        /* Borders: #3d4d60 -> HSL 212 22% 31% */
+        --border: 212 22% 31%;
+        --input: 218 45% 11%;
+        /* Use background color for input bg */
+
+        --ring: 233 74% 56%;
+
+        /* Sidebar matches Card/Panel */
+        --sidebar-background: 215 27% 19%;
+        --sidebar-foreground: 210 11% 71%;
+        --sidebar-border: 212 22% 31%;
     }
 }
 
@@ -114,111 +177,51 @@
     h4,
     h5,
     h6 {
+        /* Use Montserrat for headings everywhere except if overridden */
         font-family: 'Montserrat', sans-serif;
     }
 
-    /* Dark mode overrides for hardcoded backgrounds - MAXIMUM SPECIFICITY */
-    .dark .bg-white,
-    .dark div.bg-white,
-    .dark section.bg-white,
-    .dark article.bg-white {
-        background-color: hsl(var(--card)) !important;
-        color: hsl(var(--card-foreground)) !important;
+    .admin-layout h1,
+    .admin-layout h2,
+    .admin-layout h3,
+    .admin-layout h4,
+    .admin-layout h5,
+    .admin-layout h6 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .dark .bg-medical-gray {
-        background-color: hsl(var(--muted)) !important;
+    /* Admin Layout Specific Resets */
+    .admin-layout.dark input,
+    .admin-layout.dark textarea,
+    .admin-layout.dark select {
+        background-color: #1D2A39;
+        /* Specific TailAdmin Input Color */
+        border-color: hsl(var(--border));
+        color: white;
     }
 
-    .dark .bg-slate-50,
-    .dark .bg-slate-100,
-    .dark .bg-gray-50,
-    .dark .bg-gray-100,
-    .dark div.bg-slate-50,
-    .dark div.bg-gray-50,
-    .dark div.bg-gray-100 {
-        background-color: hsl(var(--card)) !important;
-        color: hsl(var(--card-foreground)) !important;
+    .admin-layout.dark input:focus,
+    .admin-layout.dark textarea:focus,
+    .admin-layout.dark select:focus {
+        border-color: hsl(var(--primary));
+        background-color: #1D2A39;
     }
 
-    .dark .bg-blue-50,
-    .dark .bg-cyan-50 {
-        background-color: hsl(var(--card)) !important;
+    /* Ensure white backgrounds in admin turn into panel color in dark mode */
+    .admin-layout.dark .bg-white {
+        background-color: hsl(var(--card));
+        color: hsl(var(--card-foreground));
     }
 
-    /* Dark mode text color overrides */
-    .dark .text-medical-text,
-    .dark .text-slate-600,
-    .dark .text-slate-700,
-    .dark .text-slate-800,
-    .dark .text-gray-600,
-    .dark .text-gray-700,
-    .dark .text-gray-800,
-    .dark p.text-medical-text,
-    .dark p.text-slate-600,
-    .dark p.text-gray-600 {
-        color: hsl(var(--muted-foreground)) !important;
+    .admin-layout.dark .text-slate-600,
+    .admin-layout.dark .text-slate-700,
+    .admin-layout.dark .text-gray-600 {
+        color: hsl(var(--foreground));
     }
 
-    .dark .text-medical-heading,
-    .dark .text-slate-900,
-    .dark h1.text-medical-heading,
-    .dark h2.text-medical-heading,
-    .dark h3.text-medical-heading,
-    .dark h4.text-medical-heading {
-        color: hsl(var(--card-foreground)) !important;
-    }
-
-    .dark .text-slate-500,
-    .dark .text-gray-500 {
-        color: hsl(0 0% 75%) !important;
-    }
-
-    .dark .text-slate-400,
-    .dark .text-gray-400 {
-        color: hsl(0 0% 65%) !important;
-    }
-
-    /* Border overrides */
-    .dark .border-slate-100,
-    .dark .border-slate-200,
-    .dark .border-gray-100,
-    .dark .border-gray-200 {
-        border-color: hsl(var(--border)) !important;
-    }
-
-    /* Button and interactive element overrides */
-    .dark .hover\:bg-white:hover,
-    .dark div.hover\:bg-white:hover {
-        background-color: hsl(var(--card)) !important;
-        color: hsl(var(--card-foreground)) !important;
-    }
-
-    .dark .hover\:bg-slate-50:hover,
-    .dark .hover\:bg-slate-100:hover,
-    .dark .hover\:bg-gray-50:hover {
-        background-color: hsl(var(--card)) !important;
-        color: hsl(var(--card-foreground)) !important;
-    }
-
-    /* Primary color text override - use bright blue for readability */
-    .dark .text-primary,
-    .dark .text-primary-600,
-    .dark .text-primary-700,
-    .dark .text-blue-600,
-    .dark .text-cyan-600 {
-        color: hsl(var(--primary)) !important;
-    }
-
-    /* Ensure bg-white buttons have readable text */
-    .dark .bg-white.text-primary {
-        background-color: hsl(var(--card)) !important;
-        color: hsl(var(--card-foreground)) !important;
-    }
-
-    /* Icon backgrounds in dark mode - Only target specific utility classes if needed */
-    .dark .bg-primary\/10 {
-        background-color: transparent !important;
+    .admin-layout.dark .text-slate-800,
+    .admin-layout.dark .text-gray-900 {
+        color: white;
     }
 }
 
@@ -470,14 +473,6 @@
         transition: background-color 0.3s, border-color 0.3s;
     }
 
-    .dark .glass-panel {
-        background-color: #24303F;
-        /* TailAdmin BoxDark */
-        border: 1px solid #3d4d60;
-        /* TailAdmin Stroke */
-        box-shadow: none;
-    }
-
     .glass-sidebar {
         background-color: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(20px);
@@ -485,14 +480,8 @@
         transition: background-color 0.3s, border-color 0.3s;
     }
 
-    .dark .glass-sidebar {
-        background-color: #24303F;
-        /* TailAdmin BoxDark */
-        border-right: 1px solid #3d4d60;
-    }
-
     .mesh-gradient {
-        background-color: #f3f4f6;
+        background-color: hsl(var(--background));
         background-size: cover;
         transition: background-color 0.3s;
     }
@@ -505,38 +494,8 @@
             radial-gradient(at 0% 50%, hsla(341, 100%, 96%, 1) 0px, transparent 50%);
     }
 
-    .dark .mesh-gradient {
-        background-color: #0F1828 !important;
-        /* User Requested Background */
-        background-image: none !important;
-    }
-
-    /* Admin Form Support */
-    .dark input[type="text"],
-    .dark input[type="email"],
-    .dark input[type="password"],
-    .dark input[type="number"],
-    .dark textarea,
-    .dark select {
-        background-color: #1D2A39 !important;
-        /* TailAdmin Form Field */
-        border-color: #3d4d60 !important;
-        /* TailAdmin Stroke */
-        color: #ffffff !important;
-    }
-
-    .dark input:focus,
-    .dark textarea:focus,
-    .dark select:focus {
-        border-color: #3C50E0 !important;
-        /* TailAdmin Primary */
-        background-color: #1D2A39 !important;
-        /* Very dark on focus */
-    }
-
-    .dark label {
-        color: #cbd5e1;
-        /* slate-300 */
+    .admin-layout.dark .mesh-gradient {
+        background-image: none;
     }
 }
 

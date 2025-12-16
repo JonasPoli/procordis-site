@@ -44,6 +44,11 @@
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
         updateToggleIcons(newTheme);
+
+        // Reload page to force clean re-render and avoid stale CSS variables
+        setTimeout(() => {
+            window.location.reload();
+        }, 50);
     };
 
     // Initialize on DOM ready and Turbo render

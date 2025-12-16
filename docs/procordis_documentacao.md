@@ -1188,6 +1188,96 @@ npx tailwindcss -i ./assets/app.css -o ./public/css/built.css
 
 ---
 
+---
+
+# 9. SISTEMA DE TEMAS E INTERFACE ADMINISTRATIVA (2025)
+
+> [!NOTE]
+> Esta seção foi adicionada para refletir a arquitetura moderna implementada nas últimas iterações (Dezembro/2025), garantindo alta fidelidade visual (Pixel Perfect) e consistência entre os temas Claro/Escuro.
+
+## 9.1 Arquitetura CSS Escopada (Scoped Themes)
+
+Para evitar conflitos entre o tema público ("Medical Blue") e o painel administrativo ("TailAdmin Dark"), adotamos uma arquitetura de variáveis CSS escopadas. **Não utilizamos** overrides globais com `!important` para tudo.
+
+### Estrutura do `app.css`
+
+1.  **`:root` (Default/Public)**: Define as variáveis padrão para a área pública.
+2.  **`.admin-layout` (Escopo Admin)**: Redefine as mesmas variáveis (`--background`, `--card`, `--primary`) especificamente para o Admin.
+
+**Exemplo de Implementação:**
+
+```css
+@layer base {
+    /* Tema Público */
+    :root {
+        --background: 0 0% 100%; /* Branco */
+        --card: 0 0% 100%;
+        --primary: 199 100% 36%; /* Azul Médico */
+    }
+
+    /* Tema Admin (High Contrast Dark Mode) */
+    .admin-layout.dark {
+        --background: 218 45% 11%; /* #0F1828 (Deep Blue) */
+        --card: 215 27% 19%;       /* #24303F (Panel Blue) */
+        --primary: 233 74% 56%;    /* #3C50E0 (TailAdmin Blue) */
+        --border: 212 22% 31%;     /* #3d4d60 */
+    }
+}
+```
+
+Isso permite que templates usem classes utilitárias padrão do Tailwind (ex: `bg-background`, `text-primary`, `border-border`) e automaticamente se adaptem ao contexto (Público ou Admin) sem hacks de especificidade.
+
+## 9.2 Alternância de Tema (Dark Mode Toggle)
+
+Para garantir uma renderização limpa e evitar problemas de cache de CSS (FOUC - Flash of Unstyled Content) ou variáveis "stale" (antigas) persistindo na memória do navegador/Turbo:
+
+1.  **Persistência**: O tema é salvo no `localStorage` ('theme' = 'light' | 'dark').
+2.  **Aplicação**: Um script síncrono no `<head>` aplica a classe `dark` ao `html` antes mesmo do conteúdo carregar.
+3.  **Botão de Recarregamento**: Ao alterar o tema via botão, **a página é recarregada (`window.location.reload()`)**.
+    *   *Por que?* Isso força o browser a repintar (repaint) toda a árvore de estilos, garantindo que as variáveis CSS escopadas sejam recalculadas corretamente para o novo contexto.
+
+```javascript
+// assets/js/theme-toggle.js
+const toggleTheme = () => {
+    // ... lógica de troca ...
+    setTheme(newTheme);
+    
+    // Força recarregamento para limpar cache de estilo e garantir consistência
+    setTimeout(() => {
+        window.location.reload();
+    }, 50);
+};
+```
+
+## 9.3 Histórico de Evolução e Decisões Técnicas
+
+> Seção criada para guiar futuras reconstruções e entender o "porquê" das decisões atuais.
+
+### Fase 1: Padronização de Headers (Glassmorphism)
+Todos os headers (Notícias, Serviços, Transparência) foram padronizados para utilizar o componente visual de "Glass Panel" sobre um fundo gradiente, garantindo consistência visual.
+*   **Decisão**: Uso de `vic_uploader_asset` para backgrounds dinâmicos com fallback seguro.
+
+### Fase 2: Correção do Dark Mode (Admin)
+O painel administrativo original sofria com baixo contraste e conflitos de cor (azul claro invadindo o dark mode).
+*   **Solução**: Implementação do **TailAdmin Theme**.
+    *   Fundo: `#0F1828` (Deep Midnight Blue).
+    *   Painéis: `#24303F` (Lighter Blue-Grey).
+    *   Inputs: `#1D2A39` (Dark Input) com bordas visíveis.
+*   **Correção Crítica**: Remoção de seletores "coringa" (wildcard) como `[class*="bg-blue-"]` que causavam falsos positivos no elemento `<body>`, forçando-o a ficar azul.
+*   **Cache Busting**: A implementação de `selection:bg-indigo-...` em vez de `blue` foi usada temporariamente para evadir caches persistentes.
+
+### Fase 3: Refatoração para Eficiência (Dez 2025)
+Substituímos overrides manuais por uma arquitetura de **CSS Variables Escopadas** (ver seção 9.1). Isso torna o código mais limpo, fácil de manter e previne que mudanças no Admin quebrem o Site Público e vice-versa.
+
+## 9.4 Checklist para Novos Projetos (Baseado nesta Experiência)
+
+1.  **Comece com Escopos**: Nunca defina estilos globais de Dark Mode se o site tiver áreas distintas (Admin vs Público). Crie classes de layout (`.admin-layout`, `.public-layout`) desde o dia 1.
+2.  **Variáveis CSS > Utilitários Hardcoded**: Use `bg-background` e defina `--background`, em vez de usar `dark:bg-slate-900`. Isso permite mudar o tema inteiro editando apenas o CSS e não 50 arquivos HTML.
+3.  **Reload no Toggle**: Se usar Tailwind Classes complexas e variáveis dinâmicas, o `reload` no toggle de tema economiza horas de debug com estilos "presos".
+4.  **Verifique Seletores Globais**: Evite seletores como `div[class*="..."]` em CSS global.
+
+---
+
 **FIM DA DOCUMENTAÇÃO TÉCNICA COMPLETA**
 
 *Este documento deve permitir a reconstrução total do sistema por qualquer desenvolvedor ou IA.*
