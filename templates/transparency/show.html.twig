@@ -19,7 +19,11 @@
 
             <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ transparency.title }}</h1>
             <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Documentos e informações disponíveis nesta categoria.
+                {% if transparency.description %}
+                    {{ transparency.description }}
+                {% else %}
+                    Documentos e informações disponíveis nesta categoria.
+                {% endif %}
             </p>
         </div>
     </div>
