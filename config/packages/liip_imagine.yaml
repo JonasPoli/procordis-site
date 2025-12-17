@@ -55,6 +55,13 @@ liip_imagine:
             filters:
                 thumbnail: { size: [800, 800], mode: outbound }
 
+        about_home:
+            quality: 80
+            filters:
+                thumbnail: { size: [448, 450], mode: outbound }
+                format: { name: webp, quality: 80 }
+
+
         page_header:
             quality: 80
             filters:
