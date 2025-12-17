@@ -166,14 +166,20 @@
               {% if banners|length > 0 %}
                   {% for banner in banners %}
                   <button @click="currentSlide = {{ loop.index0 }}" 
-                          class="w-3 h-3 rounded-full transition-all"
-                          :class="currentSlide === {{ loop.index0 }} ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"
-                          aria-label="Ir para slide {{ loop.index0 + 1 }}"></button>
+                          class="w-12 h-12 flex items-center justify-center rounded-full transition-all group"
+                          aria-label="Ir para slide {{ loop.index0 + 1 }}">
+                          <span class="w-3 h-3 rounded-full transition-all"
+                                :class="currentSlide === {{ loop.index0 }} ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></span>
+                  </button>
                   {% endfor %}
               {% else %}
                   {# Fallback dots #}
-                  <button @click="currentSlide = 0" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 0 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'" aria-label="Ir para slide 1"></button>
-                  <button @click="currentSlide = 1" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 1 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'" aria-label="Ir para slide 2"></button>
+                  <button @click="currentSlide = 0" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 1">
+                    <span class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 0 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></span>
+                  </button>
+                  <button @click="currentSlide = 1" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 2">
+                     <span class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 1 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></span>
+                  </button>
               {% endif %}
           </div>
         </section>
@@ -187,7 +193,7 @@
                 <div class="flex items-start gap-4">
                   <i data-lucide="clock" class="w-8 h-8 flex-shrink-0 mt-1"></i>
                   <div class="w-full">
-                    <h3 class="text-lg font-bold mb-4">Horário de Atendimento</h3>
+                    <h2 class="text-lg font-bold mb-4">Horário de Atendimento</h2>
                     <div class="space-y-2 text-sm">
                       <div class="flex justify-between gap-4">
                         <span>Segunda - Sexta</span>
@@ -211,7 +217,7 @@
                 <div class="flex items-start gap-4">
                   <i data-lucide="calendar" class="w-8 h-8 flex-shrink-0 mt-1"></i>
                   <div>
-                    <h3 class="text-lg font-bold mb-4">Corpo Clínico</h3>
+                    <h2 class="text-lg font-bold mb-4">Corpo Clínico</h2>
                     <p class="text-sm text-primary-foreground/80 mb-4">
                       Conheça nossa equipe de especialistas pronta para cuidar da sua saúde.
                     </p>
@@ -227,7 +233,7 @@
                 <div class="flex items-start gap-4">
                   <i data-lucide="phone" class="w-8 h-8 flex-shrink-0 mt-1"></i>
                   <div>
-                    <h3 class="text-lg font-bold mb-2">Informações</h3>
+                    <h2 class="text-lg font-bold mb-2">Informações</h2>
                     <p class="text-2xl md:text-3xl font-bold mb-4">(16) 3397-4625</p>
                     <p class="text-sm text-primary-foreground/80">
                       Atendemos exclusivamente pacientes com encaminhamento médico.
@@ -444,9 +450,10 @@
             <div class="flex justify-center gap-2 mt-8">
                 <template x-for="(quote, index) in quotes" :key="index">
                     <button @click="currentQuote = index" 
-                            class="w-2 h-2 rounded-full transition-all duration-300"
-                            :class="currentQuote === index ? 'bg-white dark:bg-primary w-6' : 'bg-white/40 dark:bg-primary/30 hover:bg-white/60 dark:hover:bg-primary/50'"
+                            class="w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 group"
                             :aria-label="'Ir para depoimento ' + (index + 1)">
+                            <span class="rounded-full transition-all duration-300 block"
+                                  :class="currentQuote === index ? 'bg-white dark:bg-primary w-6 h-2' : 'bg-white/40 dark:bg-primary/30 group-hover:bg-white/60 dark:group-hover:bg-primary/50 w-2 h-2'"></span>
                     </button>
                 </template>
             </div>
@@ -602,7 +609,7 @@
                                    </h3>
                                    <p class="text-xs text-medical-text dark:text-muted-foreground line-clamp-2 mb-3">{{ item.summary }}</p>
                                    <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-medical-heading dark:hover:text-card-foreground transition-colors mt-auto">
-                                     Ler mais
+                                     Ler mais <span class="sr-only">sobre {{ item.title }}</span>
                                      <i data-lucide="arrow-right" class="w-3 h-3"></i>
                                    </a>
                                  </article>
