@@ -8,14 +8,14 @@
         
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+        <meta property="og:url" content="{{ app.request.uri }}">
         <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
         <meta property="og:description" content="{% block og_description %}{{ block('description') }}{% endblock %}">
         <meta property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo_procordis.png')) }}{% endblock %}">
         
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+        <meta property="twitter:url" content="{{ app.request.uri }}">
         <meta property="twitter:title" content="{{ block('title') }}">
         <meta property="twitter:description" content="{{ block('description') }}">
         <meta property="twitter:image" content="{{ block('og_image') }}">
