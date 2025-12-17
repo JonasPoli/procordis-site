@@ -63,6 +63,7 @@
                    x-transition:leave="transition ease-in duration-1000"
                    x-transition:leave-start="opacity-100"
                    x-transition:leave-end="opacity-0"
+                   {% if loop.first %}fetchpriority="high"{% endif %}
                    style="background-image: url('{{ banner.imageName ? vich_uploader_asset(banner, 'imageFile')|imagine_filter('hero') : asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}')">
                 <div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
                 

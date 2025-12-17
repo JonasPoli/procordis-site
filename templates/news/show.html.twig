@@ -37,7 +37,7 @@
 {% block content %}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
          <div class="container mx-auto px-6 relative z-10 text-center">
             
             {# Breadcrumb #}
@@ -73,7 +73,7 @@
                     {# Main Image #}
                     {% if news.imageName %}
                         <div class="rounded-2xl overflow-hidden mb-8 shadow-sm">
-                            <img src="{{ vich_uploader_asset(news, 'imageFile') }}" alt="{{ news.imageAlt|default(news.title) }}" class="w-full object-cover">
+                            <img src="{{ vich_uploader_asset(news, 'imageFile')|imagine_filter('news_large') }}" alt="{{ news.imageAlt|default(news.title) }}" class="w-full object-cover">
                         </div>
                     {% endif %}
 
@@ -162,7 +162,7 @@
                                         <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="flex gap-4 group">
                                             <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-slate-50 dark:bg-muted relative border border-border">
                                                 {% if item.imageName %}
-                                                    <img src="{{ vich_uploader_asset(item, 'imageFile') }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                                    <img src="{{ vich_uploader_asset(item, 'imageFile')|imagine_filter('news_list_thumb') }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                                                 {% else %}
                                                      <div class="w-full h-full flex items-center justify-center text-slate-300">
                                                         <i data-lucide="image" class="w-8 h-8"></i>

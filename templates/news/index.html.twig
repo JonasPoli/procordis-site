@@ -6,7 +6,7 @@
 {% block content %}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
          <div class="container mx-auto px-6 relative z-10 text-center">
             
             {# Breadcrumb #}
@@ -32,7 +32,7 @@
                         <article class="bg-card rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-border flex flex-col h-full group" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
                             <a href="{{ path('app_news_detail', {'slug': news.slug}) }}" class="block overflow-hidden rounded-t-2xl relative h-56">
                                 {% if news.imageName %}
-                                    <img src="{{ vich_uploader_asset(news, 'imageFile') }}" alt="{{ news.title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <img src="{{ vich_uploader_asset(news, 'imageFile')|imagine_filter('news_thumb') }}" alt="{{ news.title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                                 {% else %}
                                     <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-300">
                                         <i data-lucide="image" class="w-12 h-12"></i>
