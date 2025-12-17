@@ -166,7 +166,8 @@
                     }
                 }
             }" @submit.prevent="submitNewsletter">
-              <input type="email" x-model="email" placeholder="Seu melhor e-mail" required class="flex-1 px-4 py-3 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-primary rounded-l-lg">
+              <label for="newsletter-email" class="sr-only">Seu melhor e-mail</label>
+              <input type="email" id="newsletter-email" x-model="email" placeholder="Seu melhor e-mail" required class="flex-1 px-4 py-3 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-primary rounded-l-lg">
               <button type="submit" class="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary-light transition-colors rounded-r-lg font-medium" :disabled="loading">
                 <span x-show="!loading">Inscrever</span>
                 <span x-show="loading" class="text-xs">...</span>

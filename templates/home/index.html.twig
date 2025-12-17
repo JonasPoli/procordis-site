@@ -336,7 +336,8 @@
                         <img src="{{ vich_uploader_asset(specialty, 'imageFile')|imagine_filter('service_card') }}" 
                              alt="{{ specialty.name }}" 
                              class="absolute inset-0 w-full h-full object-cover opacity-20" 
-                             loading="lazy">
+                             loading="lazy"
+                             width="300" height="200">
                       {% else %}
                          <div class="absolute inset-0 bg-cover bg-center opacity-20"></div>
                       {% endif %}
@@ -431,11 +432,11 @@
             
             {# Mobile Arrows #}
             <div class="flex justify-center gap-4 mt-8 md:hidden">
-              <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Depoimento anterior">
-                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+              <button @click="prev" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Depoimento anterior">
+                <i data-lucide="chevron-left" class="w-6 h-6"></i>
               </button>
-              <button @click="next" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Próximo depoimento">
-                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              <button @click="next" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Próximo depoimento">
+                <i data-lucide="chevron-right" class="w-6 h-6"></i>
               </button>
             </div>
 
@@ -466,7 +467,7 @@
                 <div class="relative overflow-hidden group" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                     <div class="relative overflow-hidden">
                       {% if doctor.imageName %}
-                        <img src="{{ vich_uploader_asset(doctor, 'imageFile')|imagine_filter('doctor_thumb') }}" alt="{{ doctor.name }}" class="w-full aspect-[4/5] object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                        <img src="{{ vich_uploader_asset(doctor, 'imageFile')|imagine_filter('doctor_thumb') }}" alt="{{ doctor.name }}" class="w-full aspect-[4/5] object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" width="300" height="375">
                       {% else %}
                         <div class="w-full aspect-[4/5] bg-gray-200 flex items-center justify-center">
                             <i data-lucide="user" class="w-20 h-20 text-gray-400"></i>
