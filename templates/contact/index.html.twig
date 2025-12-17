@@ -28,6 +28,11 @@
 </script>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preload" as="image" href="{{ asset('images/medical-icons.png') }}">
+{% endblock %}
+
 {% block content %}
     <!-- Hero Small -->
     <div class="bg-primary-900 py-32 text-center text-white relative overflow-hidden">

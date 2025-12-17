@@ -30,7 +30,11 @@
         </noscript>
         
         <link rel="stylesheet" href="{{ asset('css/built.css') }}">
+        {% block stylesheets %}{% endblock %}
+        
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block javascripts %}{% endblock %}
+
         {% block seo_schema %}{% endblock %}
         
         <style>

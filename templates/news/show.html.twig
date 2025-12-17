@@ -34,6 +34,11 @@
 </script>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
+{% endblock %}
+
 {% block content %}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
@@ -145,7 +150,8 @@
                         <div class="bg-white dark:bg-card p-6 rounded-2xl border border-slate-100 dark:border-border shadow-sm">
                              <h3 class="text-lg font-bold text-medical-heading dark:text-card-foreground mb-4">Buscar</h3>
                              <form action="{{ path('app_news') }}" method="get" class="relative">
-                                <input type="search" name="q" placeholder="Palavra-chave..." class="w-full pl-12 pr-4 py-3 rounded-full border border-border focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm text-sm text-medical-text dark:bg-muted dark:text-foreground dark:border-input" value="{{ app.request.query.get('q') }}">
+                                <label for="search" class="sr-only">Buscar</label>
+                                <input type="search" id="search" name="q" placeholder="Palavra-chave..." class="w-full pl-12 pr-4 py-3 rounded-full border border-border focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm text-sm text-medical-text dark:bg-muted dark:text-foreground dark:border-input" value="{{ app.request.query.get('q') }}">
                                 <i data-lucide="search" class="w-5 h-5 text-medical-placeholder absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                             </form>
                         </div>

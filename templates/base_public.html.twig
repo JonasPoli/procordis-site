@@ -26,16 +26,16 @@
             </a>
           </div>
           <div class="flex items-center gap-3 ml-4">
-            <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook">
+            <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook">
               <i data-lucide="facebook" class="w-4 h-4"></i>
             </a>
-            <a href="#" class="hover:text-primary transition-colors" aria-label="Twitter">
+            <a href="#" class="hover:text-primary transition-colors p-2" aria-label="Twitter">
               <i data-lucide="twitter" class="w-4 h-4"></i>
             </a>
-            <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram">
+            <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram">
               <i data-lucide="instagram" class="w-4 h-4"></i>
             </a>
-            <a href="#" class="hover:text-primary transition-colors" aria-label="LinkedIn">
+            <a href="#" class="hover:text-primary transition-colors p-2" aria-label="LinkedIn">
               <i data-lucide="linkedin" class="w-4 h-4"></i>
             </a>
             <span class="w-px h-4 bg-primary-foreground/20"></span>
@@ -172,11 +172,11 @@
                 <span x-show="loading" class="text-xs">...</span>
               </button>
             </form>
-            <div class="flex items-center gap-4">
-              <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-              <a href="#" class="hover:text-primary transition-colors" aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-              <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-              <a href="#" class="hover:text-primary transition-colors" aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+            <div class="flex items-center gap-2">
+              <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+              <a href="#" class="hover:text-primary transition-colors p-2" aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+              <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+              <a href="#" class="hover:text-primary transition-colors p-2" aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
             </div>
           </div>
         </div>

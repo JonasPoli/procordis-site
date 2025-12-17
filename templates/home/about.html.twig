@@ -2,6 +2,11 @@
 
 {% block title %}Quem Somos - Procordis{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
+{% endblock %}
+
 {% block content %}
     {# Hero Small #}
     {# Hero Standardized #}
