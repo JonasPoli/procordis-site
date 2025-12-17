@@ -1278,6 +1278,98 @@ Substituímos overrides manuais por uma arquitetura de **CSS Variables Escopadas
 
 ---
 
+
+# 10. GUIA DE PERFORMANCE E SEO (BLUEPRINT PAGESPEED 100)
+
+> [!IMPORTANT]
+> **OBJETIVO CRÍTICO**: Manter PageSpeed Insights 100/100 (Desktop) e +95 (Mobile).
+> Qualquer nova feature deve respeitar RIGOROSAMENTE as regras abaixo.
+
+## 10.1 Otimização de Imagens (LiipImagine)
+
+**⚠️ CRÍTICO: Limitações do Servidor**
+- **NÃO USE WebP**: O servidor atual não suporta conversão para WebP via GD/Imagick corretamente, gerando erros 500 ou "filter not found".
+- **USE JPEG**: Force `jpeg` com qualidade otimizada para todas as fotos.
+- **Background**: Ao converter PNG/Transparente para JPEG, defina `background: { color: '#ffffff' }` para evitar fundo preto.
+- **Dimensões**: Nunca sirva imagens maiores que o dobro do tamanho de exibição (Retina).
+
+**Configuração Padrão Segura (`config/packages/liip_imagine.yaml`):**
+```yaml
+filter_sets:
+    service_card: # Ex: Card de 300x200px
+        quality: 75
+        filters:
+            thumbnail: { size: [300, 200], mode: outbound }
+            background: { color: '#ffffff' } # Essencial para JPEGs
+            format: { name: jpeg, quality: 75 } # Força JPEG
+```
+
+## 10.2 LCP (Largest Contentful Paint)
+
+O elemento LCP (geralmente o banner principal) deve carregar instantaneamente.
+
+1.  **Preload**: Adicione `rel="preload"` no `<head>` apenas para a imagem LCP da página atual.
+    ```twig
+    {# templates/news/show.html.twig #}
+    {% block stylesheets %}
+        <link rel="preload" as="image" href="{{ vich_uploader_asset(news, 'imageFile')|imagine_filter('hero') }}" fetchpriority="high">
+    {% endblock %}
+    ```
+2.  **Fetch Priority**: Na tag `<img>`, use `fetchpriority="high"`.
+3.  **CSS Bloqueante**: Mantenha CSS crítico inline se possível, ou preload do `built.css`.
+
+## 10.3 CLS (Cumulative Layout Shift)
+
+**Regra de Ouro**: Tudo deve ter tamanho definido antes de carregar.
+
+1.  **Imagens**: Sempre declare `width` e `height` no HTML, mesmo que o CSS controle o tamanho.
+    ```html
+    <img src="..." width="400" height="300" class="w-full h-auto">
+    ```
+2.  **Containers Dinâmicos**: Use `min-height` para áreas que carregam conteúdo depois (ex: `<main>`).
+    ```html
+    <main class="flex-1 min-h-[50vh]">
+    ```
+3.  **Fontes**: Use `display=swap` no Google Fonts.
+
+## 10.4 Acessibilidade (Score 100)
+
+1.  **Contraste**: Textos sobre fundo escuro devem ser `text-white` ou muito claros. Evite cinza ou azul escuro sobre preto.
+2.  **Área de Toque (Mobile)**: Botões e links devem ter área clicável de pelo menos **48x48px**.
+    - *Solução para "bolinhas" de carousel*: Crie um container invisível 48x48px em volta do ponto visual.
+    ```html
+    <button class="w-12 h-12 flex items-center justify-center ..."> <!-- Hit area -->
+        <span class="w-3 h-3 bg-white ..."></span> <!-- Visual dot -->
+    </button>
+    ```
+3.  **Links Descritivos**: Nunca use apenas "Ler mais" ou ícones sem texto.
+    - *Solução*: Adicione contexto invisível.
+    ```html
+    <a href="...">Ler mais <span class="sr-only">sobre Cardiologia</span></a>
+    <a href="..."><span class="sr-only">Facebook</span> <i data-lucide="facebook"></i></a>
+    ```
+4.  **Hierarquia de Títulos**: Respeite H1 -> H2 -> H3. Não pule níveis.
+
+## 10.5 JavaScript e Animações
+
+1.  **Defer**: Todo script externo deve ter `defer`.
+2.  **Reflows**: Evite animar propriedades geométricas (`width`, `height`, `margin`) em loops ou scroll.
+    - **Preferido**: Anime `transform` e `opacity`.
+3.  **Carousel**: Não anime `background-color`. Use transição de `opacity` em elementos sobrepostos.
+
+## 10.6 Pitfalls e "O que NÃO fazer" (Lições Aprendidas)
+
+1.  **HTACCESS Sensível**:
+    - **NÃO** remova tags de fechamento `</IfModule>` cegamente.
+    - **NÃO** adicione configurações de cache/compressão que o servidor não suporte (causa Error 500).
+    - **SEGURO**: `mod_deflate` (Gzip) funciona bem. Headers básicos de segurança funcionam.
+2.  **WebP Server-Side**:
+    - O servidor atual **NÃO CONVERTE WebP**. Não tente forçar isso no LiipImagine. Otimize JPEGs.
+3.  **Lazy Load no LCP**:
+    - **JAMAIS** coloque `loading="lazy"` na imagem principal (Banner/Hero). Isso destrói o LCP. Use `eager` ou padrão.
+
+---
+
 **FIM DA DOCUMENTAÇÃO TÉCNICA COMPLETA**
 
 *Este documento deve permitir a reconstrução total do sistema por qualquer desenvolvedor ou IA.*
