@@ -46,11 +46,20 @@ final class Version20251226000000 extends AbstractMigration
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
 
         // 3. Add transparency_id to transparency_doc
-        // Using direct ALTER assuming strict migration order on fresh DB
-        $this->addSql('ALTER TABLE transparency_doc ADD COLUMN transparency_id INT NOT NULL');
+        // 3. Add transparency_id to transparency_doc
+        // Check if column exists
+        $columnExists = $this->connection->executeQuery("SHOW COLUMNS FROM transparency_doc LIKE 'transparency_id'")->fetchOne();
+        if (!$columnExists) {
+            $this->addSql('ALTER TABLE transparency_doc ADD COLUMN transparency_id INT NOT NULL');
+        }
 
         // 4. Add FK
-        $this->addSql('ALTER TABLE transparency_doc ADD CONSTRAINT FK_TRANSPARENCY_DOC_TRANSPARENCY FOREIGN KEY (transparency_id) REFERENCES transparency(id) ON DELETE CASCADE');
+        // Check if FK exists
+        $fkExists = $this->connection->executeQuery("SELECT count(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_NAME = 'FK_TRANSPARENCY_DOC_TRANSPARENCY' AND TABLE_NAME = 'transparency_doc'")->fetchOne();
+        
+        if (!$fkExists) {
+            $this->addSql('ALTER TABLE transparency_doc ADD CONSTRAINT FK_TRANSPARENCY_DOC_TRANSPARENCY FOREIGN KEY (transparency_id) REFERENCES transparency(id) ON DELETE CASCADE');
+        }
     }
 
     public function down(Schema $schema): void

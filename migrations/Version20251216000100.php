@@ -20,7 +20,7 @@ final class Version20251216000100 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // Create news_category table
-        $this->addSql('CREATE TABLE news_category (
+        $this->addSql('CREATE TABLE IF NOT EXISTS news_category (
             id INT AUTO_INCREMENT NOT NULL,
             title VARCHAR(255) NOT NULL,
             slug VARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ final class Version20251216000100 extends AbstractMigration
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
 
         // Create join table news_news_category
-        $this->addSql('CREATE TABLE news_news_category (
+        $this->addSql('CREATE TABLE IF NOT EXISTS news_news_category (
             news_id INT NOT NULL,
             news_category_id INT NOT NULL,
             INDEX IDX_NEWS_NEWS_CATEGORY_NEWS_ID (news_id),
