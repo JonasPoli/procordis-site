@@ -6,7 +6,7 @@
     {# Hero Small #}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
          <div class="container mx-auto px-6 relative z-10 text-center">
             
             {# Breadcrumb #}
@@ -29,7 +29,7 @@
                 <div class="lg:w-1/2 relative" data-aos="fade-right">
                     <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/10 rounded-full z-0"></div>
                     <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-secondary/10 rounded-full z-0"></div>
-                    <img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile') : asset('assets/images/replica/doctor-welcome.jpg') }}" alt="Sobre a Procordis" class="rounded-xl shadow-xl relative z-10 w-full object-cover">
+                    <img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile')|imagine_filter('about_image') : asset('assets/images/replica/doctor-welcome.jpg')|imagine_filter('about_image') }}" alt="Sobre a Procordis" class="rounded-xl shadow-xl relative z-10 w-full object-cover">
                 </div>
                 
                 {# Text #}
