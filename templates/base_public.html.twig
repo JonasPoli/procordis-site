@@ -7,7 +7,7 @@
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
             <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
-            <a href="https://www.google.com/maps/search/?api=1&query={{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP')|url_encode }}" target="_blank" class="hover:text-primary transition-colors">
+            <a href="https://www.google.com/maps/search/?api=1&query={{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP')|url_encode }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">
                 Localização: {{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP') }}
             </a>
           </div>
@@ -26,16 +26,16 @@
             </a>
           </div>
           <div class="flex items-center gap-3 ml-4">
-            <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank"{% endif %}>
+            <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook">
               <i data-lucide="facebook" class="w-4 h-4"></i>
             </a>
-            <a href="#" class="hover:text-primary transition-colors">
+            <a href="#" class="hover:text-primary transition-colors" aria-label="Twitter">
               <i data-lucide="twitter" class="w-4 h-4"></i>
             </a>
-            <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank"{% endif %}>
+            <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram">
               <i data-lucide="instagram" class="w-4 h-4"></i>
             </a>
-            <a href="#" class="hover:text-primary transition-colors">
+            <a href="#" class="hover:text-primary transition-colors" aria-label="LinkedIn">
               <i data-lucide="linkedin" class="w-4 h-4"></i>
             </a>
             <span class="w-px h-4 bg-primary-foreground/20"></span>
@@ -76,7 +76,7 @@
               </nav>
 
           {# Mobile Menu Button #}
-          <button class="lg:hidden p-2" @click="isMenuOpen = !isMenuOpen">
+          <button class="lg:hidden p-2" @click="isMenuOpen = !isMenuOpen" aria-label="Abrir Menu">
             <i x-show="!isMenuOpen" data-lucide="menu" class="w-6 h-6"></i>
             <i x-show="isMenuOpen" data-lucide="x" class="w-6 h-6" style="display: none;"></i>
           </button>
@@ -173,10 +173,10 @@
               </button>
             </form>
             <div class="flex items-center gap-4">
-              <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank"{% endif %}><i data-lucide="facebook" class="w-5 h-5"></i></a>
-              <a href="#" class="hover:text-primary transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-              <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank"{% endif %}><i data-lucide="instagram" class="w-5 h-5"></i></a>
-              <a href="#" class="hover:text-primary transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+              <a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.facebook %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+              <a href="#" class="hover:text-primary transition-colors" aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+              <a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors" {% if generalData.instagram %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+              <a href="#" class="hover:text-primary transition-colors" aria-label="LinkedIn"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
             </div>
           </div>
         </div>
@@ -198,7 +198,7 @@
             <div class="space-y-2 text-sm">
               <div class="flex items-center gap-2">
                 <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
-                <a href="https://www.google.com/maps/search/?api=1&query={{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP, 14806-010')|url_encode }}" target="_blank" class="hover:text-primary transition-colors">
+                <a href="https://www.google.com/maps/search/?api=1&query={{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP, 14806-010')|url_encode }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">
                     {{ generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP, 14806-010') }}
                 </a>
               </div>

@@ -3,7 +3,22 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Procordis{% endblock %}</title>
+        <title>{% block title %}Procordis - Cardiologia e Saúde em Araraquara{% endblock %}</title>
+        <meta name="description" content="{% block description %}Associação Procordis: Referência em cardiologia e exames diagnósticos em Araraquara. Tecnologia avançada e atendimento humanizado.{% endblock %}">
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+        <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
+        <meta property="og:description" content="{% block og_description %}{{ block('description') }}{% endblock %}">
+        <meta property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo_procordis.png')) }}{% endblock %}">
+        
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+        <meta property="twitter:title" content="{{ block('title') }}">
+        <meta property="twitter:description" content="{{ block('description') }}">
+        <meta property="twitter:image" content="{{ block('og_image') }}">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
         

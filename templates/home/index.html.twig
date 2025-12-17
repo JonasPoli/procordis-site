@@ -167,12 +167,13 @@
                   {% for banner in banners %}
                   <button @click="currentSlide = {{ loop.index0 }}" 
                           class="w-3 h-3 rounded-full transition-all"
-                          :class="currentSlide === {{ loop.index0 }} ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></button>
+                          :class="currentSlide === {{ loop.index0 }} ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"
+                          aria-label="Ir para slide {{ loop.index0 + 1 }}"></button>
                   {% endfor %}
               {% else %}
                   {# Fallback dots #}
-                  <button @click="currentSlide = 0" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 0 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></button>
-                  <button @click="currentSlide = 1" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 1 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'"></button>
+                  <button @click="currentSlide = 0" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 0 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'" aria-label="Ir para slide 1"></button>
+                  <button @click="currentSlide = 1" class="w-3 h-3 rounded-full transition-all" :class="currentSlide === 1 ? 'bg-primary-foreground' : 'bg-primary-foreground/50'" aria-label="Ir para slide 2"></button>
               {% endif %}
           </div>
         </section>
@@ -328,11 +329,16 @@
                       <h3 class="font-bold text-medical-heading dark:text-white text-sm">{{ specialty.name }}</h3>
                     </div>
                     
-                    {# Back Side #}
-                    <div class="flip-card-back rounded-xl overflow-hidden">
+                      {# Back Side #}
+                    <div class="flip-card-back rounded-xl overflow-hidden relative">
                       {# Background Image with Overlay #}
                       {% if specialty.imageName %}
-                        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ vich_uploader_asset(specialty, 'imageFile')|imagine_filter('service_card') }}'); opacity: 0.2;"></div>
+                        <img src="{{ vich_uploader_asset(specialty, 'imageFile')|imagine_filter('service_card') }}" 
+                             alt="{{ specialty.name }}" 
+                             class="absolute inset-0 w-full h-full object-cover opacity-20" 
+                             loading="lazy">
+                      {% else %}
+                         <div class="absolute inset-0 bg-cover bg-center opacity-20"></div>
                       {% endif %}
                       <div class="absolute inset-0 bg-primary/90 dark:bg-slate-800/95"></div>
                       
@@ -379,7 +385,7 @@
 
             <div class="flex items-center justify-center gap-2 md:gap-8">
               {# Left Arrow #}
-              <button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full">
+              <button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Depoimento anterior">
                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
               </button>
 
@@ -418,17 +424,17 @@
               </div>
 
               {# Right Arrow #}
-              <button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full">
+              <button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Próximo depoimento">
                 <i data-lucide="chevron-right" class="w-6 h-6"></i>
               </button>
             </div>
             
             {# Mobile Arrows #}
             <div class="flex justify-center gap-4 mt-8 md:hidden">
-              <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full">
+              <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Depoimento anterior">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
               </button>
-              <button @click="next" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full">
+              <button @click="next" class="w-10 h-10 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Próximo depoimento">
                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
               </button>
             </div>
@@ -438,7 +444,8 @@
                 <template x-for="(quote, index) in quotes" :key="index">
                     <button @click="currentQuote = index" 
                             class="w-2 h-2 rounded-full transition-all duration-300"
-                            :class="currentQuote === index ? 'bg-white dark:bg-primary w-6' : 'bg-white/40 dark:bg-primary/30 hover:bg-white/60 dark:hover:bg-primary/50'">
+                            :class="currentQuote === index ? 'bg-white dark:bg-primary w-6' : 'bg-white/40 dark:bg-primary/30 hover:bg-white/60 dark:hover:bg-primary/50'"
+                            :aria-label="'Ir para depoimento ' + (index + 1)">
                     </button>
                 </template>
             </div>
@@ -562,10 +569,10 @@
                         Últimas Notícias
                       </h2>
                       <div class="flex gap-2" x-show="totalSlides > 1">
-                        <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full">
+                        <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Notícias anteriores">
                           <i data-lucide="chevron-left" class="w-5 h-5"></i>
                         </button>
-                        <button @click="next" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full">
+                        <button @click="next" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Próximas notícias">
                           <i data-lucide="chevron-right" class="w-5 h-5"></i>
                         </button>
                       </div>
