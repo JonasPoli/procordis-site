@@ -5,7 +5,7 @@
 {% block content %}
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png') }}'); filter: grayscale(100%);"></div>
+         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
          <div class="container mx-auto px-6 relative z-10 text-center">
             
             {# Breadcrumb #}
