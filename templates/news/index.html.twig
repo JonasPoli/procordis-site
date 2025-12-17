@@ -64,7 +64,7 @@
                                     {{ news.summary }}
                                 </p>
                                 <a href="{{ path('app_news_detail', {'slug': news.slug}) }}" class="text-primary font-bold text-sm hover:underline inline-flex items-center gap-1 mt-auto group-hover:gap-2 transition-all">
-                                    Ler mais
+                                    Ler mais <span class="sr-only">sobre {{ news.title }}</span>
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </a>
                             </div>

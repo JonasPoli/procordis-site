@@ -42,7 +42,7 @@
                         </p>
                         
                         <a href="{{ path('app_service_show', {slug: service.slug}) }}" class="inline-flex items-center text-primary font-semibold group-hover:gap-2 transition-all mt-auto">
-                            Saiba mais <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                            Saiba mais <span class="sr-only">sobre {{ service.title }}</span> <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
                         </a>
                     </div>
                 {% endfor %}

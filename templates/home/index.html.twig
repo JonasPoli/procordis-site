@@ -216,7 +216,7 @@
                       Conheça nossa equipe de especialistas pronta para cuidar da sua saúde.
                     </p>
                     <a href="#" class="inline-flex items-center gap-2 text-sm border border-primary-foreground/50 px-4 py-2 hover:bg-primary-foreground hover:text-primary transition-colors">
-                      Ver Especialistas
+                      Ver Especialistas <span class="sr-only">do Corpo Clínico</span>
                     </a>
                   </div>
                 </div>
@@ -351,7 +351,7 @@
                         <h3 class="font-bold text-sm mb-2">{{ specialty.name }}</h3>
                         <p class="text-xs opacity-90 mb-3 line-clamp-2">{{ specialty.shortDescription|default('')|slice(0, 60) }}{% if specialty.shortDescription|length > 60 %}...{% endif %}</p>
                         <a href="{{ path('app_specialty_show', {slug: specialty.slug}) }}" class="text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors">
-                          Veja mais
+                          Veja mais <span class="sr-only">sobre {{ specialty.name }}</span>
                         </a>
                       </div>
                     </div>
@@ -477,7 +477,7 @@
                         <div class="text-primary-foreground text-sm">
                             {{ doctor.bio|striptags|u.truncate(100, '...') }}
                         </div>
-                        <a href="{{ path('app_about') }}" class="btn-medical-outline border-white text-white hover:bg-white hover:text-primary mt-2">Saiba Mais</a>
+                        <a href="{{ path('app_about') }}" class="btn-medical-outline border-white text-white hover:bg-white hover:text-primary mt-2">Saiba Mais <span class="sr-only">sobre {{ doctor.name }}</span></a>
                       </div>
                     </div>
                     <div class="pt-4">
