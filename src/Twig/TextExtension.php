@@ -16,8 +16,8 @@ class TextExtension extends AbstractExtension
 
     public function truncateWords(string $text, int $length = 250, string $ellipsis = '...'): string
     {
-        // First remove any HTML tags so we only count actual text
-        $text = strip_tags($text);
+        // First remove any HTML tags, then decode HTML entities (like &ccedil;) so we count actual characters
+        $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         if (mb_strlen($text) <= $length) {
             return $text;
