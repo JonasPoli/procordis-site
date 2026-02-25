@@ -136,54 +136,54 @@
 						<p class="text-primary-foreground/70 text-sm">Receba dicas de saúde e notícias da Procordis.</p>
 					</div>
 					<form class="flex w-full md:w-1/2" x-data="{
-												                email: '',
-												                loading: false,
-												                async submitNewsletter() {
-												                    this.loading = true;
-												                    try {
-												                        const response = await fetch('/api/newsletter', {
-												                            method: 'POST',
-												                            headers: { 'Content-Type': 'application/json' },
-												                            body: JSON.stringify({ email: this.email })
-												                        });
-												                        const result = await response.json();
-												                        if (response.ok) {
-												                            Swal.fire({
-												                                title: 'Inscrição Confirmada!',
-												                                text: 'Obrigado por se inscrever na nossa newsletter.',
-												                                icon: 'success',
-												                                confirmButtonColor: '#0ea5e9'
-												                            });
-												                            this.email = '';
-												                        } else {
-												                            if (result.error && result.error.includes('Duplicate')) {
-												                                Swal.fire({
-												                                    title: 'Já Inscrito',
-												                                    text: 'Este e-mail já faz parte da nossa lista.',
-												                                    icon: 'info',
-												                                    confirmButtonColor: '#0ea5e9'
-												                                });
-												                            } else {
-												                                Swal.fire({
-												                                    title: 'Erro',
-												                                    text: result.error || 'Não foi possível realizar a inscrição.',
-												                                    icon: 'error',
-												                                    confirmButtonColor: '#0ea5e9'
-												                                });
-												                            }
-												                        }
-												                    } catch (e) {
-												                         Swal.fire({
-												                            title: 'Erro de Conexão',
-												                            text: 'Verifique sua internet e tente novamente.',
-												                            icon: 'error',
-												                            confirmButtonColor: '#0ea5e9'
-												                        });
-												                    } finally {
-												                        this.loading = false;
-												                    }
-												                }
-												            }" @submit.prevent="submitNewsletter">
+																								                email: '',
+																								                loading: false,
+																								                async submitNewsletter() {
+																								                    this.loading = true;
+																								                    try {
+																								                        const response = await fetch('/api/newsletter', {
+																								                            method: 'POST',
+																								                            headers: { 'Content-Type': 'application/json' },
+																								                            body: JSON.stringify({ email: this.email })
+																								                        });
+																								                        const result = await response.json();
+																								                        if (response.ok) {
+																								                            Swal.fire({
+																								                                title: 'Inscrição Confirmada!',
+																								                                text: 'Obrigado por se inscrever na nossa newsletter.',
+																								                                icon: 'success',
+																								                                confirmButtonColor: '#0ea5e9'
+																								                            });
+																								                            this.email = '';
+																								                        } else {
+																								                            if (result.error && result.error.includes('Duplicate')) {
+																								                                Swal.fire({
+																								                                    title: 'Já Inscrito',
+																								                                    text: 'Este e-mail já faz parte da nossa lista.',
+																								                                    icon: 'info',
+																								                                    confirmButtonColor: '#0ea5e9'
+																								                                });
+																								                            } else {
+																								                                Swal.fire({
+																								                                    title: 'Erro',
+																								                                    text: result.error || 'Não foi possível realizar a inscrição.',
+																								                                    icon: 'error',
+																								                                    confirmButtonColor: '#0ea5e9'
+																								                                });
+																								                            }
+																								                        }
+																								                    } catch (e) {
+																								                         Swal.fire({
+																								                            title: 'Erro de Conexão',
+																								                            text: 'Verifique sua internet e tente novamente.',
+																								                            icon: 'error',
+																								                            confirmButtonColor: '#0ea5e9'
+																								                        });
+																								                    } finally {
+																								                        this.loading = false;
+																								                    }
+																								                }
+																								            }" @submit.prevent="submitNewsletter">
 						<label for="newsletter-email" class="sr-only">Seu melhor e-mail</label>
 						<input type="email" id="newsletter-email" x-model="email" placeholder="Seu melhor e-mail" required class="flex-1 px-4 py-3 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-primary rounded-l-lg">
 						<button type="submit" class="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary-light transition-colors rounded-r-lg font-medium" :disabled="loading">
@@ -321,7 +321,7 @@
 		</div>
 
 		{# Developer Bar #}
-		<div class="bg-black/20 py-2">
+		<div class="bg-black/20 py-2 border-t border-primary-foreground/20 mb-6">
 			<div class="container mx-auto text-center text-xs text-primary-foreground/60">
 				Desenvolvido por
 				<a href="https://wab.com.br" target="_blank" rel="noopener noreferrer" class="font-medium hover:text-white transition-colors duration-300">wab.com.br</a>
