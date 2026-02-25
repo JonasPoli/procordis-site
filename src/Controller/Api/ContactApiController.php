@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 #[Route('/api/contact')]
 class ContactApiController extends AbstractController
 {
@@ -52,23 +52,16 @@ class ContactApiController extends AbstractController
                 $recipientsStr = $systemVariableRepository->getValue('contact_email_recipients');
                 if ($recipientsStr) {
                     $recipientList = array_map('trim', preg_split('/\r\n|\r|\n|,/', $recipientsStr));
-                    
-                    $emailBody = "Você tem uma nova mensagem de contato do site.\n\n" .
-                                 "Nome: {$message->getName()}\n" .
-                                 "E-mail: {$message->getEmail()}\n";
-                    if ($message->getPhone()) {
-                        $emailBody .= "Telefone: {$message->getPhone()}\n";
-                    }
-                    $emailBody .= "Assunto: {$message->getSubject()}\n" .
-                                 "Mensagem:\n{$message->getMessage()}\n";
-
                     foreach ($recipientList as $rcpt) {
                         if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
-                            $email = (new Email())
+                            $email = (new TemplatedEmail())
                                 ->from('noreply@wab.com.br')
                                 ->to($rcpt)
-                                ->subject('Novo Contato do Site: ' . $message->getSubject())
-                                ->text($emailBody);
+                                ->subject('[Procordis] Novo Contato: ' . $message->getSubject())
+                                ->htmlTemplate('emails/contact.html.twig')
+                                ->context([
+                                    'contact' => $message
+                                ]);
 
                             $mailer->send($email);
                             $logger->info("Email enviado via wmailer para: {$rcpt}");
