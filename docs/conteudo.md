@@ -1,12 +1,12 @@
-## **Proposta para o novo site do Procordis**
+## **Proposta para o novo site da Procordis**
 
-Com base na análise comparativa, a proposta para o novo site do ambulatório Procordis inclui elementos inspirados nos melhores hospitais, adaptados ao contexto brasileiro e às necessidades da instituição. As recomendações são justificadas a seguir:
+Com base na análise comparativa, a proposta para o novo site do ambulatória Procordis inclui elementos inspirados nos melhores hospitais, adaptados ao contexto brasileiro e às necessidades da instituição. As recomendações são justificadas a seguir:
 
 ### Estrutura e funcionalidades
 
-1. **Página inicial acolhedora** – utilizar hero banner com fotografia real de pacientes e profissionais do Procordis, transmitindo empatia e confiança (inspirado nas fotos humanizadas dos hospitais filantrópicos).
+1. **Página inicial acolhedora** – utilizar hero banner com fotografia real de pacientes e profissionais da Procordis, transmitindo empatia e confiança (inspirado nas fotos humanizadas dos hospitais filantrópicos).
 
-2. **Menu claro e intuitivo** – incluir seções principais: **Sobre o Procordis**, **Especialidades**, **Agendamento on‑line**, **Resultados de exames**, **Notícias e educação em saúde**, **Como ajudar**, **Contato**. O menu deve ficar fixo no topo com opção de linguagem simples (português com acessibilidade) e tradução para inglês.
+2. **Menu claro e intuitivo** – incluir seções principais: **Sobre a Procordis**, **Especialidades**, **Agendamento on‑line**, **Resultados de exames**, **Notícias e educação em saúde**, **Como ajudar**, **Contato**. O menu deve ficar fixo no topo com opção de linguagem simples (português com acessibilidade) e tradução para inglês.
 
 3. **Agendamento on‑line e telemedicina** – oferecer sistema integrado para marcar consultas e exames, com escolha de profissional, data e horário, semelhante ao modelo do HIAE e Mayo Clinic. Isso reduz filas e facilita o acesso.
 
@@ -14,13 +14,13 @@ Com base na análise comparativa, a proposta para o novo site do ambulatório Pr
 
 5. **Notícias, blog e educação** – criar seção de conteúdos frequentes com dicas de prevenção cardiovascular, notícias do ambulatório, eventos e campanhas. Seguir padrão editorial (artigos curtos, infográficos e vídeos) para engajar o público e melhorar SEO.
 
-6. **Doações e voluntariado** – página dedicada a campanhas de doação, com explicações sobre a atuação filantrópica do Procordis e impacto social, inspirada em Einstein e Oswaldo Cruz. Incluir formulário seguro de contribuição e opções de voluntariado.
+6. **Doações e voluntariado** – página dedicada a campanhas de doação, com explicações sobre a atuação filantrópica da Procordis e impacto social, inspirada em Einstein e Oswaldo Cruz. Incluir formulário seguro de contribuição e opções de voluntariado.
 
 7. **Acessibilidade** – garantir contraste adequado, tamanho de fontes ajustável e navegação por teclado, a exemplo de hospitais internacionais que seguem WCAG. Disponibilizar ferramenta de leitura em voz alta e linguagem de sinais (Libras) quando possível.
 
 8. **Política de privacidade e transparência** – publicar política de privacidade completa conforme a LGPD e disponibilizar relatórios de gestão, programas de qualidade e certificações, fortalecendo a confiança.
 
-9. **Integração com redes sociais** – adicionar widgets de redes sociais e links para perfis oficiais do Procordis, permitindo compartilhamento fácil de conteúdo.
+9. **Integração com redes sociais** – adicionar widgets de redes sociais e links para perfis oficiais da Procordis, permitindo compartilhamento fácil de conteúdo.
 
 ### Identidade visual sugerida
 
@@ -30,7 +30,7 @@ Com base na análise comparativa, a proposta para o novo site do ambulatório Pr
 
 * **Tipografia:** adotar fonte sans‑serif moderna e legível (como Montserrat ou Lato) e variar tamanhos para títulos e textos. Padronizar espaçamentos e utilizar hierarquia tipográfica clara.
 
-* **Fotografia e elementos visuais:** utilizar imagens genuínas de profissionais e pacientes do Procordis, evitando bancos genéricos. As fotos devem transmitir inclusão (diversidade racial e de gênero) e mostrar momentos de cuidado e acolhimento. Incluir ícones simples e infográficos para explicar processos (agendamento, doações, procedimentos).
+* **Fotografia e elementos visuais:** utilizar imagens genuínas de profissionais e pacientes da Procordis, evitando bancos genéricos. As fotos devem transmitir inclusão (diversidade racial e de gênero) e mostrar momentos de cuidado e acolhimento. Incluir ícones simples e infográficos para explicar processos (agendamento, doações, procedimentos).
 
 * **Layout responsivo:** o design deve ser pensado para dispositivos móveis primeiro (mobile‑first), com transições suaves e menus simplificados. Testar as páginas em várias resoluções para garantir boa performance e acessibilidade, visando pontuação de pelo menos 80 no PageSpeed Insights para desktop e 60 para mobile.
 
@@ -54,11 +54,11 @@ Com base na análise comparativa, a proposta para o novo site do ambulatório Pr
 
 ## **Páginas essenciais do site**
 
-A partir da análise dos sites hospitalares de referência e das necessidades do Ambulatório Cardíaco Procordis, é possível definir um conjunto de páginas fundamentais para oferecer transparência, acolhimento e facilidade de uso. As páginas recomendadas são:
+A partir da análise dos sites hospitalares de referência e das necessidades do Ambulatório Cardíaca Procordis, é possível definir um conjunto de páginas fundamentais para oferecer transparência, acolhimento e facilidade de uso. As páginas recomendadas são:
 
 1. **Página inicial (Home)** – apresenta a missão e a visão do ambulatório, destaca serviços e permite acesso rápido às principais funcionalidades como agendamento, resultados de exames e notícias.
 
-2. **Quem somos / Sobre o Procordis** – descreve a história, a missão, a visão, os valores e as ações sociais do ambulatório; apresenta a equipe gestora e a equipe médica.
+2. **Quem somos / Sobre a Procordis** – descreve a história, a missão, a visão, os valores e as ações sociais do ambulatório; apresenta a equipe gestora e a equipe médica.
 
 3. **Serviços e especialidades** – lista e explica cada serviço oferecido (consultas cardiológicas, diagnósticos por imagem, reabilitação cardíaca, prevenção), com um breve descritivo, orientações e critérios de acesso.
 

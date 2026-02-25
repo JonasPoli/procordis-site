@@ -1,102 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-br" class="scroll-smooth overflow-x-hidden">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Procordis - Cardiologia e Saúde em Araraquara{% endblock %}</title>
-        <meta name="description" content="{% block description %}Associação Procordis: Referência em cardiologia e exames diagnósticos em Araraquara. Tecnologia avançada e atendimento humanizado.{% endblock %}">
-        
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ app.request.uri }}">
-        <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
-        <meta property="og:description" content="{% block og_description %}{{ block('description') }}{% endblock %}">
-        <meta property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo_procordis.png')) }}{% endblock %}">
-        
-        <!-- Twitter -->
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="{{ app.request.uri }}">
-        <meta property="twitter:title" content="{{ block('title') }}">
-        <meta property="twitter:description" content="{{ block('description') }}">
-        <meta property="twitter:image" content="{{ block('og_image') }}">
-        
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
-        
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-        <noscript>
-            <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-        </noscript>
-        
-        <link rel="stylesheet" href="{{ asset('css/built.css') }}">
-        {% block stylesheets %}{% endblock %}
-        
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% block javascripts %}{% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}Procordis - Cardiologia e Saúde em Araraquara
+			{% endblock %}
+		</title>
+		<meta
+		name="description" content="{% block description %}Associaçãa Procordis: Referência em cardiologia e exames diagnósticos em Araraquara. Tecnologia avançada e atendimento humanizado.{% endblock %}">
 
-        {% block seo_schema %}{% endblock %}
-        
-        <style>
-            body { font-family: 'Lato', sans-serif; }
-        </style>
-    </head>
-    <body class="flex flex-col min-h-screen font-sans antialiased text-foreground bg-background overflow-x-hidden" data-turbo="false">
-        <canvas id="heartbeat-bg" class="fixed inset-0 pointer-events-none z-[9999]"></canvas>
-        {% block body %}{% endblock %}
-        
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-        <script src="//unpkg.com/alpinejs" defer></script>
-        
-        <!-- Icons -->
-        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
-        <script>
-            // Fallback / re-init for dynamic content
-            document.addEventListener("DOMContentLoaded", () => {
-                if (window.lucide) lucide.createIcons();
-            });
-        </script>
-        <script>
-            // Theme Toggle - Simple reload-based approach to avoid Turbo conflicts
-            (function () {
-                'use strict';
-                const getTheme = () => localStorage.getItem('theme') || 'light';
-                
-                // Apply theme immediately on page load (before render)
-                const theme = getTheme();
-                if (theme === 'dark') document.documentElement.classList.add('dark');
-                else document.documentElement.classList.remove('dark');
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="{{ app.request.uri }}">
+		<meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
+		<meta property="og:description" content="{% block og_description %}{{ block('description') }}{% endblock %}">
+		<meta
+		property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo_procordis.png')) }}{% endblock %}">
 
-                const updateIcons = () => {
-                    const sunIcons = document.querySelectorAll('.theme-toggle-sun');
-                    const moonIcons = document.querySelectorAll('.theme-toggle-moon');
-                    const isDark = getTheme() === 'dark';
-                    sunIcons.forEach(i => i.classList.toggle('hidden', !isDark));
-                    moonIcons.forEach(i => i.classList.toggle('hidden', isDark));
-                };
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image">
+		<meta property="twitter:url" content="{{ app.request.uri }}">
+		<meta property="twitter:title" content="{{ block('title') }}">
+		<meta property="twitter:description" content="{{ block('description') }}">
+		<meta property="twitter:image" content="{{ block('og_image') }}">
 
-                // Wait for DOM then update icons and bind click
-                document.addEventListener('DOMContentLoaded', () => {
-                    updateIcons();
-                    document.body.addEventListener('click', (e) => {
-                        const btn = e.target.closest('.theme-toggle-btn');
-                        if (btn) {
-                            const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
-                            localStorage.setItem('theme', newTheme);
-                            window.location.reload(); // Force full page reload
-                        }
-                    });
-                });
-            })();
-        </script>
-        <script src="{{ asset('js/simple-aos.js') }}" defer></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                if(typeof AOS !== 'undefined') {
-                    AOS.init();
-                }
-            });
-        </script>
-        <script src="{{ asset('js/heartbeat.js') }}" defer></script>
-    </body>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+		<noscript>
+			<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+		</noscript>
+
+		<link rel="stylesheet" href="{{ asset('css/built.css') }}"> {% block stylesheets %}{% endblock %}
+
+		{% block importmap %}
+			{{ importmap('app') }}
+		{% endblock %}
+		{% block javascripts %}{% endblock %}
+
+		{% block seo_schema %}{% endblock %}
+
+		<style>
+			body {
+				font-family: 'Lato', sans-serif;
+			}
+		</style>
+	</head>
+	<body class="flex flex-col min-h-screen font-sans antialiased text-foreground bg-background overflow-x-hidden" data-turbo="false">
+		<canvas id="heartbeat-bg" class="fixed inset-0 pointer-events-none z-[9999]"></canvas>
+		{% block body %}{% endblock %}
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+		<script src="//unpkg.com/alpinejs" defer></script>
+
+		<!-- Icons -->
+		<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+		<script>
+			// Fallback / re-init for dynamic content
+document.addEventListener("DOMContentLoaded", () => {
+if (window.lucide) 
+lucide.createIcons();
+
+});
+		</script>
+		<script>
+			// Theme Toggle - Simple reload-based approach to avoid Turbo conflicts
+(function () {
+'use strict';
+const getTheme = () => localStorage.getItem('theme') || 'light';
+
+// Apply theme immediately on page load (before render)
+const theme = getTheme();
+if (theme === 'dark') 
+document.documentElement.classList.add('dark');
+ else 
+document.documentElement.classList.remove('dark');
+
+
+const updateIcons = () => {
+const sunIcons = document.querySelectorAll('.theme-toggle-sun');
+const moonIcons = document.querySelectorAll('.theme-toggle-moon');
+const isDark = getTheme() === 'dark';
+sunIcons.forEach(i => i.classList.toggle('hidden', ! isDark));
+moonIcons.forEach(i => i.classList.toggle('hidden', isDark));
+};
+
+// Wait for DOM then update icons and bind click
+document.addEventListener('DOMContentLoaded', () => {
+updateIcons();
+document.body.addEventListener('click', (e) => {
+const btn = e.target.closest('.theme-toggle-btn');
+if (btn) {
+const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
+localStorage.setItem('theme', newTheme);
+window.location.reload(); // Force full page reload
+}
+});
+});
+})();
+		</script>
+		<script src="{{ asset('js/simple-aos.js') }}" defer></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+if (typeof AOS !== 'undefined') {
+AOS.init();
+}
+});
+		</script>
+		<script src="{{ asset('js/heartbeat.js') }}" defer></script>
+	</body>
 </html>

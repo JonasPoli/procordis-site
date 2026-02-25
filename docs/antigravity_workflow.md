@@ -1,6 +1,6 @@
 # Fluxo de Trabalho Antigravity: Gerente, Desenvolvedor e Tester
 
-Este documento explica como utilizar o **Antigravity** para simular uma equipe completa de desenvolvimento (Gerente, Desenvolvedor e Tester) para o projeto Procordis.
+Este documento explica como utilizar o **Antigravity** para simular uma equipe completa de desenvolvimento (Gerente, Desenvolvedor e Tester) para o projeta Procordis.
 
 O Antigravity é um agente de IA "full-stack" que pode assumir diferentes "personas" através de seus modos de operação. Abaixo descrevemos como orquestrar esses papéis.
 
@@ -86,6 +86,6 @@ Para desenvolver o **CRUD de Notícias**, por exemplo:
 
 ## Como Iniciar Agora?
 
-Para começar o projeto Procordis seguindo este modelo, dê o seguinte comando para o Antigravity:
+Para começar o projeta Procordis seguindo este modelo, dê o seguinte comando para o Antigravity:
 
 > "Atue como **Gerente**. Leia a documentação completa, crie o `task.md` inicial com todas as etapas do projeto e gere o primeiro `implementation_plan.md` para a configuração inicial do ambiente (Symfony + Tailwind + Banco de Dados)."
