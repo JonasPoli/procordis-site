@@ -1,164 +1,172 @@
 {% extends 'base_public.html.twig' %}
 
-{% block title %}Quem Somos - Procordis{% endblock %}
+{% block title %}Quem Somos - Procordis
+{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
+	{{ parent() }}
+	<link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
 {% endblock %}
 
 {% block content %}
-    {# Hero Small #}
-    {# Hero Standardized #}
-    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
-         <div class="container mx-auto px-6 relative z-10 text-center">
-            
-            {# Breadcrumb #}
-            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
-                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
-                <span class="opacity-50">/</span>
-                <span class="font-medium text-white">Quem Somos</span>
-            </nav>
+	{# Hero Small #}
+	{# Hero Standardized #}
+		<div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden"> <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
+		<div
+			class="container mx-auto px-6 relative z-10 text-center">
 
-            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ about.mainTitle|default('Quem Somos') }}</h1>
-            <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">Uma trajetória dedicada a cuidar do ritmo da sua vida.</p>
-        </div>
-    </div>
+			{# Breadcrumb #}
+			<nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+				<a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+				<span class="opacity-50">/</span>
+				<span class="font-medium text-white">Quem Somos</span>
+			</nav>
 
-    {# Content #}
-    <section class="py-16 lg:py-24">
-        <div class="container mx-auto">
-            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                {# Image #}
-                <div class="lg:w-1/2 relative" data-aos="fade-right">
-                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/10 rounded-full z-0"></div>
-                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-secondary/10 rounded-full z-0"></div>
-                    <img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile')|imagine_filter('about_image') : asset('assets/images/replica/doctor-welcome.jpg')|imagine_filter('about_image') }}" alt="Sobre a Procordis" class="rounded-xl shadow-xl relative z-10 w-full object-cover" width="800" height="800">
-                </div>
-                
-                {# Text #}
-                <div class="lg:w-1/2" data-aos="fade-left">
-                    <div class="flex items-center gap-3 mb-4">
-                      <div class="w-8 h-0.5 bg-primary"></div>
-                      <span class="text-primary font-semibold uppercase tracking-wider text-sm">NOSSA HISTÓRIA</span>
-                    </div>
-                    
-                    <div class="prose prose-lg text-medical-text leading-relaxed">
-                        {% if about.mainContent %}
-                            {{ about.mainContent|raw }}
-                        {% else %}
-                             <p class="mb-6">
-                                A <strong>Associação Procordis</strong> nasceu do sonho de oferecer um atendimento cardiológico de excelência acessível a toda a comunidade de Araraquara e região.
-                            </p>
-                            <p class="mb-6">
-                                Com uma equipe de especialistas renomados e equipamentos de última geração, nos dedicamos diariamente à prevenção, diagnóstico e tratamento de doenças cardiovasculares.
-                            </p>
-                            <blockquote class="border-l-4 border-primary pl-6 italic text-medical-text bg-medical-gray py-4 pr-4 rounded-r-lg my-8 shadow-sm">
-                                "Nosso compromisso vai além do diagnóstico; cuidamos de vidas e histórias com o respeito que cada coração merece."
-                            </blockquote>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+			<h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">{{ about.mainTitle|default('Quem Somos') }}</h1>
+			<p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">Uma trajetória dedicada a cuidar do ritmo da sua vida.</p>
+		</div>
+	</div>
 
-             {# Values Grid #}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
-                 {# Mission #}
-                <div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up">
-                    <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                        <i data-lucide="target" class="w-7 h-7"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Missão</h3>
-                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.mission|default('Proporcionar saúde cardiovascular de alta qualidade.')|raw }}</p>
-                </div>
+	{# Content #}
+	<section class="py-16 lg:py-24">
+		<div class="container mx-auto">
+			<div
+				class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+				{# Image #}
+				<div class="lg:w-1/2 relative" data-aos="fade-right">
+					<div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/10 rounded-full z-0"></div>
+					<div class="absolute -bottom-4 -right-4 w-32 h-32 bg-secondary/10 rounded-full z-0"></div>
+					<img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile')|imagine_filter('about_image') : asset('assets/images/replica/doctor-welcome.jpg')|imagine_filter('about_image') }}" alt="Sobre a Procordis" class="rounded-xl shadow-xl relative z-10 w-full object-cover" width="800" height="800">
+				</div>
 
-                {# Vision #}
-                <div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
-                     <div class="w-14 h-14 bg-blue-50 dark:bg-primary/20 rounded-xl flex items-center justify-center text-blue-600 dark:text-primary mb-6 group-hover:bg-blue-600 dark:group-hover:bg-primary group-hover:text-white transition-colors">
-                        <i data-lucide="eye" class="w-7 h-7"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Visão</h3>
-                    <p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.vision|default('Ser referência regional em cardiologia.')|raw }}</p>
-                </div>
+				{# Text #}
+				<div class="lg:w-1/2" data-aos="fade-left">
+					<div class="flex items-center gap-3 mb-4">
+						<div class="w-8 h-0.5 bg-primary"></div>
+						<span class="text-primary font-semibold uppercase tracking-wider text-sm">NOSSA HISTÓRIA</span>
+					</div>
 
-                {# Values #}
-                <div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
-                     <div class="w-14 h-14 bg-cyan-50 dark:bg-primary/20 rounded-xl flex items-center justify-center text-cyan-600 dark:text-primary mb-6 group-hover:bg-cyan-600 dark:group-hover:bg-primary group-hover:text-white transition-colors">
-                        <i data-lucide="heart-handshake" class="w-7 h-7"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Valores</h3>
-                    <div class="text-medical-text dark:text-muted-foreground leading-relaxed whitespace-pre-line">{{ about.ourValues|default('Ética\nHumanização')|raw }}</div>
-                </div>
-            </div>
-        </div>
-    </section>
+					<div class="prose prose-lg text-medical-text leading-relaxed">
+						{% if about.mainContent %}
+							{{ about.mainContent|raw }}
+						{% else %}
+							<p class="mb-6">
+								A
+								<strong>Associação Procordis</strong>
+								nasceu do sonho de oferecer um atendimento cardiológico de excelência acessível a toda a comunidade de Araraquara e região.
+							</p>
+							<p class="mb-6">
+								Com uma equipe de especialistas renomados e equipamentos de última geração, nos dedicamos diariamente à prevenção, diagnóstico e tratamento de doenças cardiovasculares.
+							</p>
+							<blockquote class="border-l-4 border-primary pl-6 italic text-medical-text bg-medical-gray py-4 pr-4 rounded-r-lg my-8 shadow-sm">
+								"Nosso compromisso vai além do diagnóstico; cuidamos de vidas e histórias com o respeito que cada coração merece."
+							</blockquote>
+						{% endif %}
+					</div>
+				</div>
+			</div>
 
-    {# Timeline #}
-    {% if timelineItems|length > 0 %}
-    <section class="py-16 lg:py-24 bg-medical-gray">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-heading font-bold text-medical-heading section-title section-title-center text-center mb-16" data-aos="fade-up">Nossa Linha do Tempo</h2>
-            <div class="relative max-w-6xl mx-auto">
-                {# Central Line #}
-                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-300 md:-translate-x-1/2"></div>
-                
-                <div class="px-4 md:px-8">
-                {% for item in timelineItems %}
-                <div class="relative mb-12 md:mb-16 last:mb-0">
-                    
-                    {# Mobile Layout #}
-                    <div class="md:hidden flex gap-6 items-start">
-                        {# Dot #}
-                        <div class="relative flex-shrink-0 mt-6">
-                            <div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
-                        </div>
-                        
-                        {# Card #}
-                        <div class="flex-1 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="200">
-                            <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
-                            <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                            <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
-                        </div>
-                    </div>
+			{# Values Grid #}
+			<div
+				class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
+				{# Mission #}
+				<div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up">
+					<div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+						<i data-lucide="target" class="w-7 h-7"></i>
+					</div>
+					<h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Missão</h3>
+					<p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.mission|default('Proporcionar saúde cardiovascular de alta qualidade.')|raw }}</p>
+				</div>
 
-                    {# Desktop Layout - Alternating #}
-                    <div class="hidden md:block">
-                        {% if loop.index0 % 2 == 0 %}
-                            {# Right Side #}
-                            <div class="flex items-center gap-8">
-                                <div class="w-1/2"></div>
-                                <div class="relative flex-shrink-0">
-                                    <div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
-                                </div>
-                                <div class="w-1/2 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="300">
-                                    <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
-                                    <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
-                                </div>
-                            </div>
-                        {% else %}
-                            {# Left Side #}
-                            <div class="flex items-center gap-8">
-                                <div class="w-1/2 rounded-xl shadow-xl p-6 text-white text-right border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-right" data-aos-delay="300">
-                                    <h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
-                                    <small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
-                                    <p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
-                                </div>
-                                <div class="relative flex-shrink-0">
-                                    <div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
-                                </div>
-                                <div class="w-1/2"></div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                </div>
-                {% endfor %}
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endif %}
+				{# Vision #}
+				<div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+					<div class="w-14 h-14 bg-blue-50 dark:bg-primary/20 rounded-xl flex items-center justify-center text-blue-600 dark:text-primary mb-6 group-hover:bg-blue-600 dark:group-hover:bg-primary group-hover:text-white transition-colors">
+						<i data-lucide="eye" class="w-7 h-7"></i>
+					</div>
+					<h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Visão</h3>
+					<p class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.vision|default('Ser referência regional em cardiologia.')|raw }}</p>
+				</div>
+
+				{# Values #}
+				<div class="bg-white dark:bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+					<div class="w-14 h-14 bg-cyan-50 dark:bg-primary/20 rounded-xl flex items-center justify-center text-cyan-600 dark:text-primary mb-6 group-hover:bg-cyan-600 dark:group-hover:bg-primary group-hover:text-white transition-colors">
+						<i data-lucide="heart-handshake" class="w-7 h-7"></i>
+					</div>
+					<h3 class="text-xl font-bold text-medical-heading dark:text-card-foreground mb-4">Valores</h3>
+					<div class="text-medical-text dark:text-muted-foreground leading-relaxed">{{ about.ourValues|default('Ética\nHumanização')|raw }}</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# Timeline #}
+	{% if timelineItems|length > 0 %}
+		<section class="py-16 lg:py-24 bg-medical-gray">
+			<div class="container mx-auto">
+				<h2 class="text-3xl font-heading font-bold text-medical-heading section-title section-title-center text-center mb-16" data-aos="fade-up">Nossa Linha do Tempo</h2>
+				<div
+					class="relative max-w-6xl mx-auto">
+					{# Central Line #}
+					<div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-300 md:-translate-x-1/2"></div>
+
+					<div class="px-4 md:px-8">
+						{% for item in timelineItems %}
+							<div
+								class="relative mb-12 md:mb-16 last:mb-0">
+
+								{# Mobile Layout #}
+								<div
+									class="md:hidden flex gap-6 items-start">
+									{# Dot #}
+									<div class="relative flex-shrink-0 mt-6">
+										<div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+									</div>
+
+									{# Card #}
+									<div class="flex-1 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="200">
+										<h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
+										<small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
+										<p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
+									</div>
+								</div>
+
+								{# Desktop Layout - Alternating #}
+								<div class="hidden md:block">
+									{% if loop.index0 % 2 == 0 %}
+										{# Right Side #}
+										<div class="flex items-center gap-8">
+											<div class="w-1/2"></div>
+											<div class="relative flex-shrink-0">
+												<div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+											</div>
+											<div class="w-1/2 rounded-xl shadow-xl p-6 text-white border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-left" data-aos-delay="300">
+												<h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
+												<small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
+												<p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
+											</div>
+										</div>
+									{% else %}
+										{# Left Side #}
+										<div class="flex items-center gap-8">
+											<div class="w-1/2 rounded-xl shadow-xl p-6 text-white text-right border" style="background-color: #1e293b; border-color: #334155;" data-aos="fade-right" data-aos-delay="300">
+												<h3 class="font-bold text-xl mb-1" style="color: #ffffff;">{{ item.title }}</h3>
+												<small class="inline-block mb-3 font-medium" style="color: #cbd5e1;">{{ item.year }}</small>
+												<p class="text-sm leading-relaxed" style="color: #e2e8f0;">{{ item.description|raw }}</p>
+											</div>
+											<div class="relative flex-shrink-0">
+												<div class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+											</div>
+											<div class="w-1/2"></div>
+										</div>
+									{% endif %}
+								</div>
+
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</section>
+	{% endif %}
 
 {% endblock %}
