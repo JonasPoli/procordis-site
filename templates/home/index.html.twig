@@ -1,670 +1,651 @@
 {% extends 'base_public.html.twig' %}
 
 {% block seo_schema %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "MedicalOrganization",
-  "name": "Procordis",
-  "alternateName": "Associação Procordis",
-  "url": "{{ url('app_home') }}",
-  "logo": "{{ absolute_url(asset('images/logo_procordis.png')) }}",
-  "telephone": "(16) 3397-4625",
-  "email": "secretaria@procordis.org.br",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Av. Queiroz Filho, 685 - Vila Sedenho",
-    "addressLocality": "Araraquara",
-    "addressRegion": "SP",
-    "postalCode": "14800-000",
-    "addressCountry": "BR"
-  },
-  "openingHoursSpecification": [
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      "opens": "07:00",
-      "closes": "18:00"
-    }
-  ]
-}
-</script>
+	<script type="application/ld+json">
+		{
+		  "@context": "https://schema.org",
+		  "@type": "MedicalOrganization",
+		  "name": "Procordis",
+		  "alternateName": "Associação Procordis",
+		  "url": "{{ url('app_home') }}",
+		  "logo": "{{ absolute_url(asset('images/logo_procordis.png')) }}",
+		  "telephone": "(16) 3397-4625",
+		  "email": "secretaria@procordis.org.br",
+		  "address": {
+		    "@type": "PostalAddress",
+		    "streetAddress": "Av. Queiroz Filho, 685 - Vila Sedenho",
+		    "addressLocality": "Araraquara",
+		    "addressRegion": "SP",
+		    "postalCode": "14800-000",
+		    "addressCountry": "BR"
+		  },
+		  "openingHoursSpecification": [
+		    {
+		      "@type": "OpeningHoursSpecification",
+		      "dayOfWeek": [
+		        "Monday",
+		        "Tuesday",
+		        "Wednesday",
+		        "Thursday",
+		        "Friday"
+		      ],
+		      "opens": "07:00",
+		      "closes": "18:00"
+		    }
+		  ]
+		}
+	</script>
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {% if banners|length > 0 %}
-        {% set firstBanner = banners|first %}
-        <link rel="preload" as="image" href="{{ firstBanner.imageName ? vich_uploader_asset(firstBanner, 'imageFile')|imagine_filter('hero') : asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}">
-    {% else %}
-        <link rel="preload" as="image" href="{{ asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}">
-    {% endif %}
+	{{ parent() }}
+	{% if banners|length > 0 %}
+		{% set firstBanner = banners|first %}
+		<link rel="preload" as="image" href="{{ firstBanner.imageName ? vich_uploader_asset(firstBanner, 'imageFile')|imagine_filter('hero') : asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}">
+	{% else %}
+		<link rel="preload" as="image" href="{{ asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}">
+	{% endif %}
 {% endblock %}
 
 {% block content %}
-        {# Hero #}
-        <section class="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] overflow-hidden" 
-                 x-data="{ currentSlide: 0 }" 
-                 x-init="const timer = setInterval(() => { currentSlide = (currentSlide + 1) % {{ banners|length > 0 ? banners|length : 2 }}; }, 5000);">
-          
-          {% if banners|length > 0 %}
-              {% for banner in banners %}
-              <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
-                   x-show="currentSlide === {{ loop.index0 }}"
-                   x-transition:enter="transition ease-out duration-1000"
-                   x-transition:enter-start="opacity-0"
-                   x-transition:enter-end="opacity-100"
-                   x-transition:leave="transition ease-in duration-1000"
-                   x-transition:leave-start="opacity-100"
-                   x-transition:leave-end="opacity-0"
-                   x-transition:leave-end="opacity-0">
-                   {% set bannerImage = banner.imageName ? vich_uploader_asset(banner, 'imageFile') : asset('assets/images/replica/hero-doctor.jpg') %}
-                   <picture>
-                        <source media="(max-width: 767px)" srcset="{{ bannerImage|imagine_filter('hero_mobile') }}">
-                        <source media="(min-width: 768px)" srcset="{{ bannerImage|imagine_filter('hero') }}">
-                        <img src="{{ bannerImage|imagine_filter('hero') }}" 
-                             alt="{{ banner.title }}" 
-                             class="absolute inset-0 w-full h-full object-cover"
-                             {% if loop.first %}fetchpriority="high"{% endif %}>
-                   </picture>
-                <div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
-                
-                <div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
-                    <div class="max-w-xl text-primary-foreground" data-aos="fade-up">
-                      <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                        {{ banner.title }}
-                      </h1>
-                      {% if banner.subtitle %}
-                      <p class="text-xl md:text-2xl mb-8 font-light italic">
-                         {{ banner.subtitle }}
-                      </p>
-                      {% endif %}
-                      <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
-                        {% if banner.btn1Text %}
-                        <a href="{{ banner.btn1Link|default('#') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
-                          {{ banner.btn1Text }}
-                        </a>
-                        {% endif %}
-                        {% if banner.btn2Text %}
-                        <a href="{{ banner.btn2Link|default('#') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
-                          {{ banner.btn2Text }}
-                        </a>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-              </div>
-              {% endfor %}
-          {% else %}
-              {# FALLBACK SLIDER #}
-              <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                   x-show="currentSlide === 0"
-                   x-show="currentSlide === 0">
-                 {% set fallbackImage1 = asset('assets/images/replica/hero-doctor.jpg') %}
-                 <picture>
-                    <source media="(max-width: 767px)" srcset="{{ fallbackImage1|imagine_filter('hero_mobile') }}">
-                    <source media="(min-width: 768px)" srcset="{{ fallbackImage1|imagine_filter('hero') }}">
-                    <img src="{{ fallbackImage1|imagine_filter('hero') }}" alt="Cuidando de Vidas" class="absolute inset-0 w-full h-full object-cover" fetchpriority="high">
-                 </picture>
-                <div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
-                 <div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
-                    <div class="max-w-xl text-primary-foreground" data-aos="fade-up">
-                      <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                        Cuidando de Vidas
-                      </h1>
-                      <p class="text-xl md:text-2xl mb-8 font-light italic">
-                         Coloque também seu coração para bater nessa ideia
-                      </p>
-                      <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
-                        <a href="{{ path('app_service_index') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
-                          Nossos Serviços
-                        </a>
-                        <a href="#contact" class="btn-medical-outline text-primary-foreground border-primary-foreground">
-                          Entre em Contato
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-              
-               <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                   x-show="currentSlide === 1"
-                   x-show="currentSlide === 1">
-                 {% set fallbackImage2 = asset('assets/images/replica/doctor-welcome.jpg') %}
-                 <picture>
-                    <source media="(max-width: 767px)" srcset="{{ fallbackImage2|imagine_filter('hero_mobile') }}">
-                    <source media="(min-width: 768px)" srcset="{{ fallbackImage2|imagine_filter('hero') }}">
-                    <img src="{{ fallbackImage2|imagine_filter('hero') }}" alt="Tecnologia e Humanização" class="absolute inset-0 w-full h-full object-cover">
-                 </picture>
-                <div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
-                 <div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
-                    <div class="max-w-xl text-primary-foreground" data-aos="fade-up">
-                      <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                        Tecnologia e Humanização
-                      </h1>
-                      <p class="text-xl md:text-2xl mb-8 font-light italic">
-                         O melhor para sua saúde cardiovascular
-                      </p>
-                      <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
-                        <a href="#specialists" class="btn-medical-outline text-primary-foreground border-primary-foreground">
-                          Corpo Clínico
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-          {% endif %}
+	{# Hero #}
+	<section class="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] overflow-hidden" x-data="{ currentSlide: 0 }" x-init="const timer = setInterval(() => { currentSlide = (currentSlide + 1) % {{ banners|length > 0 ? banners|length : 2 }}; }, 5000);">
 
-          {# Slider Dots #}
-          <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-              {% if banners|length > 0 %}
-                  {% for banner in banners %}
-                  <button @click="currentSlide = {{ loop.index0 }}" 
-                          class="w-12 h-12 flex items-center justify-center rounded-full transition-all group"
-                          aria-label="Ir para slide {{ loop.index0 + 1 }}">
-                          <span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300"
-                                :class="currentSlide === {{ loop.index0 }} ? 'opacity-100' : 'opacity-50'"></span>
-                  </button>
-                  {% endfor %}
-              {% else %}
-                  {# Fallback dots #}
-                  <button @click="currentSlide = 0" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 1">
-                    <span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300" :class="currentSlide === 0 ? 'opacity-100' : 'opacity-50'"></span>
-                  </button>
-                  <button @click="currentSlide = 1" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 2">
-                     <span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300" :class="currentSlide === 1 ? 'opacity-100' : 'opacity-50'"></span>
-                  </button>
-              {% endif %}
-          </div>
-        </section>
+		{% if banners|length > 0 %}
+			{% for banner in banners %}
+				<div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000" x-show="currentSlide === {{ loop.index0 }}" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-1000" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-transition:leave-end="opacity-0">
+					{% set bannerImage = banner.imageName ? vich_uploader_asset(banner, 'imageFile') : asset('assets/images/replica/hero-doctor.jpg') %}
+					<picture>
+						<source media="(max-width: 767px)" srcset="{{ bannerImage|imagine_filter('hero_mobile') }}">
+						<source media="(min-width: 768px)" srcset="{{ bannerImage|imagine_filter('hero') }}">
+						<img src="{{ bannerImage|imagine_filter('hero') }}" alt="{{ banner.title }}" class="absolute inset-0 w-full h-full object-cover" {% if loop.first %} fetchpriority="high" {% endif %}>
+					</picture>
+					<div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
 
-        {# InfoCards #}
-        <section class="bg-primary text-primary-foreground -mt-1">
-          <div class="container mx-auto">
-            <div class="grid md:grid-cols-3">
-              {# Opening Hours #}
-              <div class="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-primary-foreground/20" data-aos="fade-up" data-aos-delay="0">
-                <div class="flex items-start gap-4">
-                  <i data-lucide="clock" class="w-8 h-8 flex-shrink-0 mt-1"></i>
-                  <div class="w-full">
-                    <h2 class="text-lg font-bold mb-4">Horário de Atendimento</h2>
-                    <div class="space-y-2 text-sm">
-                      <div class="flex justify-between gap-4">
-                        <span>Segunda - Sexta</span>
-                        <span class="text-primary-foreground/80">7:00 - 18:00</span>
-                      </div>
-                      <div class="flex justify-between gap-4">
-                        <span>Sábado</span>
-                        <span class="text-primary-foreground/80">Fechado</span>
-                      </div>
-                      <div class="flex justify-between gap-4">
-                        <span>Domingo</span>
-                        <span class="text-primary-foreground/80">Fechado</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+					<div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
+						<div class="max-w-xl text-primary-foreground" data-aos="fade-up">
+							<h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+								{{ banner.title }}
+							</h1>
+							{% if banner.subtitle %}
+								<p class="text-xl md:text-2xl mb-8 font-light italic">
+									{{ banner.subtitle }}
+								</p>
+							{% endif %}
+							<div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
+								{% if banner.btn1Text %}
+									<a href="{{ banner.btn1Link|default('#') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
+										{{ banner.btn1Text }}
+									</a>
+								{% endif %}
+								{% if banner.btn2Text %}
+									<a href="{{ banner.btn2Link|default('#') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
+										{{ banner.btn2Text }}
+									</a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			{# FALLBACK SLIDER #}
+			<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" x-show="currentSlide === 0" x-show="currentSlide === 0">
+				{% set fallbackImage1 = asset('assets/images/replica/hero-doctor.jpg') %}
+				<picture>
+					<source media="(max-width: 767px)" srcset="{{ fallbackImage1|imagine_filter('hero_mobile') }}">
+					<source media="(min-width: 768px)" srcset="{{ fallbackImage1|imagine_filter('hero') }}">
+					<img src="{{ fallbackImage1|imagine_filter('hero') }}" alt="Cuidando de Vidas" class="absolute inset-0 w-full h-full object-cover" fetchpriority="high">
+				</picture>
+				<div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
+				<div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
+					<div class="max-w-xl text-primary-foreground" data-aos="fade-up">
+						<h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+							Cuidando de Vidas
+						</h1>
+						<p class="text-xl md:text-2xl mb-8 font-light italic">
+							Coloque também seu coração para bater nessa ideia
+						</p>
+						<div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
+							<a href="{{ path('app_service_index') }}" class="btn-medical-outline text-primary-foreground border-primary-foreground">
+								Nossos Serviços
+							</a>
+							<a href="#contact" class="btn-medical-outline text-primary-foreground border-primary-foreground">
+								Entre em Contato
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
 
-              {# Doctors Timetable #}
-              <div class="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-primary-foreground/20 bg-primary-dark" data-aos="fade-up" data-aos-delay="100">
-                <div class="flex items-start gap-4">
-                  <i data-lucide="calendar" class="w-8 h-8 flex-shrink-0 mt-1"></i>
-                  <div>
-                    <h2 class="text-lg font-bold mb-4">Corpo Clínico</h2>
-                    <p class="text-sm text-primary-foreground/80 mb-4">
-                      Conheça nossa equipe de especialistas pronta para cuidar da sua saúde.
-                    </p>
-                    <a href="#" class="inline-flex items-center gap-2 text-sm border border-primary-foreground/50 px-4 py-2 hover:bg-primary-foreground hover:text-primary transition-colors">
-                      Ver Especialistas <span class="sr-only">do Corpo Clínico</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+			<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" x-show="currentSlide === 1" x-show="currentSlide === 1">
+				{% set fallbackImage2 = asset('assets/images/replica/doctor-welcome.jpg') %}
+				<picture>
+					<source media="(max-width: 767px)" srcset="{{ fallbackImage2|imagine_filter('hero_mobile') }}">
+					<source media="(min-width: 768px)" srcset="{{ fallbackImage2|imagine_filter('hero') }}">
+					<img src="{{ fallbackImage2|imagine_filter('hero') }}" alt="Tecnologia e Humanização" class="absolute inset-0 w-full h-full object-cover">
+				</picture>
+				<div class="absolute inset-0 bg-gradient-to-r from-medical-heading/90 via-medical-heading/60 to-transparent dark:from-black/90 dark:via-black/60"></div>
+				<div class="relative container mx-auto h-full flex items-center py-20 md:py-32">
+					<div class="max-w-xl text-primary-foreground" data-aos="fade-up">
+						<h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+							Tecnologia e Humanização
+						</h1>
+						<p class="text-xl md:text-2xl mb-8 font-light italic">
+							O melhor para sua saúde cardiovascular
+						</p>
+						<div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="200">
+							<a href="#specialists" class="btn-medical-outline text-primary-foreground border-primary-foreground">
+								Corpo Clínico
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 
-              {# Contact Info #}
-              <div class="p-6 lg:p-8" data-aos="fade-up" data-aos-delay="200">
-                <div class="flex items-start gap-4">
-                  <i data-lucide="phone" class="w-8 h-8 flex-shrink-0 mt-1"></i>
-                  <div>
-                    <h2 class="text-lg font-bold mb-2">Informações</h2>
-                    <p class="text-2xl md:text-3xl font-bold mb-4">(16) 3397-4625</p>
-                    <p class="text-sm text-primary-foreground/80">
-                      Atendemos exclusivamente pacientes com encaminhamento médico.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+		{# Slider Dots #}
+		<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+			{% if banners|length > 0 %}
+				{% for banner in banners %}
+					<button @click="currentSlide = {{ loop.index0 }}" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide {{ loop.index0 + 1 }}">
+						<span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300" :class="currentSlide === {{ loop.index0 }} ? 'opacity-100' : 'opacity-50'"></span>
+					</button>
+				{% endfor %}
+			{% else %}
+				{# Fallback dots #}
+				<button @click="currentSlide = 0" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 1">
+					<span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300" :class="currentSlide === 0 ? 'opacity-100' : 'opacity-50'"></span>
+				</button>
+				<button @click="currentSlide = 1" class="w-12 h-12 flex items-center justify-center rounded-full transition-all group" aria-label="Ir para slide 2">
+					<span class="w-3 h-3 rounded-full bg-primary-foreground transition-opacity duration-300" :class="currentSlide === 1 ? 'opacity-100' : 'opacity-50'"></span>
+				</button>
+			{% endif %}
+		</div>
+	</section>
 
-        {# Services #}
-        <section id="services" class="py-16 lg:py-24 bg-background">
-          <div class="container mx-auto">
-            <h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-12" data-aos="fade-up">
-              Destaques de Serviços
-            </h2>
+	{# InfoCards #}
+	<section class="bg-primary text-primary-foreground -mt-1">
+		<div class="container mx-auto">
+			<div
+				class="grid md:grid-cols-3">
+				{# Opening Hours #}
+				<div class="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-primary-foreground/20" data-aos="fade-up" data-aos-delay="0">
+					<div class="flex items-start gap-4">
+						<i data-lucide="clock" class="w-8 h-8 flex-shrink-0 mt-1"></i>
+						<div class="w-full">
+							<h2 class="text-lg font-bold mb-4">Horário de Atendimento</h2>
+							<div class="space-y-2 text-sm">
+								<div class="flex justify-between gap-4">
+									<span>Segunda - Sexta</span>
+									<span class="text-primary-foreground/80">7:00 - 18:00</span>
+								</div>
+								<div class="flex justify-between gap-4">
+									<span>Sábado</span>
+									<span class="text-primary-foreground/80">Fechado</span>
+								</div>
+								<div class="flex justify-between gap-4">
+									<span>Domingo</span>
+									<span class="text-primary-foreground/80">Fechado</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {% for service in services %}
-                <div class="group p-6 rounded-2xl border border-transparent hover:border-gray-100 dark:hover:border-border hover:shadow-xl hover:bg-white dark:hover:bg-card hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                  <div class="service-icon text-primary mb-4 transition-transform group-hover:scale-110 duration-300 origin-left">
-                    {% if service.icon starts with '<svg' or service.icon starts with '<i' %}
-                        {{ service.icon|raw }}
-                    {% else %}
-                        <i class="{{ service.icon }} w-12 h-12"></i> 
-                    {% endif %}
-                  </div>
-                  <h3 class="text-lg font-bold text-medical-heading dark:text-card-foreground mb-3 group-hover:text-primary transition-colors">{{ service.title }}</h3>
-                  <p class="text-medical-text dark:text-muted-foreground text-sm leading-relaxed">{{ service.description }}</p>
-                </div>
-                {% else %}
-                    <p class="text-gray-500 col-span-full text-center">Nenhum serviço destacado no momento.</p>
-                {% endfor %}
-            </div>
-            
-            <div class="text-center mt-12" data-aos="fade-up">
-              <a href="{{ path('app_service_index') }}" class="btn-medical-outline">Ver Todos os Serviços</a>
-            </div>
-          </div>
-        </section>
+				{# Doctors Timetable #}
+				<div class="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-primary-foreground/20 bg-primary-dark" data-aos="fade-up" data-aos-delay="100">
+					<div class="flex items-start gap-4">
+						<i data-lucide="calendar" class="w-8 h-8 flex-shrink-0 mt-1"></i>
+						<div>
+							<h2 class="text-lg font-bold mb-4">Corpo Clínico</h2>
+							<p class="text-sm text-primary-foreground/80 mb-4">
+								Conheça nossa equipe de especialistas pronta para cuidar da sua saúde.
+							</p>
+							<a href="#" class="inline-flex items-center gap-2 text-sm border border-primary-foreground/50 px-4 py-2 hover:bg-primary-foreground hover:text-primary transition-colors">
+								Ver Especialistas
+								<span class="sr-only">do Corpo Clínico</span>
+							</a>
+						</div>
+					</div>
+				</div>
 
-        {# About / Quem Somos #}
-        <section id="about" class="py-16 lg:py-24 bg-medical-gray relative overflow-hidden">
-          <div class="container mx-auto">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-              {# Image #}
-              <div class="relative order-2 lg:order-1" data-aos="fade-right">
-                <div class="absolute inset-0 bg-primary/10 -rotate-3 rounded-lg"></div>
-                <img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile')|imagine_filter('about_home') : asset('assets/images/replica/doctor-welcome.jpg')|imagine_filter('about_home') }}" alt="Sobre a Procordis" class="relative rounded-lg shadow-xl w-full max-w-md mx-auto lg:mx-0" loading="lazy">
-                <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/20 rounded-lg -z-10"></div>
-                <div class="absolute -bottom-4 -right-4 w-32 h-32 border-4 border-primary/30 rounded-lg -z-10"></div>
-              </div>
+				{# Contact Info #}
+				<div class="p-6 lg:p-8" data-aos="fade-up" data-aos-delay="200">
+					<div class="flex items-start gap-4">
+						<i data-lucide="phone" class="w-8 h-8 flex-shrink-0 mt-1"></i>
+						<div>
+							<h2 class="text-lg font-bold mb-2">Informações</h2>
+							<p class="text-2xl md:text-3xl font-bold mb-4">(16) 3397-4625</p>
+							<p class="text-sm text-primary-foreground/80">
+								Atendemos exclusivamente pacientes com encaminhamento médico.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-              {# Content #}
-              <div class="order-1 lg:order-2" data-aos="fade-left">
-                <div class="flex items-center gap-3 mb-4">
-                  <div class="w-8 h-0.5 bg-primary"></div>
-                  <span class="text-primary font-semibold uppercase tracking-wider text-sm">QUEM SOMOS</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-6">{{ about.homeTitle|default('Tradição e Excelência') }}</h2>
-                <div class="text-medical-text mb-6 leading-relaxed">
-                    {% if about.homeSummary %}
-                        {{ about.homeSummary|raw }}
-                    {% else %}
-                        <p>A Associação Procórdis é referência no atendimento cardiológico em Araraquara e região. Nossa missão é oferecer saúde de qualidade com tecnologia de ponta e um atendimento humanizado.</p>
-                        <p class="mt-4">Contamos com uma estrutura completa de exames diagnósticos, consultórios modernos e uma equipe multidisciplinar comprometida com o seu bem-estar.</p>
-                    {% endif %}
-                </div>
-                <a href="#specialists" class="btn-medical-primary">Conheça Nossa Equipe</a>
-              </div>
-            </div>
-          </div>
-        </section>
+	{# Services #}
+	<section id="services" class="py-16 lg:py-24 bg-background">
+		<div class="container mx-auto">
+			<h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-12" data-aos="fade-up">
+				Destaques de Serviços
+			</h2>
 
-        {# Departments / Especialidades #}
-        <section id="specialties" class="py-16 lg:py-24 bg-background">
-          <div class="container mx-auto px-4">
-            {# Header with Intro #}
-            <div class="text-center mb-12" data-aos="fade-up">
-              <h2 class="text-3xl font-heading font-bold text-medical-heading dark:text-white section-title section-title-center mb-4">
-                Nossas Especialidades
-              </h2>
-              <p class="text-medical-text dark:text-slate-300 max-w-2xl mx-auto">
-                Conheça os exames e procedimentos diagnósticos que oferecemos para cuidar da sua saúde cardiovascular com tecnologia de ponta e profissionais especializados.
-              </p>
-            </div>
+			<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+				{% for service in services %}
+					<div class="group p-6 rounded-2xl border border-transparent hover:border-gray-100 dark:hover:border-border hover:shadow-xl hover:bg-white dark:hover:bg-card hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+						<div class="service-icon text-primary mb-4 transition-transform group-hover:scale-110 duration-300 origin-left">
+							{% if service.icon starts with '<svg' or service.icon starts with '<i' %}
+								{{ service.icon|raw }}
+							{% else %}
+								<i class="{{ service.icon }} w-12 h-12"></i>
+							{% endif %}
+						</div>
+						<h3 class="text-lg font-bold text-medical-heading dark:text-card-foreground mb-3 group-hover:text-primary transition-colors">{{ service.title }}</h3>
+						<p class="text-medical-text dark:text-muted-foreground text-sm leading-relaxed">{{ service.description|raw }}</p>
+					</div>
+				{% else %}
+					<p class="text-gray-500 col-span-full text-center">Nenhum serviço destacado no momento.</p>
+				{% endfor %}
+			</div>
 
-            {# Flip Cards Grid #}
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {% for specialty in specialties %}
-                <div class="flip-card group h-44" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
-                  <div class="flip-card-inner">
-                    {# Front Side #}
-                    <div class="flip-card-front bg-gray-50 dark:bg-card rounded-xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col items-center justify-center text-center">
-                      <div class="w-12 h-12 mb-4 text-primary flex items-center justify-center">
-                        {{ specialty.svgIcon|raw }}
-                      </div>
-                      <h3 class="font-bold text-medical-heading dark:text-white text-sm">{{ specialty.name }}</h3>
-                    </div>
-                    
-                      {# Back Side #}
-                    <div class="flip-card-back rounded-xl overflow-hidden relative">
-                      {# Background Image with Overlay #}
-                      {% if specialty.imageName %}
-                        <img src="{{ vich_uploader_asset(specialty, 'imageFile')|imagine_filter('service_card') }}" 
-                             alt="{{ specialty.name }}" 
-                             class="absolute inset-0 w-full h-full object-cover opacity-20" 
-                             loading="lazy"
-                             width="300" height="200">
-                      {% else %}
-                         <div class="absolute inset-0 bg-cover bg-center opacity-20"></div>
-                      {% endif %}
-                      <div class="absolute inset-0 bg-primary/90 dark:bg-slate-800/95"></div>
-                      
-                      {# Content #}
-                      <div class="relative z-10 h-full flex flex-col items-center justify-center p-4 text-center text-white">
-                        <div class="w-8 h-8 mb-2 opacity-80">
-                          {{ specialty.svgIcon|raw }}
-                        </div>
-                        <h3 class="font-bold text-sm mb-2">{{ specialty.name }}</h3>
-                        <p class="text-xs opacity-90 mb-3 line-clamp-2">{{ specialty.shortDescription|default('')|slice(0, 60) }}{% if specialty.shortDescription|length > 60 %}...{% endif %}</p>
-                        <a href="{{ path('app_specialty_show', {slug: specialty.slug}) }}" class="text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors">
-                          Veja mais <span class="sr-only">sobre {{ specialty.name }}</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              {% else %}
-                <p class="text-center col-span-full text-medical-text dark:text-slate-400">Em breve...</p>
-              {% endfor %}
-            </div>
-          </div>
-        </section>
+			<div class="text-center mt-12" data-aos="fade-up">
+				<a href="{{ path('app_service_index') }}" class="btn-medical-outline">Ver Todos os Serviços</a>
+			</div>
+		</div>
+	</section>
 
-        {# Testimonials / Depoimentos #}
-        {# Testimonials / Depoimentos #}
-        {% if testimonies|length > 0 %}
-        <section class="py-16 lg:py-24 bg-primary dark:bg-card text-primary-foreground dark:text-card-foreground relative overflow-hidden" 
-                 x-data="{ 
-                    currentQuote: 0, 
-                    quotes: {{ testimonies|map(t => { text: t.text, author: t.authorName, role: t.authorRole|default('') })|json_encode|e('html_attr') }},
-                    next() { this.currentQuote = (this.currentQuote + 1) % this.quotes.length },
-                    prev() { this.currentQuote = (this.currentQuote - 1 + this.quotes.length) % this.quotes.length }
-                 }"
-                 x-init="setInterval(() => next(), 8000)">
-          
-          <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute top-0 left-0 w-64 h-64 bg-primary-foreground dark:bg-primary rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-foreground dark:bg-primary rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-          </div>
+	{# About / Quem Somos #}
+	<section id="about" class="py-16 lg:py-24 bg-medical-gray relative overflow-hidden">
+		<div class="container mx-auto">
+			<div
+				class="grid lg:grid-cols-2 gap-12 items-center">
+				{# Image #}
+				<div class="relative order-2 lg:order-1" data-aos="fade-right">
+					<div class="absolute inset-0 bg-primary/10 -rotate-3 rounded-lg"></div>
+					<img src="{{ about.homeImageName ? vich_uploader_asset(about, 'homeImageFile')|imagine_filter('about_home') : asset('assets/images/replica/doctor-welcome.jpg')|imagine_filter('about_home') }}" alt="Sobre a Procordis" class="relative rounded-lg shadow-xl w-full max-w-md mx-auto lg:mx-0" loading="lazy">
+					<div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/20 rounded-lg -z-10"></div>
+					<div class="absolute -bottom-4 -right-4 w-32 h-32 border-4 border-primary/30 rounded-lg -z-10"></div>
+				</div>
 
-          <div class="container mx-auto relative" data-aos="fade-up">
-            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary-foreground/90 dark:text-card-foreground">O que dizem nossos pacientes</h2>
+				{# Content #}
+				<div class="order-1 lg:order-2" data-aos="fade-left">
+					<div class="flex items-center gap-3 mb-4">
+						<div class="w-8 h-0.5 bg-primary"></div>
+						<span class="text-primary font-semibold uppercase tracking-wider text-sm">QUEM SOMOS</span>
+					</div>
+					<h2 class="text-3xl md:text-4xl font-heading font-bold text-medical-heading mb-6">{{ about.homeTitle|default('Tradição e Excelência') }}</h2>
+					<div class="text-medical-text mb-6 leading-relaxed">
+						{% if about.homeSummary %}
+							{{ about.homeSummary|raw }}
+						{% else %}
+							<p>A Associação Procórdis é referência no atendimento cardiológico em Araraquara e região. Nossa missão é oferecer saúde de qualidade com tecnologia de ponta e um atendimento humanizado.</p>
+							<p class="mt-4">Contamos com uma estrutura completa de exames diagnósticos, consultórios modernos e uma equipe multidisciplinar comprometida com o seu bem-estar.</p>
+						{% endif %}
+					</div>
+					<a href="#specialists" class="btn-medical-primary">Conheça Nossa Equipe</a>
+				</div>
+			</div>
+		</div>
+	</section>
 
-            <div class="flex items-center justify-center gap-2 md:gap-8">
-              {# Left Arrow #}
-              <button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Depoimento anterior">
-                <i data-lucide="chevron-left" class="w-6 h-6"></i>
-              </button>
+	{# Departments / Especialidades #}
+	<section id="specialties" class="py-16 lg:py-24 bg-background">
+		<div
+			class="container mx-auto px-4">
+			{# Header with Intro #}
+			<div class="text-center mb-12" data-aos="fade-up">
+				<h2 class="text-3xl font-heading font-bold text-medical-heading dark:text-white section-title section-title-center mb-4">
+					Nossas Especialidades
+				</h2>
+				<p class="text-medical-text dark:text-slate-300 max-w-2xl mx-auto">
+					Conheça os exames e procedimentos diagnósticos que oferecemos para cuidar da sua saúde cardiovascular com tecnologia de ponta e profissionais especializados.
+				</p>
+			</div>
 
-              {# Quote Content #}
-              <div class="max-w-4xl text-center px-4 min-h-[200px] flex flex-col justify-center">
-                 <div class="mb-6">
-                    <div class="flex justify-center gap-1 text-yellow-400 mb-4">
-                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                    </div>
-                    <i data-lucide="quote" class="w-10 h-10 mx-auto mb-4 opacity-50"></i>
-                 </div>
-                 
-                 <div class="relative overflow-hidden">
-                     <template x-for="(quote, index) in quotes" :key="index">
-                        <div x-show="currentQuote === index"
-                             x-transition:enter="transition ease-out duration-300"
-                             x-transition:enter-start="opacity-0 translate-y-4"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-300 absolute inset-0"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 -translate-y-4">
-                            <blockquote class="text-lg md:text-2xl font-light italic mb-8 leading-relaxed">
-                              &quot;<span x-text="quote.text"></span>&quot;
-                            </blockquote>
-                            <div class="flex flex-col items-center justify-center gap-1">
-                              <p class="font-bold text-lg" x-text="quote.author"></p>
-                              <p class="text-sm opacity-75" x-text="quote.role"></p>
-                            </div>
-                        </div>
-                     </template>
-                 </div>
-              </div>
+			{# Flip Cards Grid #}
+			<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+				{% for specialty in specialties %}
+					<div class="flip-card group h-44" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+						<div
+							class="flip-card-inner">
+							{# Front Side #}
+							<div class="flip-card-front bg-gray-50 dark:bg-card rounded-xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col items-center justify-center text-center">
+								<div class="w-12 h-12 mb-4 text-primary flex items-center justify-center">
+									{{ specialty.svgIcon|raw }}
+								</div>
+								<h3 class="font-bold text-medical-heading dark:text-white text-sm">{{ specialty.name }}</h3>
+							</div>
 
-              {# Right Arrow #}
-              <button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Próximo depoimento">
-                <i data-lucide="chevron-right" class="w-6 h-6"></i>
-              </button>
-            </div>
-            
-            {# Mobile Arrows #}
-            <div class="flex justify-center gap-4 mt-8 md:hidden">
-              <button @click="prev" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Depoimento anterior">
-                <i data-lucide="chevron-left" class="w-6 h-6"></i>
-              </button>
-              <button @click="next" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Próximo depoimento">
-                <i data-lucide="chevron-right" class="w-6 h-6"></i>
-              </button>
-            </div>
+							{# Back Side #}
+							<div
+								class="flip-card-back rounded-xl overflow-hidden relative">
+								{# Background Image with Overlay #}
+								{% if specialty.imageName %}
+									<img src="{{ vich_uploader_asset(specialty, 'imageFile')|imagine_filter('service_card') }}" alt="{{ specialty.name }}" class="absolute inset-0 w-full h-full object-cover opacity-20" loading="lazy" width="300" height="200">
+								{% else %}
+									<div class="absolute inset-0 bg-cover bg-center opacity-20"></div>
+								{% endif %}
+								<div class="absolute inset-0 bg-primary/90 dark:bg-slate-800/95"></div>
 
-            {# Dots #}
-            <div class="flex justify-center gap-2 mt-8">
-                <template x-for="(quote, index) in quotes" :key="index">
-                    <button @click="currentQuote = index" 
-                            class="w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 group"
-                            :aria-label="'Ir para depoimento ' + (index + 1)">
-                            <span class="rounded-full transition-all duration-300 block bg-white dark:bg-primary"
-                                  :class="currentQuote === index ? 'w-6 h-2 opacity-100' : 'w-2 h-2 opacity-40 group-hover:opacity-60'"></span>
-                    </button>
-                </template>
-            </div>
-          </div>
-        </section>
-        {% endif %}
+								{# Content #}
+								<div class="relative z-10 h-full flex flex-col items-center justify-center p-4 text-center text-white">
+									<div class="w-8 h-8 mb-2 opacity-80">
+										{{ specialty.svgIcon|raw }}
+									</div>
+									<h3 class="font-bold text-sm mb-2">{{ specialty.name }}</h3>
+									<p class="text-xs opacity-90 mb-3 line-clamp-2">{{ specialty.shortDescription|default('')|slice(0, 60) }}
+										{% if specialty.shortDescription|length > 60 %}...
+										{% endif %}
+									</p>
+									<a href="{{ path('app_specialty_show', {slug: specialty.slug}) }}" class="text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors">
+										Veja mais
+										<span class="sr-only">sobre
+											{{ specialty.name }}</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<p class="text-center col-span-full text-medical-text dark:text-slate-400">Em breve...</p>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
 
-        {# Specialists / Corpo Clínico #}
-        <section id="specialists" class="py-16 lg:py-24 bg-background">
-          <div class="container mx-auto">
-            <h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-12" data-aos="fade-up">
-              Corpo Clínico
-            </h2>
+	{# Testimonials / Depoimentos #}
+	{# Testimonials / Depoimentos #}
+	{% if testimonies|length > 0 %}
+		<section class="py-16 lg:py-24 bg-primary dark:bg-card text-primary-foreground dark:text-card-foreground relative overflow-hidden" x-data="{
+			                    currentQuote: 0,
+			                    quotes: {{ testimonies|map(t => { text: t.text, author: t.authorName, role: t.authorRole|default('') })|json_encode|e('html_attr') }},
+			                    next() { this.currentQuote = (this.currentQuote + 1) % this.quotes.length },
+			                    prev() { this.currentQuote = (this.currentQuote - 1 + this.quotes.length) % this.quotes.length }
+			                 }" x-init="setInterval(() => next(), 8000)">
 
-            <div class="relative">
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {% for doctor in doctors %}
-                <div class="relative overflow-hidden group" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                    <div class="relative overflow-hidden">
-                      {% if doctor.imageName %}
-                        <img src="{{ vich_uploader_asset(doctor, 'imageFile')|imagine_filter('doctor_thumb') }}" alt="{{ doctor.name }}" class="w-full aspect-[4/5] object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" width="300" height="375">
-                      {% else %}
-                        <div class="w-full aspect-[4/5] bg-gray-200 flex items-center justify-center">
-                            <i data-lucide="user" class="w-20 h-20 text-gray-400"></i>
-                        </div>
-                      {% endif %}
-                      <div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 p-4 text-center">
-                        <div class="text-primary-foreground text-sm">
-                            {{ doctor.bio|striptags|u.truncate(100, '...') }}
-                        </div>
-                        <a href="{{ path('app_about') }}" class="btn-medical-outline border-white text-white hover:bg-white hover:text-primary mt-2">Saiba Mais <span class="sr-only">sobre {{ doctor.name }}</span></a>
-                      </div>
-                    </div>
-                    <div class="pt-4">
-                      <p class="text-xs text-primary uppercase tracking-wider mb-1">{{ doctor.specialty }}</p>
-                      <h3 class="text-lg font-bold text-medical-heading">{{ doctor.name }}</h3>
-                      <div class="flex items-center gap-2 mt-2 text-sm text-medical-text">
-                        <span class="font-medium">CRM:</span>
-                        <span>{{ doctor.crm }}</span>
-                      </div>
-                    </div>
-                </div>
-                {% else %}
-                    <p class="text-gray-500 col-span-full">Nenhum profissional cadastrado.</p>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </section>
+			<div class="absolute inset-0 opacity-10 pointer-events-none">
+				<div class="absolute top-0 left-0 w-64 h-64 bg-primary-foreground dark:bg-primary rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+				<div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-foreground dark:bg-primary rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+			</div>
 
-        {# AppointmentNews #}
-        <section id="news" class="py-16 lg:py-24 bg-medical-gray">
-          <div class="container mx-auto">
-            <div class="grid lg:grid-cols-2 gap-12">
-              {# Contact Form #}
-              <div id="contact" data-aos="fade-right">
-                <h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-8">
-                  Contato
-                </h2>
-                <form class="space-y-4" x-data="{
-                    loading: false,
-                    formData: { name: '', email: '', subject: '', message: '' },
-                    async submitContact() {
-                        this.loading = true;
-                        try {
-                            const response = await fetch('/api/contact', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(this.formData)
-                            });
-                            const result = await response.json();
-                            if (response.ok) {
-                                Swal.fire('Sucesso!', 'Sua mensagem foi enviada. Entraremos em contato em breve.', 'success');
-                                this.formData = { name: '', email: '', subject: '', message: '' };
-                            } else {
-                                Swal.fire('Erro!', result.error || 'Ocorreu um erro ao enviar.', 'error');
-                            }
-                        } catch (e) {
-                            Swal.fire('Erro!', 'Erro de conexão.', 'error');
-                        } finally {
-                            this.loading = false;
-                        }
-                    }
-                }" @submit.prevent="submitContact">
-                  <div>
-                    <input type="text" x-model="formData.name" placeholder="Nome Completo" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
-                  </div>
-                  <div>
-                    <input type="email" x-model="formData.email" placeholder="E-mail" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
-                  </div>
-                  <div>
-                     <input type="text" x-model="formData.subject" placeholder="Assunto" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
-                  </div>
-                  <div>
-                    <textarea x-model="formData.message" placeholder="Mensagem" rows="4" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
-                  </div>
-                  <button type="submit" class="btn-medical-primary w-full" :disabled="loading" x-text="loading ? 'Enviando...' : 'Enviar Mensagem'"></button>
-                </form>
-              </div>
+			<div class="container mx-auto relative" data-aos="fade-up">
+				<h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary-foreground/90 dark:text-card-foreground">O que dizem nossos pacientes</h2>
 
-              {# Latest News #}
-              <div data-aos="fade-left">
-                 <div class="space-y-6" x-data="{ 
-                    currentSlide: 0,
-                    itemsPerSlide: 3,
-                    totalItems: {{ latestNews|length }},
-                    get totalSlides() { return Math.ceil(this.totalItems / this.itemsPerSlide) },
-                    get paginatedItems() {
-                        const start = this.currentSlide * this.itemsPerSlide;
-                        return Array.from({length: this.totalItems}).map((_, i) => i).slice(start, start + this.itemsPerSlide);
-                    },
-                    next() { 
-                        this.currentSlide = (this.currentSlide + 1) % this.totalSlides 
-                    },
-                    prev() { 
-                        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides 
-                    }
-                }">
-                    <div class="flex items-center justify-between mb-8">
-                      <h2 class="text-3xl font-heading font-bold text-medical-heading section-title">
-                        Últimas Notícias
-                      </h2>
-                      <div class="flex gap-2" x-show="totalSlides > 1">
-                        <button @click="prev" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Notícias anteriores">
-                          <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                        </button>
-                        <button @click="next" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Próximas notícias">
-                          <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        </button>
-                      </div>
-                    </div>
+				<div
+					class="flex items-center justify-center gap-2 md:gap-8">
+					{# Left Arrow #}
+					<button @click="prev" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Depoimento anterior">
+						<i data-lucide="chevron-left" class="w-6 h-6"></i>
+					</button>
 
-                    <div class="relative overflow-hidden min-h-[300px]">
-                        {# Grid Container for the items #}
-                        <div class="flex flex-col gap-6 transition-all duration-500">
-                             {% for item in latestNews %}
-                                 <article class="group bg-white dark:bg-card rounded-2xl border border-slate-100 dark:border-border p-4 hover:shadow-lg transition-all duration-300 flex flex-col"
-                                          x-show="paginatedItems.includes({{ loop.index0 }})"
-                                          x-transition:enter="transition ease-out duration-300"
-                                          x-transition:enter-start="opacity-0 translate-y-2"
-                                          x-transition:enter-end="opacity-100 translate-y-0">
-                                     <div class="flex items-center gap-2 text-xs text-medical-text dark:text-muted-foreground mb-3">
-                                     <i data-lucide="calendar" class="w-3 h-3"></i>
-                                     <span>{{ item.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
+					{# Quote Content #}
+					<div class="max-w-4xl text-center px-4 min-h-[200px] flex flex-col justify-center">
+						<div class="mb-6">
+							<div class="flex justify-center gap-1 text-yellow-400 mb-4">
+								<i data-lucide="star" class="w-5 h-5 fill-current"></i>
+								<i data-lucide="star" class="w-5 h-5 fill-current"></i>
+								<i data-lucide="star" class="w-5 h-5 fill-current"></i>
+								<i data-lucide="star" class="w-5 h-5 fill-current"></i>
+								<i data-lucide="star" class="w-5 h-5 fill-current"></i>
+							</div>
+							<i data-lucide="quote" class="w-10 h-10 mx-auto mb-4 opacity-50"></i>
+						</div>
+
+						<div class="relative overflow-hidden">
+							<template x-for="(quote, index) in quotes" :key="index">
+								<div x-show="currentQuote === index" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300 absolute inset-0" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4">
+									<blockquote class="text-lg md:text-2xl font-light italic mb-8 leading-relaxed">
+										&quot;<span x-text="quote.text"></span>&quot;
+									</blockquote>
+									<div class="flex flex-col items-center justify-center gap-1">
+										<p class="font-bold text-lg" x-text="quote.author"></p>
+										<p class="text-sm opacity-75" x-text="quote.role"></p>
+									</div>
+								</div>
+							</template>
+						</div>
+					</div>
+
+					{# Right Arrow #}
+					<button @click="next" class="hidden md:flex w-12 h-12 items-center justify-center border border-primary-foreground/30 dark:border-border hover:bg-primary-foreground dark:hover:bg-primary hover:text-primary dark:hover:text-primary-foreground transition-colors rounded-full" aria-label="Próximo depoimento">
+						<i data-lucide="chevron-right" class="w-6 h-6"></i>
+					</button>
+				</div>
+
+				{# Mobile Arrows #}
+				<div class="flex justify-center gap-4 mt-8 md:hidden">
+					<button @click="prev" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Depoimento anterior">
+						<i data-lucide="chevron-left" class="w-6 h-6"></i>
+					</button>
+					<button @click="next" class="w-12 h-12 flex items-center justify-center border border-primary-foreground/30 dark:border-border rounded-full" aria-label="Próximo depoimento">
+						<i data-lucide="chevron-right" class="w-6 h-6"></i>
+					</button>
+				</div>
+
+				{# Dots #}
+				<div class="flex justify-center gap-2 mt-8">
+					<template x-for="(quote, index) in quotes" :key="index">
+						<button @click="currentQuote = index" class="w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 group" :aria-label="'Ir para depoimento ' + (index + 1)">
+							<span class="rounded-full transition-all duration-300 block bg-white dark:bg-primary" :class="currentQuote === index ? 'w-6 h-2 opacity-100' : 'w-2 h-2 opacity-40 group-hover:opacity-60'"></span>
+						</button>
+					</template>
+				</div>
+			</div>
+		</section>
+	{% endif %}
+
+	{# Specialists / Corpo Clínico #}
+	<section id="specialists" class="py-16 lg:py-24 bg-background">
+		<div class="container mx-auto">
+			<h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-12" data-aos="fade-up">
+				Corpo Clínico
+			</h2>
+
+			<div class="relative">
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+					{% for doctor in doctors %}
+						<div class="relative overflow-hidden group" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+							<div class="relative overflow-hidden">
+								{% if doctor.imageName %}
+									<img src="{{ vich_uploader_asset(doctor, 'imageFile')|imagine_filter('doctor_thumb') }}" alt="{{ doctor.name }}" class="w-full aspect-[4/5] object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" width="300" height="375">
+								{% else %}
+									<div class="w-full aspect-[4/5] bg-gray-200 flex items-center justify-center">
+										<i data-lucide="user" class="w-20 h-20 text-gray-400"></i>
+									</div>
+								{% endif %}
+								<div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 p-4 text-center">
+									<div class="text-primary-foreground text-sm">
+										{{ doctor.bio|striptags|u.truncate(100, '...') }}
+									</div>
+									<a href="{{ path('app_about') }}" class="btn-medical-outline border-white text-white hover:bg-white hover:text-primary mt-2">Saiba Mais
+										<span class="sr-only">sobre
+											{{ doctor.name }}</span>
+									</a>
+								</div>
+							</div>
+							<div class="pt-4">
+								<p class="text-xs text-primary uppercase tracking-wider mb-1">{{ doctor.specialty }}</p>
+								<h3 class="text-lg font-bold text-medical-heading">{{ doctor.name }}</h3>
+								<div class="flex items-center gap-2 mt-2 text-sm text-medical-text">
+									<span class="font-medium">CRM:</span>
+									<span>{{ doctor.crm }}</span>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<p class="text-gray-500 col-span-full">Nenhum profissional cadastrado.</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# AppointmentNews #}
+	<section id="news" class="py-16 lg:py-24 bg-medical-gray">
+		<div class="container mx-auto">
+			<div
+				class="grid lg:grid-cols-2 gap-12">
+				{# Contact Form #}
+				<div id="contact" data-aos="fade-right">
+					<h2 class="text-3xl font-heading font-bold text-medical-heading section-title mb-8">
+						Contato
+					</h2>
+					<form class="space-y-4" x-data="{
+						                    loading: false,
+						                    formData: { name: '', email: '', subject: '', message: '' },
+						                    async submitContact() {
+						                        this.loading = true;
+						                        try {
+						                            const response = await fetch('/api/contact', {
+						                                method: 'POST',
+						                                headers: { 'Content-Type': 'application/json' },
+						                                body: JSON.stringify(this.formData)
+						                            });
+						                            const result = await response.json();
+						                            if (response.ok) {
+						                                Swal.fire('Sucesso!', 'Sua mensagem foi enviada. Entraremos em contato em breve.', 'success');
+						                                this.formData = { name: '', email: '', subject: '', message: '' };
+						                            } else {
+						                                Swal.fire('Erro!', result.error || 'Ocorreu um erro ao enviar.', 'error');
+						                            }
+						                        } catch (e) {
+						                            Swal.fire('Erro!', 'Erro de conexão.', 'error');
+						                        } finally {
+						                            this.loading = false;
+						                        }
+						                    }
+						                }" @submit.prevent="submitContact">
+						<div>
+							<input type="text" x-model="formData.name" placeholder="Nome Completo" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
+						</div>
+						<div>
+							<input type="email" x-model="formData.email" placeholder="E-mail" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
+						</div>
+						<div>
+							<input type="text" x-model="formData.subject" placeholder="Assunto" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors">
+						</div>
+						<div>
+							<textarea x-model="formData.message" placeholder="Mensagem" rows="4" required class="w-full px-4 py-3 border border-border bg-background text-medical-text placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
+						</div>
+						<button type="submit" class="btn-medical-primary w-full" :disabled="loading" x-text="loading ? 'Enviando...' : 'Enviar Mensagem'"></button>
+					</form>
+				</div>
+
+				{# Latest News #}
+				<div data-aos="fade-left">
+					<div class="space-y-6" x-data="{
+							                    currentSlide: 0,
+							                    itemsPerSlide: 3,
+							                    totalItems: {{ latestNews|length }},
+							                    get totalSlides() { return Math.ceil(this.totalItems / this.itemsPerSlide) },
+							                    get paginatedItems() {
+							                        const start = this.currentSlide * this.itemsPerSlide;
+							                        return Array.from({length: this.totalItems}).map((_, i) => i).slice(start, start + this.itemsPerSlide);
+							                    },
+							                    next() {
+							                        this.currentSlide = (this.currentSlide + 1) % this.totalSlides
+							                    },
+							                    prev() {
+							                        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides
+							                    }
+							                }">
+						<div class="flex items-center justify-between mb-8">
+							<h2 class="text-3xl font-heading font-bold text-medical-heading section-title">
+								Últimas Notícias
+							</h2>
+							<div class="flex gap-2" x-show="totalSlides > 1">
+								<button @click="prev" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Notícias anteriores">
+									<i data-lucide="chevron-left" class="w-5 h-5"></i>
+								</button>
+								<button @click="next" class="w-10 h-10 flex items-center justify-center border border-border text-medical-text hover:border-primary transition-colors hover:bg-primary hover:text-white rounded-full" aria-label="Próximas notícias">
+									<i data-lucide="chevron-right" class="w-5 h-5"></i>
+								</button>
+							</div>
+						</div>
+
+						<div
+							class="relative overflow-hidden min-h-[300px]">
+							{# Grid Container for the items #}
+							<div class="flex flex-col gap-6 transition-all duration-500">
+								{% for item in latestNews %}
+									<article class="group bg-white dark:bg-card rounded-2xl border border-slate-100 dark:border-border p-4 hover:shadow-lg transition-all duration-300 flex flex-col" x-show="paginatedItems.includes({{ loop.index0 }})" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+										<div class="flex items-center gap-2 text-xs text-medical-text dark:text-muted-foreground mb-3">
+											<i data-lucide="calendar" class="w-3 h-3"></i>
+											<span>{{ item.publishedAt|date('d \\d\\e F \\d\\e Y')|replace({
                                     'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março', 
                                     'April': 'Abril', 'May': 'Maio', 'June': 'Junho', 
                                     'July': 'Julho', 'August': 'Agosto', 'September': 'Setembro', 
                                     'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
                                 }) }}</span>
-                                   </div>
-                                   <h3 class="text-base font-bold text-medical-heading dark:text-card-foreground group-hover:text-primary transition-colors cursor-pointer leading-tight mb-2">
-                                     <a href="{{ path('app_news_detail', {'slug': item.slug}) }}">{{ item.title }}</a>
-                                   </h3>
-                                   <p class="text-xs text-medical-text dark:text-muted-foreground line-clamp-2 mb-3">{{ item.summary }}</p>
-                                   <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-medical-heading dark:hover:text-card-foreground transition-colors mt-auto">
-                                     Ler mais <span class="sr-only">sobre {{ item.title }}</span>
-                                     <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                                   </a>
-                                 </article>
-                             {% else %}
-                                <div class="text-center text-gray-500 py-8">Nenhuma notícia recente.</div>
-                             {% endfor %}
-                        </div>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+										</div>
+										<h3 class="text-base font-bold text-medical-heading dark:text-card-foreground group-hover:text-primary transition-colors cursor-pointer leading-tight mb-2">
+											<a href="{{ path('app_news_detail', {'slug': item.slug}) }}">{{ item.title }}</a>
+										</h3>
+										<p class="text-xs text-medical-text dark:text-muted-foreground line-clamp-2 mb-3">{{ item.summary }}</p>
+										<a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-medical-heading dark:hover:text-card-foreground transition-colors mt-auto">
+											Ler mais
+											<span class="sr-only">sobre
+												{{ item.title }}</span>
+											<i data-lucide="arrow-right" class="w-3 h-3"></i>
+										</a>
+									</article>
+								{% else %}
+									<div class="text-center text-gray-500 py-8">Nenhuma notícia recente.</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-        {# Partners #}
-        <section class="py-12 bg-background border-t border-border">
-          <div class="container mx-auto">
-            <div class="flex flex-wrap items-center justify-center gap-8 lg:gap-16" data-aos="fade-up">
-                <!-- METROMED -->
-                <div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Metromed">
-                  <span class="flex items-center gap-2">
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    METROMED
-                  </span>
-                </div>
-                <!-- Uma medical -->
-                <div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Uma Medical">
-                  <span class="flex items-center gap-2">
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    Uma medical
-                  </span>
-                </div>
-                <!-- AKS HEALTH -->
-                <div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="AKS Health">
-                  <span class="flex items-center gap-2">
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    AKS HEALTH
-                  </span>
-                </div>
-                <!-- healthcare -->
-                <div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Healthcare">
-                  <span class="flex items-center gap-2">
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    healthcare
-                  </span>
-                </div>
-            </div>
-          </div>
-        </section>
+	{# Partners #}
+	<section class="py-12 bg-background border-t border-border">
+		<div class="container mx-auto">
+			<div
+				class="flex flex-wrap items-center justify-center gap-8 lg:gap-16" data-aos="fade-up">
+				<!-- METROMED -->
+				<div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Metromed">
+					<span class="flex items-center gap-2">
+						<svg class="w-8 h-8" viewbox="0 0 24 24" fill="currentColor">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+						</svg>
+						METROMED
+					</span>
+				</div>
+				<!-- Uma medical -->
+				<div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Uma Medical">
+					<span class="flex items-center gap-2">
+						<svg class="w-8 h-8" viewbox="0 0 24 24" fill="currentColor">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+						</svg>
+						Uma medical
+					</span>
+				</div>
+				<!-- AKS HEALTH -->
+				<div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="AKS Health">
+					<span class="flex items-center gap-2">
+						<svg class="w-8 h-8" viewbox="0 0 24 24" fill="currentColor">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+						</svg>
+						AKS HEALTH
+					</span>
+				</div>
+				<!-- healthcare -->
+				<div class="text-2xl font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer" aria-label="Healthcare">
+					<span class="flex items-center gap-2">
+						<svg class="w-8 h-8" viewbox="0 0 24 24" fill="currentColor">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+						</svg>
+						healthcare
+					</span>
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}
