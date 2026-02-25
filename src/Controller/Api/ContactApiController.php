@@ -49,9 +49,9 @@ class ContactApiController extends AbstractController
 
             // Send Email Notification
             try {
-                $recipients = $systemVariableRepository->getValue('contact_email_recipients');
-                if ($recipients) {
-                    $recipientList = array_map('trim', preg_split('/\r\n|\r|\n|,/', $recipients));
+                $recipientsStr = $systemVariableRepository->getValue('contact_email_recipients');
+                if ($recipientsStr) {
+                    $recipientList = array_map('trim', preg_split('/\r\n|\r|\n|,/', $recipientsStr));
                     
                     $emailBody = "Você tem uma nova mensagem de contato do site.\n\n" .
                                  "Nome: {$message->getName()}\n" .
@@ -62,20 +62,18 @@ class ContactApiController extends AbstractController
                     $emailBody .= "Assunto: {$message->getSubject()}\n" .
                                  "Mensagem:\n{$message->getMessage()}\n";
 
-                    $email = (new Email())
-                        ->from('noreply@wab.com.br')
-                        ->subject('Novo Contato do Site: ' . $message->getSubject())
-                        ->text($emailBody);
-
                     foreach ($recipientList as $rcpt) {
                         if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
-                            $email->addTo($rcpt);
-                        }
-                    }
+                            // Cria um novo e-mail para cada destinatário, igualzinho no TestEmailCommand
+                            $email = (new Email())
+                                ->from('noreply@wab.com.br')
+                                ->to($rcpt)
+                                ->subject('Novo Contato do Site: ' . $message->getSubject())
+                                ->text($emailBody);
 
-                    if (count($email->getTo()) > 0) {
-                        $mailer->send($email);
-                        $logger->info("Email enviado via wmailer para: " . implode(', ', array_map(function($add) { return $add->getAddress(); }, $email->getTo())));
+                            $mailer->send($email);
+                            $logger->info("Email enviado via wmailer para: {$rcpt}");
+                        }
                     }
                 }
             } catch (\Exception $emailEx) {
