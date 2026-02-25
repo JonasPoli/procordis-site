@@ -54,7 +54,7 @@ Com base na análise comparativa, a proposta para o novo site do ambulatório Pr
 
 ## **Páginas essenciais do site**
 
-A partir da análise dos sites hospitalares de referência e das necessidades do Ambulatório Cardíaco Procórdis, é possível definir um conjunto de páginas fundamentais para oferecer transparência, acolhimento e facilidade de uso. As páginas recomendadas são:
+A partir da análise dos sites hospitalares de referência e das necessidades do Ambulatório Cardíaco Procordis, é possível definir um conjunto de páginas fundamentais para oferecer transparência, acolhimento e facilidade de uso. As páginas recomendadas são:
 
 1. **Página inicial (Home)** – apresenta a missão e a visão do ambulatório, destaca serviços e permite acesso rápido às principais funcionalidades como agendamento, resultados de exames e notícias.
 
