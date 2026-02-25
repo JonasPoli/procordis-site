@@ -16,7 +16,7 @@
 		<meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
 		<meta property="og:description" content="{% block og_description %}{{ block('description') }}{% endblock %}">
 		<meta
-		property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo_procordis.png')) }}{% endblock %}">
+		property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo-og.png')) }}{% endblock %}">
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image">
@@ -63,6 +63,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 if (window.lucide) 
 lucide.createIcons();
+
 
 
 });
