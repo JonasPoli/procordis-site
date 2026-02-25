@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46a007a3252ec2c9f5e34f1e0bcb80ba",
+    "content-hash": "f8e6d23db27eb0d0afa29ace414c2c00",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -9129,6 +9129,41 @@
                 "source": "https://github.com/dustin10/VichUploaderBundle/tree/v2.9.1"
             },
             "time": "2025-12-10T08:23:38+00:00"
+        },
+        {
+            "name": "wab-ninjas/wmailer-transport",
+            "version": "1.0.14",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/wab-ninjas/wmailer-transport.git",
+                "reference": "c23eff7aa249df7f1fbad28f9aa1ce9f287c71e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/wab-ninjas/wmailer-transport/get/c23eff7aa249df7f1fbad28f9aa1ce9f287c71e3.zip",
+                "reference": "c23eff7aa249df7f1fbad28f9aa1ce9f287c71e3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^7.4 || ^8.1 || ^8.2 || ^8.3",
+                "symfony/mailer": "^4.4 || ^5.4 || ^6.1 || ^6.2 || ^6.3 || ^6.4 || ^7.0 || ^7.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "WabNinjas\\WmailerTransport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Mailer Transport personalizado para Symfony usando API WAB",
+            "homepage": "https://bitbucket.org/wab-ninjas/wmailer-transport",
+            "support": {
+                "source": "https://bitbucket.org/wab-ninjas/wmailer-transport/src/c23eff7aa249df7f1fbad28f9aa1ce9f287c71e3/?at=1.0.14"
+            },
+            "time": "2025-07-04T15:00:36+00:00"
         },
         {
             "name": "webmozart/assert",

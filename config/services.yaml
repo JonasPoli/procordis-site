@@ -22,3 +22,5 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    WabNinjas\WmailerTransport\Mailer\Transport\WabTransportFactory:
+        tags: ['mailer.transport_factory']

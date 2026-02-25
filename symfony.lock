@@ -350,5 +350,8 @@
             "version": "1.13",
             "ref": "1b3064c2f6b255c2bc2f56461aaeb76b11e07e36"
         }
+    },
+    "wab-ninjas/wmailer-transport": {
+        "version": "1.0.14"
     }
 }

@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 #[Route('/api/contact')]
 class ContactApiController extends AbstractController
 {
@@ -19,7 +20,8 @@ class ContactApiController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         SystemVariableRepository $systemVariableRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        MailerInterface $mailer
     ): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -45,18 +47,39 @@ class ContactApiController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            // Send Email Notification (Log only for now if mailer not injected, or use mailer if available)
-            // The previous code used SystemVariableRepository to get recipients and logged. We keep that safe.
+            // Send Email Notification
             try {
                 $recipients = $systemVariableRepository->getValue('contact_email_recipients');
                 if ($recipients) {
                     $recipientList = array_map('trim', explode(',', $recipients));
-                    foreach ($recipientList as $email) {
-                        $logger->info("Sending contact email to: {$email} regarding '{$message->getSubject()}' from {$message->getName()}");
+                    
+                    $emailBody = "Você tem uma nova mensagem de contato do site.\n\n" .
+                                 "Nome: {$message->getName()}\n" .
+                                 "E-mail: {$message->getEmail()}\n";
+                    if ($message->getPhone()) {
+                        $emailBody .= "Telefone: {$message->getPhone()}\n";
+                    }
+                    $emailBody .= "Assunto: {$message->getSubject()}\n" .
+                                 "Mensagem:\n{$message->getMessage()}\n";
+
+                    $email = (new Email())
+                        ->from('no-reply@procordis.org.br')
+                        ->subject('Novo Contato do Site: ' . $message->getSubject())
+                        ->text($emailBody);
+
+                    foreach ($recipientList as $rcpt) {
+                        if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
+                            $email->addTo($rcpt);
+                        }
+                    }
+
+                    if (count($email->getTo()) > 0) {
+                        $mailer->send($email);
+                        $logger->info("Email enviado via wmailer para: " . implode(', ', array_map(function($add) { return $add->getAddress(); }, $email->getTo())));
                     }
                 }
             } catch (\Exception $emailEx) {
-                $logger->warning("Failed to check recipients or log email: " . $emailEx->getMessage());
+                $logger->warning("Erro ao enviar email ou recuperar destinatarios: " . $emailEx->getMessage());
             }
 
             return $this->json(['success' => true]);
