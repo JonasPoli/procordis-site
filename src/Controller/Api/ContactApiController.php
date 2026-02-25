@@ -76,7 +76,7 @@ class ContactApiController extends AbstractController
                         }
                     }
                 }
-            } catch (\Exception $emailEx) {
+            } catch (\Throwable $emailEx) {
                 $logger->warning("Erro ao enviar email ou recuperar destinatarios: " . $emailEx->getMessage());
             }
 
