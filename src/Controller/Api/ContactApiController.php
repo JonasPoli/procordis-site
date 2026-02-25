@@ -63,7 +63,7 @@ class ContactApiController extends AbstractController
                                  "Mensagem:\n{$message->getMessage()}\n";
 
                     $email = (new Email())
-                        ->from('no-reply@procordis.org.br')
+                        ->from('noreply@wab.com.br')
                         ->subject('Novo Contato do Site: ' . $message->getSubject())
                         ->text($emailBody);
 
