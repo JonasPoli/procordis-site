@@ -51,7 +51,7 @@ class ContactApiController extends AbstractController
             try {
                 $recipients = $systemVariableRepository->getValue('contact_email_recipients');
                 if ($recipients) {
-                    $recipientList = array_map('trim', explode(',', $recipients));
+                    $recipientList = array_map('trim', preg_split('/\r\n|\r|\n|,/', $recipients));
                     
                     $emailBody = "Você tem uma nova mensagem de contato do site.\n\n" .
                                  "Nome: {$message->getName()}\n" .
