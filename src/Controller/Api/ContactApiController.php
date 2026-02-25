@@ -64,9 +64,8 @@ class ContactApiController extends AbstractController
 
                     foreach ($recipientList as $rcpt) {
                         if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
-                            // Cria um novo e-mail para cada destinatário, igualzinho no TestEmailCommand
                             $email = (new Email())
-                                ->from('noreply@wab.com.br')
+                                ->from('no-reply@procordis.org.br')
                                 ->to($rcpt)
                                 ->subject('Novo Contato do Site: ' . $message->getSubject())
                                 ->text($emailBody);
@@ -76,7 +75,7 @@ class ContactApiController extends AbstractController
                         }
                     }
                 }
-            } catch (\Throwable $emailEx) {
+            } catch (\Exception $emailEx) {
                 $logger->warning("Erro ao enviar email ou recuperar destinatarios: " . $emailEx->getMessage());
             }
 
