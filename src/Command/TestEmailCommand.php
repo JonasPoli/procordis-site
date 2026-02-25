@@ -33,7 +33,7 @@ class TestEmailCommand extends Command
 
         try {
             $email = (new Email())
-                ->from('no-reply@procordis.org.br')
+                ->from('no-reply@wab.com.br')
                 ->to($to)
                 ->subject('Teste de Integração Wmailer via Comando')
                 ->text('Este é um e-mail de teste enviado pelo comando do Symfony para verificar a integração do wab-ninjas/wmailer-transport no site da Procordis.');
