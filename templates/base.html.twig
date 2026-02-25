@@ -1,76 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-br" class="scroll-smooth">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}{{ templateService.pageSeo.homePageTitle|default('Procordis') }}{% endblock %}</title>
-        <meta name="description" content="{% block description %}{{ templateService.pageSeo.homePageDescription|default('Ambulatório Cardíaco de Araraquara') }}{% endblock %}">
-        
-        {% block stylesheets %}
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
-        
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-        
-        <!-- AOS Animation CSS -->
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}
+				{{ templateService.pageSeo.homePageTitle|default('Procordis') }}
+			{% endblock %}
+		</title>
+		<meta name="description" content="{% block description %}{{ templateService.pageSeo.homePageDescription|default('Ambulatório Cardíaco de Araraquara') }}{% endblock %}">
+		<meta property="og:image" content="{{ app.request.schemeAndHttpHost }}/assets/images/logo-A3qBa0m.svg">
 
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            {# Tailwind/Webpack Entry #}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-            <style>
-                body { font-family: 'Lato', sans-serif; }
-                h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
-            </style>
-        {% endblock %}
+		{% block stylesheets %}
+			<link
+			rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❤️</text></svg>">
 
-        {% block javascripts %}
-        {% endblock %}
-        
-        <!-- Global Tags -->
-        {% if templateService.globalTags.ga4 %}
-            <script async src="https://www.googletagmanager.com/gtag/js?id={{ templateService.globalTags.ga4 }}"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '{{ templateService.globalTags.ga4 }}');
-            </script>
-        {% endif %}
-    </head>
-    <body class="flex flex-col min-h-screen font-sans antialiased text-slate-600 bg-white selection:bg-primary-500 selection:text-white"
-          x-data="{ scrolled: false }"
-          @scroll.window="scrolled = (window.pageYOffset > 50)">
-        
-        <!-- Header -->
-        <header 
-            class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out border-b border-transparent"
-            :class="{ 'bg-white/95 backdrop-blur-md shadow-sm py-3 border-slate-100': scrolled, 'bg-transparent py-6': !scrolled }"
-        >
-            {% include 'partials/header.html.twig' %}
-        </header>
+			<!-- Fonts -->
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link
+			href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        <main class="flex-grow pt-0">
-            {% block body %}{% endblock %}
-        </main>
+			<!-- AOS Animation CSS -->
+			<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-        {% include 'partials/footer.html.twig' %}
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+			<link
+			rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+			{# Tailwind/Webpack Entry #}
+			{% block importmap %}
+				{{ importmap('app') }}
+			{% endblock %}
+			<style>
+				body {
+					font-family: 'Lato', sans-serif;
+				}
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6 {
+					font-family: 'Montserrat', sans-serif;
+				}
+			</style>
+		{% endblock %}
 
-    <!-- AOS JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="//unpkg.com/alpinejs" defer></script> 
-    <script>
-        AOS.init({
-            once: true,
-            offset: 50,
-            duration: 800,
-            easing: 'ease-out-cubic',
-        });
-    </script>
-    </body>
-</html>
+		{% block javascripts %}{% endblock %}
+
+		<!-- Global Tags -->
+		{% if templateService.globalTags.ga4 %}
+			<script async src="https://www.googletagmanager.com/gtag/js?id={{ templateService.globalTags.ga4 }}"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+function gtag() {
+dataLayer.push(arguments);
+}
+gtag('js', new Date());
+gtag('config', '{{ templateService.globalTags.ga4 }}');
+			</script>
+		{% endif %}
+	</head>
+	<body
+		class="flex flex-col min-h-screen font-sans antialiased text-slate-600 bg-white selection:bg-primary-500 selection:text-white" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+
+		<!-- Header -->
+		<header class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out border-b border-transparent" :class="{ 'bg-white/95 backdrop-blur-md shadow-sm py-3 border-slate-100': scrolled, 'bg-transparent py-6': !scrolled }">
+			{% include 'partials/header.html.twig' %}
+		</header>
+
+		<main class="flex-grow pt-0"> {% block body %}{% endblock %}
+			</main>
+
+			{% include 'partials/footer.html.twig' %}
+
+			<!-- AOS JS -->
+			<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+			<script src="//unpkg.com/alpinejs" defer></script>
+			<script>
+				AOS.init({once: true, offset: 50, duration: 800, easing: 'ease-out-cubic'});
+			</script>
+		</body>
+	</html>

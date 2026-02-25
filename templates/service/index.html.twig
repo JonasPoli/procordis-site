@@ -1,64 +1,68 @@
 {% extends 'base_public.html.twig' %}
 
-{% block title %}Nossos Serviços - Procordis{% endblock %}
+{% block title %}Nossos Serviços - Procordis
+{% endblock %}
 
 {% block content %}
-    {# Hero Section #}
-    {# Hero Standardized #}
-    <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
-         <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
-         <div class="container mx-auto px-6 relative z-10 text-center">
-            
-            {# Breadcrumb #}
-            <nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
-                <a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
-                <span class="opacity-50">/</span>
-                <span class="font-medium text-white">Serviços</span>
-            </nav>
+	{# Hero Section #}
+	{# Hero Standardized #}
+		<div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden"> <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
+		<div
+			class="container mx-auto px-6 relative z-10 text-center">
 
-            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">Nossos Serviços</h1>
-            <p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Oferecemos uma ampla gama de exames e especialidades cardiológicas com tecnologia de ponta e equipe qualificada.
-            </p>
-        </div>
-    </div>
+			{# Breadcrumb #}
+			<nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+				<a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+				<span class="opacity-50">/</span>
+				<span class="font-medium text-white">Serviços</span>
+			</nav>
 
-    {# Services Grid #}
-    <section class="py-16 md:py-24 bg-background">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for service in services %}
-                    <div class="group bg-card rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-border flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
-                        <div class="w-16 h-16 bg-blue-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                            {{ service.icon|raw }}
-                        </div>
-                        
-                        <h3 class="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
-                            {{ service.title }}
-                        </h3>
-                        
-                        <p class="text-muted-foreground mb-6 flex-grow line-clamp-3">
-                            {{ service.description }}
-                        </p>
-                        
-                        <a href="{{ path('app_service_show', {slug: service.slug}) }}" class="inline-flex items-center text-primary font-semibold group-hover:gap-2 transition-all mt-auto">
-                            Saiba mais <span class="sr-only">sobre {{ service.title }}</span> <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
+			<h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">Nossos Serviços</h1>
+			<p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+				Oferecemos uma ampla gama de exames e especialidades cardiológicas com tecnologia de ponta e equipe qualificada.
+			</p>
+		</div>
+	</div>
 
-    {# Referral Notice #}
-    <section class="py-16 bg-amber-500 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Atendimento por Encaminhamento</h2>
-            <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Nosso ambulatório atende exclusivamente pacientes encaminhados pelo sistema de saúde ou médico assistente.</p>
-            <a href="{{ path('app_about') }}" class="inline-flex items-center px-8 py-4 bg-white text-amber-600 font-bold rounded-xl hover:bg-slate-100 transition-colors">
-                <i data-lucide="info" class="w-5 h-5 mr-2"></i>
-                Conheça Nosso Ambulatório
-            </a>
-        </div>
-    </section>
+	{# Services Grid #}
+	<section class="py-16 md:py-24 bg-background">
+		<div class="container mx-auto px-4">
+			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{% for service in services %}
+					<div class="group bg-card rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-border flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+						<div class="w-16 h-16 bg-blue-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+							{{ service.icon|raw }}
+						</div>
+
+						<h3 class="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+							{{ service.title }}
+						</h3>
+
+						<p class="text-muted-foreground mb-6 flex-grow line-clamp-3">
+							{{ service.description|raw }}
+						</p>
+
+						<a href="{{ path('app_service_show', {slug: service.slug}) }}" class="inline-flex items-center text-primary font-semibold group-hover:gap-2 transition-all mt-auto">
+							Saiba mais
+							<span class="sr-only">sobre
+								{{ service.title }}</span>
+							<i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+	{# Referral Notice #}
+	<section class="py-16 bg-amber-500 text-white">
+		<div class="container mx-auto px-4 text-center">
+			<h2 class="text-3xl md:text-4xl font-bold mb-6">Atendimento por Encaminhamento</h2>
+			<p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Nosso ambulatório atende exclusivamente pacientes encaminhados pelo sistema de saúde ou médico assistente.</p>
+			<a href="{{ path('app_about') }}" class="inline-flex items-center px-8 py-4 bg-white text-amber-600 font-bold rounded-xl hover:bg-slate-100 transition-colors">
+				<i data-lucide="info" class="w-5 h-5 mr-2"></i>
+				Conheça Nosso Ambulatório
+			</a>
+		</div>
+	</section>
 {% endblock %}
