@@ -65,7 +65,7 @@ class ContactApiController extends AbstractController
                     foreach ($recipientList as $rcpt) {
                         if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
                             $email = (new Email())
-                                ->from('no-reply@procordis.org.br')
+                                ->from('noreply@wab.com.br')
                                 ->to($rcpt)
                                 ->subject('Novo Contato do Site: ' . $message->getSubject())
                                 ->text($emailBody);
