@@ -33,12 +33,14 @@ if (canvas) {
             'rgba(180, 180, 180, 0.3)'
         ];
         blendMode = 'multiply';
-        canvasOpacity = '0.4';
+        canvasOpacity = '0.3';
     }
 
     // Aplicar estilos ao Canvas
     canvas.style.mixBlendMode = blendMode;
     canvas.style.opacity = canvasOpacity;
+    // Adiciona o blur aumentado em vez de depender de uma classe fixa do Twig
+    canvas.style.filter = 'blur(150px)';
 
     const blobs = [
         { x: 0.3, y: 0.4, size: 0.2, color: colors[0] },
@@ -70,19 +72,19 @@ if (canvas) {
         // Valores de curva desenhados para não serem um "Coração Emoji", mas simétricos de órgão
         ctx.beginPath();
         ctx.moveTo(0, -20); // Topo médio
-        
+
         // Cúspide Superior Direita (Átrio direito/Aorta área)
         ctx.bezierCurveTo(30, -35, 60, -10, 50, 20);
-        
+
         // Descida do Ventrículo Direito até o Ápice Inferior
-        ctx.bezierCurveTo(40, 50, 15, 80, -10, 90); 
-        
+        ctx.bezierCurveTo(40, 50, 15, 80, -10, 90);
+
         // Subida do Ventrículo Esquerdo
         ctx.bezierCurveTo(-45, 75, -60, 40, -50, 10);
-        
+
         // Cúspide Superior Esquerda (Átrio esquerdo)
         ctx.bezierCurveTo(-40, -20, -15, -30, 0, -20);
-        
+
         ctx.closePath();
 
         // O Gradiente continua o mesmo conceito, preenchendo o path
@@ -114,10 +116,10 @@ if (canvas) {
 
         drawOrganicHeart(
             ctx,
-            centerX + driftX, 
-            centerY + driftY, 
-            baseSize, 
-            pulse, 
+            centerX + driftX,
+            centerY + driftY,
+            baseSize,
+            pulse,
             colors[0]
         );
 
