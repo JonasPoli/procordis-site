@@ -58,35 +58,68 @@ if (canvas) {
         return beat1 + beat2;
     }
 
+    function drawOrganicHeart(ctx, x, y, size, pulse, color) {
+        ctx.save();
+        ctx.translate(x, y);
+
+        // A escala base aumenta levemente de acordo com o pulso
+        const scale = size * (1 + pulse * 0.15);
+        ctx.scale(scale, scale);
+
+        // Path que imita o formato orgânico de um coração humano (mais cônico, levemente inclinado)
+        // Valores de curva desenhados para não serem um "Coração Emoji", mas simétricos de órgão
+        ctx.beginPath();
+        ctx.moveTo(0, -20); // Topo médio
+        
+        // Cúspide Superior Direita (Átrio direito/Aorta área)
+        ctx.bezierCurveTo(30, -35, 60, -10, 50, 20);
+        
+        // Descida do Ventrículo Direito até o Ápice Inferior
+        ctx.bezierCurveTo(40, 50, 15, 80, -10, 90); 
+        
+        // Subida do Ventrículo Esquerdo
+        ctx.bezierCurveTo(-45, 75, -60, 40, -50, 10);
+        
+        // Cúspide Superior Esquerda (Átrio esquerdo)
+        ctx.bezierCurveTo(-40, -20, -15, -30, 0, -20);
+        
+        ctx.closePath();
+
+        // O Gradiente continua o mesmo conceito, preenchendo o path
+        const gradient = ctx.createRadialGradient(0, 15, 0, 0, 15, 90);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        ctx.restore();
+    }
+
     function animate() {
         ctx.clearRect(0, 0, width, height);
 
         time += speed;
         const pulse = getHumanHeartBeat(time);
 
-        blobs.forEach(blob => {
-            const x = width * blob.x;
-            const y = height * blob.y;
+        // Daremos base no centro da tela para um "coração" único e forte
+        const centerX = width * 0.5;
+        const centerY = height * 0.45;
 
-            const driftX = Math.sin(time + blob.y) * 20;
-            const driftY = Math.cos(time + blob.x) * 20;
+        // O coração principal recebe movimento orgânico (drift)
+        const driftX = Math.sin(time * 0.5) * 15;
+        const driftY = Math.cos(time * 0.3) * 15;
 
-            const baseRadius = Math.min(width, height) * blob.size;
-            const beatExpansion = baseRadius * 0.25 * pulse;
-            const currentRadius = baseRadius + beatExpansion;
+        const baseSize = Math.min(width, height) * 0.0035;
 
-            const gradient = ctx.createRadialGradient(
-                x + driftX, y + driftY, 0,
-                x + driftX, y + driftY, currentRadius
-            );
-            gradient.addColorStop(0, blob.color);
-            gradient.addColorStop(1, 'rgba(0,0,0,0)');
-
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(x + driftX, y + driftY, currentRadius, 0, Math.PI * 2);
-            ctx.fill();
-        });
+        drawOrganicHeart(
+            ctx,
+            centerX + driftX, 
+            centerY + driftY, 
+            baseSize, 
+            pulse, 
+            colors[0]
+        );
 
         requestAnimationFrame(animate);
     }
