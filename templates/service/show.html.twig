@@ -50,7 +50,7 @@
             
              {% if service.description %}
                 <p class="text-xl opacity-90 max-w-2xl mx-auto leading-relaxed font-light" data-aos="fade-up" data-aos-delay="100">
-                    {{ service.description }}
+                    {{ service.description|raw }}
                 </p>
             {% endif %}
         </div>
