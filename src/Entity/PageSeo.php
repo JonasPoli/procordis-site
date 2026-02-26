@@ -44,6 +44,15 @@ class PageSeo
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $contactPageDescription = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $headerEndCode = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $bodyStartCode = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $bodyEndCode = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +174,42 @@ class PageSeo
     public function setContactPageDescription(?string $contactPageDescription): static
     {
         $this->contactPageDescription = $contactPageDescription;
+
+        return $this;
+    }
+
+    public function getHeaderEndCode(): ?string
+    {
+        return $this->headerEndCode;
+    }
+
+    public function setHeaderEndCode(?string $headerEndCode): static
+    {
+        $this->headerEndCode = $headerEndCode;
+
+        return $this;
+    }
+
+    public function getBodyStartCode(): ?string
+    {
+        return $this->bodyStartCode;
+    }
+
+    public function setBodyStartCode(?string $bodyStartCode): static
+    {
+        $this->bodyStartCode = $bodyStartCode;
+
+        return $this;
+    }
+
+    public function getBodyEndCode(): ?string
+    {
+        return $this->bodyEndCode;
+    }
+
+    public function setBodyEndCode(?string $bodyEndCode): static
+    {
+        $this->bodyEndCode = $bodyEndCode;
 
         return $this;
     }

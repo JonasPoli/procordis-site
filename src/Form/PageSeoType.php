@@ -28,6 +28,25 @@ class PageSeoType extends AbstractType
 
             ->add('contactPageTitle', TextType::class, ['label' => 'Contato: Título SEO', 'required' => false])
             ->add('contactPageDescription', TextareaType::class, ['label' => 'Contato: Descrição SEO', 'required' => false, 'attr' => ['rows' => 2]])
+
+            ->add('headerEndCode', TextareaType::class, [
+                'label' => 'Fim do Cabeçalho',
+                'required' => false,
+                'help' => 'O conteúdo deste campo será enviado para todas as páginas públicas do site antes do fechamento da tag <head>',
+                'attr' => ['rows' => 5],
+            ])
+            ->add('bodyStartCode', TextareaType::class, [
+                'label' => 'Início do Corpo',
+                'required' => false,
+                'help' => 'O conteúdo deste campo será enviado para todas as páginas públicas do site logo apos a abertura da tag <body>',
+                'attr' => ['rows' => 5],
+            ])
+            ->add('bodyEndCode', TextareaType::class, [
+                'label' => 'Fim do Corpo',
+                'required' => false,
+                'help' => 'O conteúdo deste campo será enviado para todas as páginas públicas do site antes do fechamento da tag <body>',
+                'attr' => ['rows' => 5],
+            ])
         ;
     }
 
