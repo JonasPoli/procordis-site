@@ -65,7 +65,17 @@ gtag('config', '{{ templateService.globalTags.ga4 }}');
 
 		{{ templateService.pageSeo.headerEndCode|default('')|raw }}
 	</head>
-	<body class="flex flex-col min-h-screen font-sans antialiased text-slate-600 bg-white selection:bg-primary-500 selection:text-white" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+	<body
+		class="flex flex-col min-h-screen font-sans antialiased text-slate-600 bg-white selection:bg-primary-500 selection:text-white" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+		<!-- DEBUG: START -->
+		<div style="background: red; color: white; padding: 10px; z-index: 999999; position: relative;">
+			HEADER END:
+			{{ templateService.pageSeo.headerEndCode|default('NULL_HEADER') }}
+			BODY START:
+			{{ templateService.pageSeo.bodyStartCode|default('NULL_BODY_START') }}
+		</div>
+		<!-- DEBUG: END -->
+
 		{{ templateService.pageSeo.bodyStartCode|default('')|raw }}
 
 		<!-- Header -->

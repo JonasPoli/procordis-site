@@ -48,8 +48,11 @@
 				font-family: 'Lato', sans-serif;
 			}
 		</style>
+
+		{{ templateService.pageSeo.headerEndCode|default('')|raw }}
 	</head>
 	<body class="flex flex-col min-h-screen font-sans antialiased text-foreground bg-background overflow-x-hidden" data-turbo="false">
+		{{ templateService.pageSeo.bodyStartCode|default('')|raw }}
 		<canvas id="heartbeat-bg" class="fixed inset-0 pointer-events-none z-[9999]"></canvas>
 		{% block body %}{% endblock %}
 
@@ -114,5 +117,7 @@ AOS.init();
 });
 		</script>
 		<script src="{{ asset('js/heartbeat.js') }}" defer></script>
+
+		{{ templateService.pageSeo.bodyEndCode|default('')|raw }}
 	</body>
 </html>
