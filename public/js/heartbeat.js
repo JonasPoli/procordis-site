@@ -40,7 +40,7 @@ if (canvas) {
     canvas.style.mixBlendMode = blendMode;
     canvas.style.opacity = canvasOpacity;
     // Adiciona o blur aumentado em vez de depender de uma classe fixa do Twig
-    canvas.style.filter = 'blur(150px)';
+    canvas.style.filter = 'blur(10px)';
 
     const blobs = [
         { x: 0.3, y: 0.4, size: 0.2, color: colors[0] },
