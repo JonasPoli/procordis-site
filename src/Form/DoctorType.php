@@ -41,6 +41,16 @@ class DoctorType extends AbstractType
                 'required' => false,
                 'attr' => ['rows' => 4, 'class' => 'form-textarea editor-html']
             ])
+            ->add('isActive', \Symfony\Component\Form\Extension\Core\Type\CheckboxType::class, [
+                'label' => 'Ativo',
+                'required' => false,
+                'attr' => [
+                    'class' => 'peer sr-only' // Tailwind custom switch class if applicable, or generic
+                ],
+                'label_attr' => [
+                    'class' => 'inline-flex items-center cursor-pointer'
+                ]
+            ])
         ;
     }
 

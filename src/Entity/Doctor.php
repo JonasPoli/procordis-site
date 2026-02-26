@@ -38,6 +38,16 @@ class Doctor
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isActive = true;
+
+    // ... Other properties usually follow, or constructors
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -113,5 +123,17 @@ class Doctor
     public function setImageName(?string $imageName): void
     {
         $this->imageName = $imageName;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 }

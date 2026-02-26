@@ -30,7 +30,7 @@ class HomeController extends AbstractController
             'generalData' => $generalDataRepository->findOneBy([]),
             'services' => $serviceRepository->findBy([], ['id' => 'ASC'], 4),
             'specialties' => $specialtyRepository->findActive(),
-            'doctors' => $doctorRepository->findBy([], ['id' => 'ASC']),
+            'doctors' => $doctorRepository->findBy(['isActive' => true], ['id' => 'ASC']),
             'latestNews' => $newsRepository->findRecent(3),
             'testimonies' => $testimonyRepository->findActive(10),
             'banners' => $homeBannerRepository->findActive(),

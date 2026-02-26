@@ -1,28 +1,37 @@
 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            {{ form_row(form.name) }}
-        </div>
-        <div>
-            {{ form_row(form.crm) }}
-        </div>
-    </div>
 
-    <div>
-        {{ form_row(form.specialty) }}
-    </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+	<div>
+		{{ form_row(form.name) }}
+	</div>
+	<div>
+		{{ form_row(form.crm) }}
+	</div>
+</div>
 
-    <div>
-        {{ form_row(form.imageFile) }}
-    </div>
+<div>
+	{{ form_row(form.specialty) }}
+</div>
 
-    <div>
-        {{ form_row(form.bio) }}
-    </div>
+<div>
+	{{ form_row(form.imageFile) }}
+</div>
 
-    <div class="flex justify-end">
-        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ button_label|default('Salvar') }}</button>
-    </div>
+<div>
+	{{ form_row(form.bio) }}
+</div>
+
+<div class="flex items-center space-x-3 mb-6">
+	<label class="relative inline-flex items-center cursor-pointer">
+		{{ form_widget(form.isActive) }}
+		<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+		<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Médico Ativo no Site</span>
+	</label>
+	<div class="hidden">{{ form_rest(form) }}</div>
+</div>
+
+<div class="flex justify-end">
+	<button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ button_label|default('Salvar') }}</button>
+</div>
 
 {{ form_end(form) }}
