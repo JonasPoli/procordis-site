@@ -1,0 +1,40 @@
+{{ form_start(form) }}
+    <div class="grid gap-6">
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 dark:text-white mb-1'}}) }}
+                {{ form_widget(form.title, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div>
+                {{ form_label(form.link, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 dark:text-white mb-1'}}) }}
+                {{ form_widget(form.link, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white'}}) }}
+                {{ form_errors(form.link) }}
+                <p class="text-xs text-slate-500 mt-1">Se preenchido, torna o logo clicável no site público. Deixe em branco caso não tenha link.</p>
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.imageFile, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 dark:text-white mb-1'}}) }}
+            {{ form_widget(form.imageFile, {'attr': {'class': 'block w-full text-sm text-slate-500 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-[#3C50E0] dark:file:text-white dark:hover:file:bg-blue-600'}}) }}
+            {{ form_errors(form.imageFile) }}
+        </div>
+
+        <div class="flex gap-6 items-center border-t pt-4">
+            <div class="w-32">
+                {{ form_label(form.sortOrder, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-700 dark:text-white mb-1'}}) }}
+                {{ form_widget(form.sortOrder, {'attr': {'class': 'w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white'}}) }}
+            </div>
+            <div class="pt-6">
+                {{ form_widget(form.active) }}
+                {{ form_label(form.active, null, {'label_attr': {'class': 'ml-2 text-sm font-medium text-slate-700 dark:text-white'}}) }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-8 flex justify-end">
+        <button class="btn bg-blue-600 text-white px-6 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition font-medium">
+            {{ button_label|default('Salvar') }}
+        </button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,14 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block page_title %}Novo Parceiro{% endblock %}
+
+{% block body %}
+    <div class="glass-panel text-sm px-6 py-6 rounded-xl shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-800 dark:text-white">Novo Parceiro</h2>
+            <a href="{{ path('admin_partner_index') }}" class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">&larr; Voltar</a>
+        </div>
+        
+        {{ include('admin/partner/_form.html.twig') }}
+    </div>
+{% endblock %}

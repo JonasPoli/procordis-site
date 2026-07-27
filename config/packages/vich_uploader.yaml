@@ -41,3 +41,9 @@ vich_uploader:
             uri_prefix: /images/specialties
             upload_destination: '%kernel.project_dir%/public/images/specialties'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+
+        partner_image:
+            uri_prefix: /images/partners
+            upload_destination: '%kernel.project_dir%/public/images/partners'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+

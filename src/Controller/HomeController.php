@@ -23,7 +23,8 @@ class HomeController extends AbstractController
         NewsRepository $newsRepository,
         TestimonyRepository $testimonyRepository,
         \App\Repository\HomeBannerRepository $homeBannerRepository,
-        \App\Repository\AboutPageRepository $aboutPageRepository
+        \App\Repository\AboutPageRepository $aboutPageRepository,
+        \App\Repository\PartnerRepository $partnerRepository
     ): Response
     {
         return $this->render('home/index.html.twig', [
@@ -35,6 +36,7 @@ class HomeController extends AbstractController
             'testimonies' => $testimonyRepository->findActive(10),
             'banners' => $homeBannerRepository->findActive(),
             'about' => $aboutPageRepository->getPage(),
+            'partners' => $partnerRepository->findActive(),
         ]);
     }
 

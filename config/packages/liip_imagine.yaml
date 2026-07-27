@@ -88,3 +88,9 @@ liip_imagine:
             filters:
                 thumbnail: { size: [800, 600], mode: inset }
                 # no format filter
+
+        partner_thumb:
+            quality: 85
+            filters:
+                thumbnail: { size: [200, 100], mode: inset }
+
