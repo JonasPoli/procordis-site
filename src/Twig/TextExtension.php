@@ -14,8 +14,12 @@ class TextExtension extends AbstractExtension
         ];
     }
 
-    public function truncateWords(string $text, int $length = 250, string $ellipsis = '...'): string
+    public function truncateWords(?string $text, int $length = 250, string $ellipsis = '...'): string
     {
+        if ($text === null || $text === '') {
+            return '';
+        }
+
         // First remove any HTML tags, then decode HTML entities (like &ccedil;) so we count actual characters
         $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 

@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
 {% block title %}Resultados da Busca: {{ query }} - Procordis{% endblock %}
 
 {% block content %}
     <!-- Hero Small / Search Header -->
-    <div class="bg-primary-900 py-16 text-white relative overflow-hidden">
+    <div class="bg-[#2993C9] dark:bg-[#031219] py-16 text-white relative overflow-hidden">
          <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/medical-icons.png')] opacity-10"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">
             <h1 class="text-3xl md:text-5xl font-display font-bold mb-4">Resultados da Busca</h1>
@@ -57,9 +57,9 @@
                         {% if services is not empty %}
                             <div class="space-y-4">
                                 {% for service in services %}
-                                    <a href="{{ path('app_service_show', {id: service.id}) }}" class="block bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-200 transition-all group">
+                                    <a href="{{ path('app_service_show', {slug: service.slug}) }}" class="block bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-200 transition-all group">
                                         <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">{{ service.title }}</h3>
-                                        <p class="text-slate-500 text-sm line-clamp-2">{{ service.description }}</p>
+                                        <p class="text-slate-500 text-sm line-clamp-2">{{ service.description|raw }}</p>
                                     </a>
                                 {% endfor %}
                             </div>
@@ -78,7 +78,7 @@
                         {% if news is not empty %}
                              <div class="space-y-4">
                                 {% for item in news %}
-                                     <a href="{{ path('app_news_show', {slug: item.slug}) }}" class="flex gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-green-200 transition-all group">
+                                     <a href="{{ path('app_news_detail', {slug: item.slug}) }}" class="flex gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-green-200 transition-all group">
                                         {% if item.imageName %}
                                            <div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
                                                 <img src="{{ asset('images/news/' ~ item.imageName) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">

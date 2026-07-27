@@ -41,15 +41,15 @@
 				<ul class="space-y-6 text-primary-100 text-sm">
 					<li class="flex items-start group">
 						<i class="fas fa-map-marker-alt w-6 mt-1 text-primary-400 group-hover:text-white transition-colors"></i>
-						<span class="leading-relaxed">{{ templateService.generalData.address|default('Av. Brasil, 123 - Centro, Araraquara - SP') }}</span>
+						<span class="leading-relaxed">{{ templateService.generalData.address|default('Av. Queiroz Filho, 685 - Vila Sedenho, Araraquara - SP, 14806-010') }}</span>
 					</li>
 					<li class="flex items-center group">
 						<i class="fas fa-phone-alt w-6 text-primary-400 group-hover:text-white transition-colors"></i>
-						<a href="tel:{{ templateService.generalData.phone }}" class="hover:text-white transition-colors font-bold">{{ templateService.generalData.phone|default('(16) 3333-4444') }}</a>
+						<a href="tel:{{ templateService.generalData.phone }}" class="hover:text-white transition-colors font-bold">{{ templateService.generalData.phone|default('(16) 3397-4625') }}</a>
 					</li>
 					<li class="flex items-center group">
 						<i class="fas fa-envelope w-6 text-primary-400 group-hover:text-white transition-colors"></i>
-						<a href="mailto:{{ templateService.generalData.email }}" class="hover:text-white transition-colors">{{ templateService.generalData.email|default('contato@procordis.org.br') }}</a>
+						<a href="mailto:{{ templateService.generalData.email }}" class="hover:text-white transition-colors">{{ templateService.generalData.email|default('secretaria@procordis.org.br') }}</a>
 					</li>
 				</ul>
 			</div>
@@ -65,13 +65,15 @@
 			</div>
 		</div>
 
-		<div class="border-t border-primary-800/50 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-primary-400 font-medium tracking-wide uppercase">
-			<p>&copy;
-				{{ 'now'|date('Y') }}
-				Associação Procordis. Todos os direitos reservados.</p>
-			<div class="flex space-x-8 mt-4 md:mt-0">
-				<a href="#" class="hover:text-white transition-colors">Privacidade</a>
-				<a href="#" class="hover:text-white transition-colors">Termos de Uso</a>
+		<div class="border-t border-primary-800/50 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-primary-400 font-medium tracking-wide">
+			<div>
+				<p class="font-bold text-white uppercase">Associação Procordis Araraquara</p>
+				<p class="text-primary-200">CNPJ: 13.020.032/0001-09</p>
+				<p>&copy; {{ 'now'|date('Y') }} Todos os direitos reservados.</p>
+			</div>
+			<div class="flex space-x-8 mt-4 md:mt-0 uppercase">
+				<a href="{{ path('app_transparency_index') }}" class="hover:text-white transition-colors">Transparência</a>
+				<a href="{{ path('app_about') }}" class="hover:text-white transition-colors">Quem Somos</a>
 			</div>
 		</div>
 	</div>
