@@ -44,7 +44,7 @@
 							</h3>
 
 							<p class="text-muted-foreground mb-6 flex-grow line-clamp-3">
-								{{ specialty.shortDescription|default(specialty.description|striptags)|raw }}
+								{{ specialty.shortDescription|default(specialty.fullText|default('')|striptags)|raw }}
 							</p>
 
 							<a href="{{ path('app_specialty_show', {slug: specialty.slug}) }}" class="inline-flex items-center text-primary font-semibold group-hover:gap-2 transition-all mt-auto">
