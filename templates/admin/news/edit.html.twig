@@ -10,4 +10,11 @@
         
         {{ include('admin/news/_form.html.twig', {'button_label': 'Atualizar'}) }}
     </div>
+
+    {{ include('admin/news_gallery/_manager.html.twig', {
+        news: news,
+        items: galleryItems,
+        max_upload_bytes: galleryMaxUploadBytes,
+        max_upload_label: galleryMaxUploadLabel
+    }) }}
 {% endblock %}

@@ -590,3 +590,26 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+/* =========================================
+   Admin: galeria das notícias
+   ========================================= */
+/* Item inativo: continua visível no painel, esmaecido e com selo "Inativo". */
+[data-news-gallery-admin-target="item"].is-inactive {
+    border-style: dashed;
+}
+
+[data-news-gallery-admin-target="item"].is-inactive .gallery-item-thumb {
+    opacity: 0.45;
+    filter: grayscale(1);
+}
+
+/* Estados do arrastar-e-soltar (SortableJS). */
+.gallery-sortable-ghost {
+    opacity: 0.35;
+    outline: 2px dashed #2563eb;
+    outline-offset: 2px;
+}
+
+.gallery-sortable-chosen {
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.25);
+}

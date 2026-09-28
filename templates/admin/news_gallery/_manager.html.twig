@@ -1,0 +1,99 @@
+{# Gerenciador da galeria da notícia (imagens + vídeos do YouTube). Variáveis: news, items, max_upload_bytes, max_upload_label. #}
+<section id="galeria" class="glass-panel p-6 rounded-2xl mt-6 scroll-mt-6"
+         aria-labelledby="galeria-titulo"
+         data-controller="news-gallery-admin"
+         data-news-gallery-admin-upload-url-value="{{ path('admin_news_gallery_upload', {id: news.id}) }}"
+         data-news-gallery-admin-preview-url-value="{{ path('admin_news_gallery_youtube_preview', {id: news.id}) }}"
+         data-news-gallery-admin-youtube-url-value="{{ path('admin_news_gallery_youtube_add', {id: news.id}) }}"
+         data-news-gallery-admin-reorder-url-value="{{ path('admin_news_gallery_reorder', {id: news.id}) }}"
+         data-news-gallery-admin-token-value="{{ csrf_token('admin_ajax') }}"
+         data-news-gallery-admin-max-bytes-value="{{ max_upload_bytes }}">
+
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6">
+        <div>
+            <h2 id="galeria-titulo" class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Galeria da notícia
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                Imagens e vídeos do YouTube aparecem em um slideshow no fim da notícia, nesta ordem. As alterações são salvas na hora.
+            </p>
+        </div>
+        <span class="text-sm font-semibold text-slate-500 dark:text-slate-400" data-news-gallery-admin-target="count" aria-live="polite">
+            {{ items|length }} {{ items|length == 1 ? 'item' : 'itens' }}
+        </span>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {# Upload de imagens #}
+        <div>
+            <div class="relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/40 px-6 py-8 text-center transition-colors data-[dragging]:border-blue-500 data-[dragging]:bg-blue-50/70 dark:data-[dragging]:bg-blue-900/20"
+                 data-news-gallery-admin-target="dropzone"
+                 data-action="dragenter->news-gallery-admin#dragEnter dragover->news-gallery-admin#dragOver dragleave->news-gallery-admin#dragLeave drop->news-gallery-admin#drop">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300" aria-hidden="true">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                </span>
+                <div>
+                    <p class="font-semibold text-slate-700 dark:text-slate-200">Arraste e solte as imagens aqui</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">ou</p>
+                </div>
+                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm shadow-blue-500/30 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/40"
+                        data-action="news-gallery-admin#openFilePicker">
+                    Selecionar imagens
+                </button>
+                <input type="file" class="sr-only" multiple accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                       data-news-gallery-admin-target="fileInput"
+                       data-action="change->news-gallery-admin#filesSelected"
+                       aria-label="Selecionar imagens para a galeria" tabindex="-1">
+                <p class="text-xs text-slate-400">JPG, PNG ou WebP · até {{ max_upload_label }} por arquivo · várias de uma vez</p>
+            </div>
+
+            <ul class="mt-4 space-y-2 empty:hidden" data-news-gallery-admin-target="uploads" aria-live="polite" aria-label="Envios em andamento"></ul>
+        </div>
+
+        {# Vídeos do YouTube #}
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-600 bg-white/50 dark:bg-slate-800/40 p-5">
+            <label for="galeria-youtube-{{ news.id }}" class="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200 mb-2">
+                <svg class="w-5 h-5 text-red-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+                Adicionar vídeo do YouTube
+            </label>
+            <textarea id="galeria-youtube-{{ news.id }}" rows="2"
+                      class="w-full rounded-xl border border-slate-300 dark:border-[#3d4d60] bg-white dark:bg-[#1D2A39] px-4 py-3 text-sm text-slate-700 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10"
+                      placeholder="Cole aqui o link do vídeo (ou vários, um por linha)"
+                      data-news-gallery-admin-target="youtubeInput"
+                      data-action="input->news-gallery-admin#youtubeInput paste->news-gallery-admin#youtubePaste"
+                      aria-describedby="galeria-youtube-ajuda-{{ news.id }}"></textarea>
+            <p id="galeria-youtube-ajuda-{{ news.id }}" class="mt-1 text-xs text-slate-400">
+                Aceita links do tipo youtube.com/watch, youtu.be, /shorts/, /embed/ e /live/. O título do vídeo vira a legenda sugerida.
+            </p>
+
+            <ul class="mt-4 space-y-3 empty:hidden" data-news-gallery-admin-target="youtubePreviews" aria-live="polite" aria-label="Pré-visualização dos vídeos"></ul>
+
+            <div class="mt-4 flex items-center justify-end gap-3">
+                <span class="text-xs text-slate-500" data-news-gallery-admin-target="youtubeStatus" aria-live="polite"></span>
+                <button type="button" disabled
+                        class="bg-red-600 hover:bg-red-700 disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:cursor-not-allowed dark:disabled:bg-slate-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm shadow-red-500/30 focus:outline-none focus-visible:ring-4 focus-visible:ring-red-500/40"
+                        data-news-gallery-admin-target="youtubeSubmit"
+                        data-action="news-gallery-admin#addVideos">
+                    Adicionar vídeo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# Itens da galeria #}
+    <div class="mt-8">
+        <p class="text-center text-sm text-slate-500 dark:text-slate-400 py-10 border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl {{ items is empty ? '' : 'hidden' }}"
+           data-news-gallery-admin-target="empty">
+            A galeria ainda está vazia. Envie imagens ou adicione vídeos do YouTube acima.
+        </p>
+
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"
+            data-news-gallery-admin-target="list"
+            aria-label="Itens da galeria (arraste para reordenar)">
+            {% for item in items %}
+                {{ include('admin/news_gallery/_item.html.twig', {news: news, item: item}) }}
+            {% endfor %}
+        </ul>
+    </div>
+</section>
