@@ -94,7 +94,12 @@
         const counters = document.querySelectorAll('.seo-counter');
         counters.forEach(input => {
             const max = input.dataset.max;
-            const display = input.parentNode.querySelector('.counter-display');
+            // form_row envolve o campo numa div própria; o contador fica logo depois dela.
+            const row = input.closest('.mb-6') || input.parentNode;
+            const display = (row.parentNode || row).querySelector('.counter-display');
+            if (!display) {
+                return;
+            }
             
             const updateCounter = () => {
                 const current = input.value.length;
