@@ -35,3 +35,6 @@ services:
 when@test:
     parameters:
         app.news_gallery.dir: '%kernel.project_dir%/var/test/news-gallery'
+
+    services:
+        App\Tests\Support\YouTubeMockResponseFactory: ~
