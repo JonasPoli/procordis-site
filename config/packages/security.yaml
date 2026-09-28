@@ -2,6 +2,13 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # Tipos de usuário do painel:
+    # - ROLE_ADMIN: administrador geral, acesso total (herda tudo o que o jornalista pode fazer);
+    # - ROLE_JORNALISTA: apenas notícias, categorias de notícias e galeria das notícias.
+    role_hierarchy:
+        ROLE_JORNALISTA: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_JORNALISTA]
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -35,6 +42,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # Painel inicial: jornalistas são redirecionados para a lista de notícias.
+        - { path: ^/admin/?$, roles: ROLE_JORNALISTA }
+        # Notícias (inclui a galeria) e categorias de notícias: jornalista e administrador.
+        - { path: ^/admin/(news|news-category)(/|$), roles: ROLE_JORNALISTA }
+        # Todo o restante do painel: somente administrador.
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/news')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_JORNALISTA')]
 class NewsController extends AbstractController
 {
     #[Route('/', name: 'admin_news_index', methods: ['GET'])]

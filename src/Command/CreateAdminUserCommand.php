@@ -8,13 +8,14 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:admin-user',
-    description: 'Creates a new admin user',
+    description: 'Cria ou atualiza um usuário do painel (administrador por padrão; use --jornalista para jornalista)',
 )]
 class CreateAdminUserCommand extends Command
 {
@@ -30,6 +31,7 @@ class CreateAdminUserCommand extends Command
         $this
             ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new admin user')
             ->addArgument('password', InputArgument::OPTIONAL, 'The password of the new admin user')
+            ->addOption('jornalista', null, InputOption::VALUE_NONE, 'Cria o usuário com o perfil Jornalista (somente notícias, categorias e galeria)')
         ;
     }
 
@@ -61,13 +63,14 @@ class CreateAdminUserCommand extends Command
             $user->setEmail($email);
         }
 
-        $user->setRoles(['ROLE_ADMIN']);
+        $isJournalist = (bool) $input->getOption('jornalista');
+        $user->setAccessType($isJournalist ? User::ROLE_JORNALISTA : User::ROLE_ADMIN);
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
 
         $this->userRepository->save($user, true); // Assuming repository has save method or using EntityManager
 
-        $io->success(sprintf('Admin user %s created/updated successfully.', $email));
+        $io->success(sprintf('Usuário %s (%s) criado/atualizado com sucesso.', $email, $user->getAccessTypeLabel()));
 
         return Command::SUCCESS;
     }
