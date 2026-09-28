@@ -4,8 +4,8 @@
 {% block page_title %}Categorias de Notícias{% endblock %}
 
 {% block body %}
-    <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-slate-800">Listagem de Categorias</h1>
+    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        {{ include('admin/_partials/status_filter.html.twig', {route: 'admin_news_category_index', status: status, counts: statusCounts}) }}
         <a href="{{ path('admin_news_category_new') }}" class="btn btn-primary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Nova Categoria
@@ -31,11 +31,11 @@
                         <td class="p-6 font-medium text-slate-800">{{ category.title }}</td>
                         <td class="p-6 text-slate-500">{{ category.slug }}</td>
                         <td class="p-6">
-                            {% if category.active %}
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Ativo</span>
-                            {% else %}
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Inativo</span>
-                            {% endif %}
+                            {{ include('admin/_partials/active_toggle.html.twig', {
+                                url: path('admin_news_category_toggle_active', {id: category.id}),
+                                active: category.active,
+                                name: 'Categoria ' ~ category.title
+                            }) }}
                         </td>
                         <td class="p-6">
                             {{ include('admin/_partials/action_buttons.html.twig', {

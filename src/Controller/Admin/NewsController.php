@@ -7,6 +7,7 @@ use App\Form\NewsType;
 use App\Repository\NewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,11 +18,39 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[IsGranted('ROLE_JORNALISTA')]
 class NewsController extends AbstractController
 {
+    use AdminAjaxTrait;
+    use StatusFilterTrait;
+
     #[Route('/', name: 'admin_news_index', methods: ['GET'])]
-    public function index(NewsRepository $newsRepository): Response
+    public function index(Request $request, NewsRepository $newsRepository): Response
     {
+        [$activeFilter, $status] = $this->resolveStatusFilter($request);
+
         return $this->render('admin/news/index.html.twig', [
-            'news' => $newsRepository->findBy([], ['publishedAt' => 'DESC']),
+            'news' => $newsRepository->findForAdmin($activeFilter),
+            'status' => $status,
+            'statusCounts' => $newsRepository->countByStatus(),
+        ]);
+    }
+
+    /**
+     * Alternância rápida de "Ativo" direto na listagem (AJAX).
+     */
+    #[Route('/{id}/toggle-active', name: 'admin_news_toggle_active', methods: ['POST'])]
+    public function toggleActive(Request $request, News $news, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($error = $this->checkAjaxCsrf($request)) {
+            return $error;
+        }
+
+        $news->setActive(!$news->isActive());
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'active' => $news->isActive(),
+            'message' => $news->isActive()
+                ? 'Notícia ativada: ela já aparece no site.'
+                : 'Notícia desativada: ela não aparece mais no site.',
         ]);
     }
 

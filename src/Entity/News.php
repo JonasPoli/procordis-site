@@ -73,6 +73,13 @@ class News
     #[ORM\ManyToMany(targetEntity: NewsCategory::class, inversedBy: 'news')]
     private Collection $categories;
 
+    /**
+     * Quando false, a notícia não aparece em nenhum lugar do site público
+     * (listagens, home, busca, recentes/anteriores) e a URL direta retorna 404.
+     */
+    #[ORM\Column(options: ['default' => true])]
+    private bool $active = true;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTimeImmutable();
@@ -261,5 +268,40 @@ class News
         $this->categories->removeElement($category);
 
         return $this;
+    }
+
+    /**
+     * Categorias que podem ser exibidas/linkadas no site público (somente as ativas).
+     * A notícia continua visível mesmo que todas as suas categorias estejam inativas.
+     *
+     * @return NewsCategory[]
+     */
+    public function getActiveCategories(): array
+    {
+        return array_values($this->categories->filter(
+            static fn (NewsCategory $category): bool => true === $category->isActive()
+        )->toArray());
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Visível no site público: ativa e com data de publicação já alcançada.
+     */
+    public function isPubliclyVisible(?\DateTimeImmutable $now = null): bool
+    {
+        $now ??= new \DateTimeImmutable();
+
+        return $this->active && null !== $this->publishedAt && $this->publishedAt <= $now;
     }
 }

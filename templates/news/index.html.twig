@@ -42,7 +42,8 @@
                             </a>
                             <div class="p-6 flex-1 flex flex-col">
                                 <div class="flex flex-wrap gap-2 mb-3">
-                                    {% for category in news.categories %}
+                                    {# Somente categorias ativas são exibidas/linkadas no site público #}
+                                    {% for category in news.activeCategories %}
                                         <a href="{{ path('app_news', {'category': category.slug}) }}" class="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors uppercase tracking-wider">
                                             {{ category.title }}
                                         </a>

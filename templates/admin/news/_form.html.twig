@@ -18,6 +18,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             {{ form_row(form.publishedAt) }}
+            {{ include('admin/_partials/form_switch.html.twig', {field: form.active}) }}
         </div>
         <div>
             {{ form_row(form.imageFile) }}

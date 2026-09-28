@@ -7,6 +7,7 @@ use App\Form\NewsCategoryType;
 use App\Repository\NewsCategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,11 +17,39 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_JORNALISTA')]
 class NewsCategoryController extends AbstractController
 {
+    use AdminAjaxTrait;
+    use StatusFilterTrait;
+
     #[Route('/', name: 'admin_news_category_index', methods: ['GET'])]
-    public function index(NewsCategoryRepository $newsCategoryRepository): Response
+    public function index(Request $request, NewsCategoryRepository $newsCategoryRepository): Response
     {
+        [$activeFilter, $status] = $this->resolveStatusFilter($request);
+
         return $this->render('admin/news_category/index.html.twig', [
-            'news_categories' => $newsCategoryRepository->findAll(),
+            'news_categories' => $newsCategoryRepository->findForAdmin($activeFilter),
+            'status' => $status,
+            'statusCounts' => $newsCategoryRepository->countByStatus(),
+        ]);
+    }
+
+    /**
+     * Alternância rápida de "Ativo" direto na listagem (AJAX).
+     */
+    #[Route('/{id}/toggle-active', name: 'admin_news_category_toggle_active', methods: ['POST'])]
+    public function toggleActive(Request $request, NewsCategory $newsCategory, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($error = $this->checkAjaxCsrf($request)) {
+            return $error;
+        }
+
+        $newsCategory->setActive(!$newsCategory->isActive());
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'active' => $newsCategory->isActive(),
+            'message' => $newsCategory->isActive()
+                ? 'Categoria ativada: ela volta a aparecer no site.'
+                : 'Categoria desativada: ela some do site (as notícias continuam visíveis).',
         ]);
     }
 

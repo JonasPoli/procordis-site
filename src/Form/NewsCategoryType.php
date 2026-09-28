@@ -26,6 +26,7 @@ class NewsCategoryType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'label' => 'Ativo',
                 'required' => false,
+                'help' => 'Categoria inativa some dos menus, filtros e listagens do site. As notícias dela continuam visíveis, apenas sem o link para a categoria.',
             ])
         ;
     }

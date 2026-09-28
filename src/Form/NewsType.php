@@ -43,6 +43,11 @@ class NewsType extends AbstractType
                 'input' => 'datetime_immutable',
                 'attr' => ['class' => 'form-input']
             ])
+            ->add('active', CheckboxType::class, [
+                'label' => 'Ativo',
+                'required' => false,
+                'help' => 'Desligue para esconder a notícia de todo o site público (listagens, home, busca e link direto).',
+            ])
             ->add('summary', TextareaType::class, [
                 'label' => 'Resumo',
                 'attr' => ['rows' => 3, 'class' => 'form-textarea']
