@@ -48,17 +48,33 @@ class NewsCategoryRepository extends ServiceEntityRepository
      */
     public function findSidebarCategories(): array
     {
+        // 1) contagem de notícias públicas por categoria ativa (só colunas agrupadas, portável MySQL/MariaDB/SQLite);
         $qb = $this->createPublicQueryBuilder('c')
-            ->select('c AS category', 'COUNT(n.id) AS newsCount')
+            ->select('c.id AS id', 'COUNT(n.id) AS newsCount')
             ->innerJoin('c.news', 'n')
-            ->groupBy('c.id')
-            ->orderBy('c.title', 'ASC');
-
+            ->groupBy('c.id');
         NewsRepository::applyPublicCriteria($qb, 'n');
 
+        $counts = [];
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
+            $counts[(int) $row['id']] = (int) $row['newsCount'];
+        }
+
+        if ([] === $counts) {
+            return [];
+        }
+
+        // 2) as categorias em si, em ordem alfabética.
+        $categories = $this->createPublicQueryBuilder('c')
+            ->andWhere('c.id IN (:ids)')
+            ->setParameter('ids', array_keys($counts))
+            ->orderBy('c.title', 'ASC')
+            ->getQuery()
+            ->getResult();
+
         return array_map(
-            static fn (array $row): array => ['category' => $row['category'], 'newsCount' => (int) $row['newsCount']],
-            $qb->getQuery()->getResult()
+            static fn (NewsCategory $category): array => ['category' => $category, 'newsCount' => $counts[$category->getId()]],
+            $categories
         );
     }
 
