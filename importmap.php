@@ -38,4 +38,27 @@ return [
         'version' => '4.0.1',
         'type' => 'css',
     ],
+    'photoswipe' => [
+        'version' => '5.4.4',
+    ],
+    'photoswipe/lightbox' => [
+        'version' => '5.4.4',
+    ],
+    'swiper' => [
+        'version' => '14.2.0',
+    ],
+    'swiper/modules' => [
+        'version' => '14.2.0',
+    ],
+    'swiper/swiper-bundle.min.css' => [
+        'version' => '14.2.0',
+        'type' => 'css',
+    ],
+    'sortablejs' => [
+        'version' => '1.15.7',
+    ],
+    'photoswipe/dist/photoswipe.min.css' => [
+        'version' => '5.4.4',
+        'type' => 'css',
+    ],
 ];
