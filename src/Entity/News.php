@@ -80,10 +80,22 @@ class News
     #[ORM\Column(options: ['default' => true])]
     private bool $active = true;
 
+    /**
+     * Galeria (imagens e vídeos do YouTube), na ordem definida no painel.
+     * cascade remove + orphanRemoval: ao excluir a notícia ou o item, os arquivos gerados
+     * também são apagados (ver GalleryFileCleanupListener).
+     *
+     * @var Collection<int, NewsGalleryItem>
+     */
+    #[ORM\OneToMany(targetEntity: NewsGalleryItem::class, mappedBy: 'news', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+    private Collection $galleryItems;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTimeImmutable();
         $this->categories = new ArrayCollection();
+        $this->galleryItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,6 +293,36 @@ class News
         return array_values($this->categories->filter(
             static fn (NewsCategory $category): bool => true === $category->isActive()
         )->toArray());
+    }
+
+    /**
+     * Todos os itens da galeria (inclusive inativos) — uso no painel.
+     * No site público use NewsGalleryItemRepository::findPublicByNews().
+     *
+     * @return Collection<int, NewsGalleryItem>
+     */
+    public function getGalleryItems(): Collection
+    {
+        return $this->galleryItems;
+    }
+
+    public function addGalleryItem(NewsGalleryItem $item): static
+    {
+        if (!$this->galleryItems->contains($item)) {
+            $this->galleryItems->add($item);
+            $item->setNews($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGalleryItem(NewsGalleryItem $item): static
+    {
+        if ($this->galleryItems->removeElement($item) && $item->getNews() === $this) {
+            $item->setNews(null);
+        }
+
+        return $this;
     }
 
     public function isActive(): bool
