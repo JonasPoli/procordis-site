@@ -1,0 +1,113 @@
+{# Galeria pública da notícia. Variáveis: news, items (somente itens ativos, na ordem do painel). #}
+{% set total = items|length %}
+{% set images_count = items|filter(i => i.image)|length %}
+{% set videos_count = total - images_count %}
+{% set parts = [] %}
+{% if images_count %}{% set parts = parts|merge([images_count ~ (images_count == 1 ? ' foto' : ' fotos')]) %}{% endif %}
+{% if videos_count %}{% set parts = parts|merge([videos_count ~ (videos_count == 1 ? ' vídeo' : ' vídeos')]) %}{% endif %}
+
+<section class="news-gallery" aria-labelledby="news-gallery-title-{{ news.id }}" data-controller="news-gallery">
+    <div class="news-gallery__header">
+        <h2 id="news-gallery-title-{{ news.id }}" class="news-gallery__title">Galeria</h2>
+        <p class="news-gallery__meta">{{ parts|join(' e ') }}</p>
+    </div>
+
+    <div class="swiper news-gallery__main" data-news-gallery-target="main">
+        <div class="swiper-wrapper">
+            {% for item in items %}
+                {% set medium = item.variant('medium') ?? item.variant('thumb') %}
+                {% set thumb_url = news_gallery_url(item, 'thumb') %}
+                {% set label = item.caption ?: (item.video ? 'Vídeo' : 'Foto') ~ ' ' ~ loop.index ~ ' de ' ~ total ~ ' da galeria' %}
+                <figure class="swiper-slide news-gallery__slide">
+                    {% if item.video %}
+                        <a href="{{ item.youtubeWatchUrl }}"
+                           class="news-gallery__media news-gallery__media--video"
+                           style="--ng-bg: url('{{ thumb_url }}')"
+                           data-pswp-type="youtube"
+                           data-pswp-width="1600"
+                           data-pswp-height="900"
+                           data-youtube-id="{{ item.youtubeId }}"
+                           data-youtube-url="{{ item.youtubeWatchUrl }}"
+                           data-embed-url="{{ item.youtubeEmbedUrl }}"
+                           data-poster="{{ news_gallery_url(item, 'medium') }}"
+                           data-thumb="{{ thumb_url }}"
+                           data-caption="{{ item.caption }}"
+                           aria-label="Assistir ao vídeo: {{ label }}">
+                            <img class="news-gallery__img"
+                                 src="{{ news_gallery_url(item, 'medium') ?? thumb_url }}"
+                                 srcset="{{ news_gallery_srcset(item) }}"
+                                 sizes="(min-width: 1024px) 760px, 100vw"
+                                 {% if medium %}width="{{ medium.width }}" height="{{ medium.height }}"{% endif %}
+                                 alt="{{ label }}"
+                                 {% if not loop.first %}loading="lazy"{% endif %}
+                                 decoding="async">
+                            <span class="news-gallery__badge" aria-hidden="true">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+                                Vídeo
+                            </span>
+                            <span class="news-gallery__play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </span>
+                        </a>
+                    {% else %}
+                        {% set large = item.largestVariant %}
+                        <a href="{{ news_gallery_url(item, 'large') ?? news_gallery_url(item, 'medium') }}"
+                           class="news-gallery__media"
+                           style="--ng-bg: url('{{ thumb_url }}')"
+                           data-pswp-width="{{ large.width }}"
+                           data-pswp-height="{{ large.height }}"
+                           data-pswp-srcset="{{ news_gallery_srcset(item, ['medium', 'large']) }}"
+                           data-thumb="{{ thumb_url }}"
+                           data-caption="{{ item.caption }}"
+                           aria-label="Ampliar foto: {{ label }}">
+                            <img class="news-gallery__img"
+                                 src="{{ news_gallery_url(item, 'medium') ?? thumb_url }}"
+                                 srcset="{{ news_gallery_srcset(item) }}"
+                                 sizes="(min-width: 1024px) 760px, 100vw"
+                                 {% if medium %}width="{{ medium.width }}" height="{{ medium.height }}"{% endif %}
+                                 alt="{{ label }}"
+                                 {% if not loop.first %}loading="lazy"{% endif %}
+                                 decoding="async">
+                            <span class="news-gallery__zoom-hint" aria-hidden="true">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                            </span>
+                        </a>
+                    {% endif %}
+
+                    {% if item.caption %}
+                        <figcaption class="news-gallery__caption">{{ item.caption }}</figcaption>
+                    {% endif %}
+                </figure>
+            {% endfor %}
+        </div>
+
+        {% if total > 1 %}
+            <div class="news-gallery__controls">
+                <button type="button" class="news-gallery__nav news-gallery__nav--prev" data-news-gallery-target="prev" aria-label="Item anterior da galeria">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="news-gallery__nav news-gallery__nav--next" data-news-gallery-target="next" aria-label="Próximo item da galeria">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <span class="news-gallery__counter" data-news-gallery-target="counter" aria-live="polite">1 / {{ total }}</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if total > 1 %}
+        <div class="swiper news-gallery__thumbs" data-news-gallery-target="thumbs" aria-hidden="true">
+            <div class="swiper-wrapper">
+                {% for item in items %}
+                    <div class="swiper-slide news-gallery__thumb">
+                        <img src="{{ news_gallery_url(item, 'thumb') }}" alt="" loading="lazy" decoding="async">
+                        {% if item.video %}
+                            <span class="news-gallery__thumb-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</section>

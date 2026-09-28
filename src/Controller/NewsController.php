@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\GeneralDataRepository;
 use App\Repository\NewsCategoryRepository;
+use App\Repository\NewsGalleryItemRepository;
 use App\Repository\NewsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,8 @@ class NewsController extends AbstractController
         string $slug,
         NewsRepository $newsRepository,
         NewsCategoryRepository $newsCategoryRepository,
-        GeneralDataRepository $generalDataRepository
+        GeneralDataRepository $generalDataRepository,
+        NewsGalleryItemRepository $galleryRepository
     ): Response {
         $news = $newsRepository->findOnePublicBySlug($slug);
         $isPreview = false;
@@ -71,6 +73,8 @@ class NewsController extends AbstractController
         return $this->render('news/show.html.twig', [
             'news' => $news,
             'isPreview' => $isPreview,
+            // Somente itens ativos, na ordem definida no painel.
+            'galleryItems' => $galleryRepository->findPublicByNews($news),
             'recentNews' => $recentNews,
             'previousNews' => $previousNews,
             'sidebarCategories' => $sidebarCategories,

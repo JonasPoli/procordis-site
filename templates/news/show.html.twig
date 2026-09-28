@@ -34,6 +34,11 @@
 </script>
 {% endblock %}
 
+{% block importmap %}
+    {# A galeria pública só carrega os estilos/bibliotecas extras quando a notícia tem itens. #}
+    {{ importmap(galleryItems is not empty ? ['app', 'news_gallery'] : 'app') }}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
@@ -114,6 +119,11 @@
                         {% endif %}
                         {{ news.content|raw }}
                     </div>
+
+                    {# Galeria (imagens e vídeos) — só aparece se houver itens ativos #}
+                    {% if galleryItems is not empty %}
+                        {{ include('news/_gallery.html.twig', {news: news, items: galleryItems}) }}
+                    {% endif %}
 
                     {# Share #}
                     <div class="border-t border-b border-border py-8 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
