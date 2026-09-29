@@ -16,11 +16,14 @@ function formatBytes(bytes) {
     return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
+// Escapa texto para uso em innerHTML, inclusive dentro de atributos (aspas também são escapadas).
 function escapeHtml(value) {
-    const div = document.createElement('div');
-    div.textContent = value ?? '';
-
-    return div.innerHTML;
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 /*
@@ -65,7 +68,12 @@ export default class extends Controller {
         });
 
         // Evita que o navegador abra a imagem se ela for solta fora da área de upload.
+        // Campos de arquivo (ex.: "Imagem de Capa" do formulário) continuam aceitando arquivos soltos neles.
         this.preventWindowDrop = (event) => {
+            if (event.target instanceof Element && event.target.closest('input[type="file"]')) {
+                return;
+            }
+
             if (event.dataTransfer && Array.from(event.dataTransfer.types || []).includes('Files')) {
                 event.preventDefault();
             }
