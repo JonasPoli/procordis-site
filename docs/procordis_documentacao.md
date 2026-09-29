@@ -1237,7 +1237,7 @@ Para garantir uma renderização limpa e evitar problemas de cache de CSS (FOUC 
     *   *Por que?* Isso força o browser a repintar (repaint) toda a árvore de estilos, garantindo que as variáveis CSS escopadas sejam recalculadas corretamente para o novo contexto.
 
 ```javascript
-// assets/js/theme-toggle.js
+// assets/controllers/theme_toggle_controller.js (controller Stimulus "theme-toggle", no <body> dos layouts)
 const toggleTheme = () => {
     // ... lógica de troca ...
     setTheme(newTheme);

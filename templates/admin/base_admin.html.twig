@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Procordis Admin{% endblock %}</title>
+        {# Aplica o tema salvo antes da primeira pintura (o restante fica em assets/controllers/theme_toggle_controller.js) #}
+        <script>try { document.documentElement.classList.toggle('dark', localStorage.getItem('theme') === 'dark'); } catch (e) {}</script>
          <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -40,38 +42,11 @@
 
         {% block javascripts %}
             {{ importmap('app') }}
+            {# Os editores são criados por assets/controllers/tinymce_controller.js nos campos com a classe "editor-html" #}
             <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key|default('no-api-key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-            <script>
-                const initTinyMCE = () => {
-                   if (window.tinymce) {
-                        try {
-                            tinymce.remove('.editor-html');
-                        } catch(e) {}
-
-                        tinymce.init({
-                            selector: '.editor-html',
-                            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                            branding: false,
-                            promotion: false,
-                            height: 500,
-                            setup: function (editor) {
-                                editor.on('change', function () {
-                                    editor.save();
-                                });
-                            }
-                        });
-                   }
-                };
-
-                // Support both standard load and Turbo navigation
-                document.addEventListener("DOMContentLoaded", initTinyMCE);
-                document.addEventListener("turbo:load", initTinyMCE);
-                document.addEventListener("turbo:render", initTinyMCE);
-            </script>
         {% endblock %}
     </head>
-    <body class="admin-layout mesh-gradient flex h-screen text-slate-800 dark:text-slate-200 overflow-hidden selection:bg-indigo-100 dark:selection:bg-indigo-900">
+    <body class="admin-layout mesh-gradient flex h-screen text-slate-800 dark:text-slate-200 overflow-hidden selection:bg-indigo-100 dark:selection:bg-indigo-900" data-controller="theme-toggle tinymce">
         
         <!-- Sidebar -->
         <aside class="w-72 flex flex-col glass-sidebar h-full z-20 transition-transform duration-300">
@@ -247,7 +222,7 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
-                     <button class="theme-toggle-btn p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle theme">
+                     <button class="theme-toggle-btn p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle theme" data-action="theme-toggle#toggle">
                         <svg class="w-5 h-5 theme-toggle-sun hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                         </svg>
@@ -282,6 +257,5 @@
                 {% block body %}{% endblock %}
             </main>
         </div>
-        <script src="{{ asset('js/theme-toggle.js') }}"></script>
     </body>
 </html>
