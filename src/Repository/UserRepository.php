@@ -57,6 +57,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    /**
+     * @return User[] usuários ordenados por e-mail
+     */
+    public function findAllOrdered(): array
+    {
+        return $this->findBy([], ['email' => 'ASC']);
+    }
+
+    /**
+     * Quantidade de administradores gerais (usado para impedir que o último seja removido ou rebaixado).
+     * A tabela de usuários é pequena, então a contagem em PHP mantém a consulta portável entre bancos.
+     */
+    public function countAdmins(): int
+    {
+        return \count(array_filter($this->findAll(), static fn (User $user): bool => $user->isAdmin()));
+    }
+
     public function save(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

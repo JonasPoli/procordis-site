@@ -61,4 +61,84 @@
     array (
     ),
   ),
+  'photoswipe' => 
+  array (
+    'version' => '5.4.4',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'photoswipe/lightbox' => 
+  array (
+    'version' => '5.4.4',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'photoswipe/dist/photoswipe.css' => 
+  array (
+    'version' => '5.4.4',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'swiper' => 
+  array (
+    'version' => '14.2.0',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'swiper/modules' => 
+  array (
+    'version' => '14.2.0',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'swiper/swiper-bundle.min.css' => 
+  array (
+    'version' => '14.2.0',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'sortablejs' => 
+  array (
+    'version' => '1.15.7',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'photoswipe/dist/photoswipe.min.css' => 
+  array (
+    'version' => '5.4.4',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
 );

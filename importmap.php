@@ -16,6 +16,10 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'news_gallery' => [
+        'path' => './assets/news_gallery.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -36,6 +40,29 @@ return [
     ],
     'flowbite/dist/flowbite.min.css' => [
         'version' => '4.0.1',
+        'type' => 'css',
+    ],
+    'photoswipe' => [
+        'version' => '5.4.4',
+    ],
+    'photoswipe/lightbox' => [
+        'version' => '5.4.4',
+    ],
+    'swiper' => [
+        'version' => '14.2.0',
+    ],
+    'swiper/modules' => [
+        'version' => '14.2.0',
+    ],
+    'swiper/swiper-bundle.min.css' => [
+        'version' => '14.2.0',
+        'type' => 'css',
+    ],
+    'sortablejs' => [
+        'version' => '1.15.7',
+    ],
+    'photoswipe/dist/photoswipe.min.css' => [
+        'version' => '5.4.4',
         'type' => 'css',
     ],
 ];

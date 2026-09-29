@@ -13,3 +13,6 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        # Nenhuma requisição externa nos testes: o YouTube (oEmbed e capas) é simulado.
+        http_client:
+            mock_response_factory: App\Tests\Support\YouTubeMockResponseFactory

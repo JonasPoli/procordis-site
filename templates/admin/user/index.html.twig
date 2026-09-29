@@ -1,0 +1,63 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Usuários - Procordis Admin{% endblock %}
+{% block page_title %}Usuários{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
+            Administradores têm acesso total ao painel. Jornalistas acessam apenas notícias, categorias de notícias e a galeria das notícias.
+        </p>
+        <a href="{{ path('admin_user_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded whitespace-nowrap">
+            + Novo Usuário
+        </a>
+    </div>
+
+    <div class="glass-panel overflow-hidden rounded-xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50/50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-white/10">
+                    <tr>
+                        <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">E-mail</th>
+                        <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Tipo de acesso</th>
+                        <th class="p-4 font-semibold text-gray-600 dark:text-gray-400 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 dark:text-gray-300 text-sm">
+                    {% for user in users %}
+                        {% set is_self = app.user and app.user.userIdentifier == user.userIdentifier %}
+                        <tr class="border-b border-gray-100/50 dark:border-white/5 hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
+                            <td class="p-4 font-medium text-gray-900 dark:text-gray-200">
+                                {{ user.email }}
+                                {% if is_self %}
+                                    <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200">Você</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4">
+                                {% if user.accessType == constant('App\\Entity\\User::ROLE_ADMIN') %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">Administrador</span>
+                                {% elseif user.accessType == constant('App\\Entity\\User::ROLE_JORNALISTA') %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">Jornalista</span>
+                                {% else %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Sem acesso ao painel</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-center">
+                                {{ include('admin/_partials/action_buttons.html.twig', {
+                                    edit_url: path('admin_user_edit', {id: user.id}),
+                                    delete_url: is_self ? null : path('admin_user_delete', {id: user.id}),
+                                    csrf_token: csrf_token('delete_user' ~ user.id),
+                                    delete_confirm: 'Tem certeza que deseja excluir o usuário ' ~ user.email ~ '?'
+                                }) }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="p-8 text-center text-gray-500 dark:text-gray-400">Nenhum usuário cadastrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

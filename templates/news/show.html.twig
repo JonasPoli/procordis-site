@@ -34,12 +34,29 @@
 </script>
 {% endblock %}
 
+{% block importmap %}
+    {# A galeria pública só carrega os estilos/bibliotecas extras quando a notícia tem itens. #}
+    {{ importmap(galleryItems is not empty ? ['app', 'news_gallery'] : 'app') }}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
 {% endblock %}
 
 {% block content %}
+    {% if isPreview|default(false) %}
+        <div class="bg-amber-100 text-amber-900 border-b border-amber-300 dark:bg-amber-900/40 dark:text-amber-100 dark:border-amber-700" role="status">
+            <div class="container mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
+                <span class="flex items-center gap-2 font-semibold">
+                    <i data-lucide="eye-off" class="w-4 h-4"></i>
+                    Pré-visualização: esta notícia está {{ news.active ? 'agendada' : 'inativa' }} e não aparece para o público.
+                </span>
+                <a href="{{ path('admin_news_edit', {id: news.id}) }}" class="underline font-semibold hover:no-underline">Editar no painel</a>
+            </div>
+        </div>
+    {% endif %}
+
     {# Hero Standardized #}
     <div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground py-20 text-center relative overflow-hidden">
          <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
@@ -86,7 +103,8 @@
                     {# Article Header - Removed Title as it is now in Hero #}
                     <header class="mb-8">
                         <div class="flex flex-wrap gap-2 mb-4">
-                            {% for category in news.categories %}
+                            {# Somente categorias ativas são exibidas/linkadas no site público #}
+                            {% for category in news.activeCategories %}
                                 <a href="{{ path('app_news', {'category': category.slug}) }}" class="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors uppercase tracking-wider">
                                     {{ category.title }}
                                 </a>
@@ -101,6 +119,11 @@
                         {% endif %}
                         {{ news.content|raw }}
                     </div>
+
+                    {# Galeria (imagens e vídeos) — só aparece se houver itens ativos #}
+                    {% if galleryItems is not empty %}
+                        {{ include('news/_gallery.html.twig', {news: news, items: galleryItems}) }}
+                    {% endif %}
 
                     {# Share #}
                     <div class="border-t border-b border-border py-8 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -200,12 +223,13 @@
                                     Categorias
                                 </h3>
                                 <ul class="space-y-2">
-                                    {% for category in sidebarCategories %}
+                                    {% for row in sidebarCategories %}
+                                        {% set category = row.category %}
                                         <li>
                                             <a href="{{ path('app_news', {'category': category.slug}) }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-muted text-medical-text dark:text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors group">
                                                 <span>{{ category.title }}</span>
                                                 <span class="bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                                    {{ category.news|length }}
+                                                    {{ row.newsCount }}
                                                 </span>
                                             </a>
                                         </li>

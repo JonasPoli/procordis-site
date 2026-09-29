@@ -1,0 +1,17 @@
+{# Abas de filtro por status. Parâmetros: route, status ('todos'|'ativos'|'inativos'), counts {all, active, inactive}. #}
+{% set tabs = [
+    {key: 'todos', label: 'Todos', count: counts.all, params: {}},
+    {key: 'ativos', label: 'Ativos', count: counts.active, params: {status: 'ativos'}},
+    {key: 'inativos', label: 'Inativos', count: counts.inactive, params: {status: 'inativos'}},
+] %}
+<nav class="inline-flex flex-wrap gap-1 p-1 rounded-xl bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-white/10" aria-label="Filtrar por status">
+    {% for tab in tabs %}
+        {% set current = status == tab.key %}
+        <a href="{{ path(route, tab.params) }}"
+           class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors {{ current ? 'bg-blue-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10' }}"
+           {% if current %}aria-current="page"{% endif %}>
+            {{ tab.label }}
+            <span class="ml-1 px-2 py-0.5 rounded-full text-xs {{ current ? 'bg-white/20' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300' }}">{{ tab.count }}</span>
+        </a>
+    {% endfor %}
+</nav>

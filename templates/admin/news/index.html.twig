@@ -3,9 +3,9 @@
 {% block page_title %}Notícias{% endblock %}
 
 {% block body %}
-    <div class="mb-6 flex justify-between items-center">
-        <div></div>
-        <a href="{{ path('admin_news_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        {{ include('admin/_partials/status_filter.html.twig', {route: 'admin_news_index', status: status, counts: statusCounts}) }}
+        <a href="{{ path('admin_news_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center">
             + Nova Notícia
         </a>
     </div>
@@ -18,6 +18,8 @@
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Imagem</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400">Título</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400 text-center">Data</th>
+                    <th class="p-4 font-semibold text-gray-600 dark:text-gray-400 text-center">Status</th>
+                    <th class="p-4 font-semibold text-gray-600 dark:text-gray-400 text-center">Galeria</th>
                     <th class="p-4 font-semibold text-gray-600 dark:text-gray-400 text-center">Ações</th>
                 </tr>
             </thead>
@@ -39,6 +41,25 @@
                         </td>
                         <td class="p-4 text-center">
                             {{ item.publishedAt ? item.publishedAt|date('d/m/Y') : '' }}
+                            {% if item.publishedAt and item.publishedAt > date() %}
+                                <span class="block text-xs text-amber-600 dark:text-amber-400 font-semibold">Agendada</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-center">
+                            {{ include('admin/_partials/active_toggle.html.twig', {
+                                url: path('admin_news_toggle_active', {id: item.id}),
+                                active: item.active,
+                                name: 'Notícia ' ~ item.title
+                            }) }}
+                        </td>
+                        <td class="p-4 text-center">
+                            {% set gallery = galleryCounts[item.id]|default({total: 0, active: 0}) %}
+                            <a href="{{ path('admin_news_edit', {id: item.id}) }}#galeria"
+                               class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors {{ gallery.total ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300' }}"
+                               title="{{ gallery.total ? gallery.active ~ ' de ' ~ gallery.total ~ ' itens ativos' : 'Adicionar imagens e vídeos' }}">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{ gallery.total ? gallery.total : 'Adicionar' }}
+                            </a>
                         </td>
                         <td class="p-4 text-center">
                             {{ include('admin/_partials/action_buttons.html.twig', {
@@ -50,7 +71,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="5" class="p-8 text-center text-gray-500 dark:text-gray-400">Nenhuma notícia encontrada.</td>
+                        <td colspan="7" class="p-8 text-center text-gray-500 dark:text-gray-400">Nenhuma notícia encontrada.</td>
                     </tr>
                 {% endfor %}
             </tbody>

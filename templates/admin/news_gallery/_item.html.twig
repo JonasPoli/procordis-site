@@ -1,0 +1,81 @@
+{# Card de um item da galeria no painel. Variáveis: news, item. #}
+{% set thumb_url = news_gallery_url(item, 'thumb') %}
+{% set type_label = item.video ? 'Vídeo' : 'Imagem' %}
+<li class="group/item relative flex flex-col rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800/60 shadow-sm overflow-hidden transition-all duration-200 {{ item.active ? '' : 'is-inactive' }}"
+    data-news-gallery-admin-target="item"
+    data-id="{{ item.id }}"
+    data-position="{{ item.position }}"
+    data-caption-url="{{ path('admin_news_gallery_caption', {id: news.id, itemId: item.id}) }}"
+    data-delete-url="{{ path('admin_news_gallery_delete', {id: news.id, itemId: item.id}) }}"
+    data-action="active-toggle:changed->news-gallery-admin#itemToggled">
+
+    <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-900 overflow-hidden">
+        {% if thumb_url %}
+            <img src="{{ thumb_url }}" alt="{{ item.caption|default(type_label ~ ' da galeria') }}" loading="lazy" decoding="async"
+                 class="gallery-item-thumb w-full h-full object-cover transition-all duration-200">
+        {% endif %}
+
+        {% if item.video %}
+            <span class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-red-600/90 text-white shadow-lg">
+                    <svg class="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+            </span>
+        {% endif %}
+
+        <span class="absolute top-2 left-2 flex gap-1">
+            <span class="px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide {{ item.video ? 'bg-red-600 text-white' : 'bg-white/90 text-slate-700' }} shadow-sm">{{ type_label }}</span>
+            <span class="gallery-inactive-badge px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide bg-slate-800 text-white shadow-sm {{ item.active ? 'hidden' : '' }}">Inativo</span>
+        </span>
+
+        <button type="button" data-drag-handle
+                class="absolute top-2 right-2 p-1.5 rounded-lg bg-white/90 text-slate-600 shadow-sm cursor-grab active:cursor-grabbing hover:bg-white focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/40"
+                title="Arraste para reordenar" aria-label="Arrastar para reordenar">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+        </button>
+
+        {% if item.video %}
+            <a href="{{ item.youtubeWatchUrl }}" target="_blank" rel="noopener noreferrer"
+               class="absolute bottom-2 right-2 px-2 py-1 rounded-md bg-black/70 text-white text-[11px] font-semibold hover:bg-black/90">
+                Abrir no YouTube
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="flex flex-col gap-2 p-3 flex-1">
+        <label class="sr-only" for="gallery-caption-{{ item.id }}">Legenda</label>
+        <textarea id="gallery-caption-{{ item.id }}" rows="2" maxlength="500"
+                  class="w-full resize-none rounded-lg border border-transparent bg-slate-50 dark:bg-slate-900/60 px-2 py-1.5 text-sm text-slate-700 dark:text-slate-100 placeholder-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-colors"
+                  placeholder="Adicionar legenda…"
+                  data-news-gallery-admin-target="caption"
+                  data-original="{{ item.caption }}"
+                  data-action="blur->news-gallery-admin#saveCaption keydown->news-gallery-admin#captionKeydown input->news-gallery-admin#captionInput">{{ item.caption }}</textarea>
+        <p class="gallery-caption-status min-h-[1rem] text-[11px] font-medium text-slate-400" aria-live="polite"></p>
+
+        <div class="mt-auto flex items-center justify-between gap-2">
+            {{ include('admin/_partials/active_toggle.html.twig', {
+                url: path('admin_news_gallery_toggle_active', {id: news.id, itemId: item.id}),
+                active: item.active,
+                name: type_label ~ (item.caption ? ' "' ~ item.caption ~ '"' : '')
+            }) }}
+
+            <div class="flex items-center gap-0.5">
+                <button type="button" data-action="news-gallery-admin#moveBackward"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-white/10 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30"
+                        title="Mover para antes" aria-label="Mover para antes">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" data-action="news-gallery-admin#moveForward"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-white/10 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30"
+                        title="Mover para depois" aria-label="Mover para depois">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button type="button" data-action="news-gallery-admin#deleteItem"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus-visible:ring-4 focus-visible:ring-red-500/30"
+                        title="Excluir da galeria" aria-label="Excluir {{ type_label|lower }} da galeria">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</li>

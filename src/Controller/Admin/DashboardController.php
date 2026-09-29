@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_JORNALISTA')]
 class DashboardController extends AbstractController
 {
     public function __construct(
@@ -22,6 +22,11 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'admin_dashboard')]
     public function index(): Response
     {
+        // Jornalistas não têm acesso à visão geral: vão direto para as notícias.
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_news_index');
+        }
+
         return $this->render('admin/dashboard/index.html.twig', [
             'newsCount' => $this->newsRepository->count([]),
             'servicesCount' => $this->serviceRepository->count([]),

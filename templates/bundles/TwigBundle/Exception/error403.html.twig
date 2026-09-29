@@ -1,0 +1,27 @@
+{% extends 'base_public.html.twig' %}
+
+{% block title %}Acesso negado - Procordis{% endblock %}
+
+{% block content %}
+    <div class="min-h-[70vh] flex items-center justify-center bg-slate-50 py-20">
+        <div class="text-center max-w-lg px-6">
+            <h1 class="text-9xl font-display font-bold text-primary/20 mb-8">403</h1>
+            <h2 class="text-3xl font-display font-bold text-slate-900 mb-4">Acesso negado</h2>
+            <p class="text-slate-600 text-lg mb-10 leading-relaxed">
+                Você não tem permissão para acessar esta área do painel.
+                Se precisar desse acesso, fale com o administrador do site.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% if is_granted('ROLE_JORNALISTA') %}
+                    <a href="{{ path('admin_news_index') }}" class="px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:bg-primary-dark transition-all hover:-translate-y-1">
+                        Ir para as notícias
+                    </a>
+                {% endif %}
+                <a href="{{ path('app_home') }}" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all hover:-translate-y-1">
+                    Voltar para o início
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

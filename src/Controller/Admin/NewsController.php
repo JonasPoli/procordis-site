@@ -4,9 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\News;
 use App\Form\NewsType;
+use App\Repository\NewsGalleryItemRepository;
 use App\Repository\NewsRepository;
+use App\Service\Gallery\NewsGalleryManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,14 +17,44 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/news')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_JORNALISTA')]
 class NewsController extends AbstractController
 {
+    use AdminAjaxTrait;
+    use StatusFilterTrait;
+
     #[Route('/', name: 'admin_news_index', methods: ['GET'])]
-    public function index(NewsRepository $newsRepository): Response
+    public function index(Request $request, NewsRepository $newsRepository, NewsGalleryItemRepository $galleryRepository): Response
     {
+        [$activeFilter, $status] = $this->resolveStatusFilter($request);
+        $news = $newsRepository->findForAdmin($activeFilter);
+
         return $this->render('admin/news/index.html.twig', [
-            'news' => $newsRepository->findBy([], ['publishedAt' => 'DESC']),
+            'news' => $news,
+            'status' => $status,
+            'statusCounts' => $newsRepository->countByStatus(),
+            'galleryCounts' => $galleryRepository->countByNewsIds(array_map(static fn (News $item): int => (int) $item->getId(), $news)),
+        ]);
+    }
+
+    /**
+     * Alternância rápida de "Ativo" direto na listagem (AJAX).
+     */
+    #[Route('/{id}/toggle-active', name: 'admin_news_toggle_active', methods: ['POST'])]
+    public function toggleActive(Request $request, News $news, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($error = $this->checkAjaxCsrf($request)) {
+            return $error;
+        }
+
+        $news->setActive(!$news->isActive());
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'active' => $news->isActive(),
+            'message' => $news->isActive()
+                ? 'Notícia ativada: ela já aparece no site.'
+                : 'Notícia desativada: ela não aparece mais no site.',
         ]);
     }
 
@@ -39,9 +72,9 @@ class NewsController extends AbstractController
             $entityManager->persist($news);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Notícia criada com sucesso!');
+            $this->addFlash('success', 'Notícia criada com sucesso! Agora você já pode adicionar imagens e vídeos à galeria.');
 
-            return $this->redirectToRoute('admin_news_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_news_edit', ['id' => $news->getId(), '_fragment' => 'galeria'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/news/new.html.twig', [
@@ -51,8 +84,14 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_news_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, News $news, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-    {
+    public function edit(
+        Request $request,
+        News $news,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger,
+        NewsGalleryItemRepository $galleryRepository,
+        NewsGalleryManager $galleryManager,
+    ): Response {
         $form = $this->createForm(NewsType::class, $news);
         $form->handleRequest($request);
 
@@ -70,6 +109,9 @@ class NewsController extends AbstractController
         return $this->render('admin/news/edit.html.twig', [
             'news' => $news,
             'form' => $form,
+            'galleryItems' => $galleryRepository->findByNewsOrdered($news),
+            'galleryMaxUploadBytes' => $galleryManager->getMaxUploadBytes(),
+            'galleryMaxUploadLabel' => NewsGalleryManager::formatBytes($galleryManager->getMaxUploadBytes()),
         ]);
     }
 

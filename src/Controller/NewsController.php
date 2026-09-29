@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\GeneralDataRepository;
 use App\Repository\NewsCategoryRepository;
+use App\Repository\NewsGalleryItemRepository;
 use App\Repository\NewsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +26,16 @@ class NewsController extends AbstractController
 
         $currentCategory = null;
         if ($categorySlug) {
-            $currentCategory = $newsCategoryRepository->findOneBy(['slug' => $categorySlug]);
+            // Categoria inativa (ou inexistente) não tem página pública.
+            $currentCategory = $newsCategoryRepository->findOnePublicBySlug((string) $categorySlug);
+
+            if (!$currentCategory) {
+                throw $this->createNotFoundException('Categoria não encontrada');
+            }
         }
 
-        $allNews = $newsRepository->findActive($categorySlug, $searchQuery);
-        // Map category IDs to slugs for the template if needed, or just use slugs directly in template
-        $categorySlugMap = []; 
-        
+        $allNews = $newsRepository->findActive($currentCategory, $searchQuery ? (string) $searchQuery : null);
+
         return $this->render('news/index.html.twig', [
             'allNews' => $allNews,
             'currentCategory' => $currentCategory,
@@ -45,9 +49,18 @@ class NewsController extends AbstractController
         string $slug,
         NewsRepository $newsRepository,
         NewsCategoryRepository $newsCategoryRepository,
-        GeneralDataRepository $generalDataRepository
+        GeneralDataRepository $generalDataRepository,
+        NewsGalleryItemRepository $galleryRepository
     ): Response {
-        $news = $newsRepository->findOneBy(['slug' => $slug]);
+        $news = $newsRepository->findOnePublicBySlug($slug);
+        $isPreview = false;
+
+        // Notícia inativa ou agendada: 404 para o público. Quem gerencia notícias
+        // (jornalista/administrador logado) pode pré-visualizá-la.
+        if (!$news && $this->isGranted('ROLE_JORNALISTA')) {
+            $news = $newsRepository->findOneBy(['slug' => $slug]);
+            $isPreview = null !== $news;
+        }
 
         if (!$news) {
             throw $this->createNotFoundException('Notícia não encontrada');
@@ -59,12 +72,13 @@ class NewsController extends AbstractController
 
         return $this->render('news/show.html.twig', [
             'news' => $news,
+            'isPreview' => $isPreview,
+            // Somente itens ativos, na ordem definida no painel.
+            'galleryItems' => $galleryRepository->findPublicByNews($news),
             'recentNews' => $recentNews,
             'previousNews' => $previousNews,
             'sidebarCategories' => $sidebarCategories,
             'generalData' => $generalDataRepository->findOneBy([]),
-            'newsUrl' => $this->generateUrl('app_news_detail', ['slug' => $news->getSlug()], 0) // 0 = ABSOLUTE_PATH? No, UrlGeneratorInterface::ABSOLUTE_URL is needed but 0 happens to be compatible with some versions or distinct logic. Let's use request schemehost concatanation in template or pass absolute url properly. 
-            // Better: use request uri in template.
         ]);
     }
 }

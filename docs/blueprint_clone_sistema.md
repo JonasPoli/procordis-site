@@ -63,7 +63,7 @@ O painel administrativo utiliza uma estética **Glassmorphism-Modern**, com foco
 
 A implementação de cores é baseada em **Variáveis CSS** e na configuração `darkMode: 'class'` do Tailwind.
 
-### 4.1 Mecânica de Troca (`theme-toggle.js`)
+### 4.1 Mecânica de Troca (`assets/controllers/theme_toggle_controller.js`)
 - **Funcionamento**: O script alterna a classe `.dark` no elemento `<html>`.
 - **Persistência**: O estado (light/dark) é salvo no `localStorage.getItem('theme')`.
 - **Botão Toggle**: Presente tanto na Home quanto no Admin, alternando entre ícones de sol e lua.
