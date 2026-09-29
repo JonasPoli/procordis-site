@@ -1,13 +1,14 @@
 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {# Slug gerado a partir do título (assets/controllers/slug_controller.js) #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-controller="slug">
         <div>
-            {{ form_row(form.title, {'attr': {'id': 'title_input'}}) }}
+            {{ form_row(form.title, {'attr': {'data-slug-target': 'title', 'data-action': 'blur->slug#fillIfEmpty'}}) }}
         </div>
         <div>
             <div class="relative">
-                 {{ form_row(form.slug, {'attr': {'id': 'slug_input'}}) }}
-                 <button type="button" id="btn-generate-slug" class="absolute top-9 right-3 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300" title="Gerar automaticamente">
+                 {{ form_row(form.slug, {'attr': {'data-slug-target': 'slug'}}) }}
+                 <button type="button" data-action="slug#generate" class="absolute top-9 right-3 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300" title="Gerar automaticamente">
                     <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                  </button>
             </div>
@@ -56,17 +57,18 @@
             SEO & Metadados
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                 {{ form_row(form.seoTitle, {'attr': {'class': 'seo-counter', 'data-max': 60}}) }}
-                 <div class="text-right text-xs text-slate-400 mt-1"><span class="counter-display">0</span>/60</div>
+            {# Contador de caracteres (assets/controllers/seo_counter_controller.js) #}
+            <div data-controller="seo-counter" data-seo-counter-max-value="60">
+                 {{ form_row(form.seoTitle, {'attr': {'data-seo-counter-target': 'input', 'data-action': 'input->seo-counter#update'}}) }}
+                 <div class="text-right text-xs text-slate-400 mt-1"><span data-seo-counter-target="display">0</span>/60</div>
             </div>
              <div>
                  {{ form_row(form.isNoIndex) }}
             </div>
         </div>
-        <div class="mt-4">
-             {{ form_row(form.seoDescription, {'attr': {'class': 'seo-counter', 'data-max': 160}}) }}
-             <div class="text-right text-xs text-slate-400 mt-1"><span class="counter-display">0</span>/160</div>
+        <div class="mt-4" data-controller="seo-counter" data-seo-counter-max-value="160">
+             {{ form_row(form.seoDescription, {'attr': {'data-seo-counter-target': 'input', 'data-action': 'input->seo-counter#update'}}) }}
+             <div class="text-right text-xs text-slate-400 mt-1"><span data-seo-counter-target="display">0</span>/160</div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <div>
@@ -86,63 +88,3 @@
     </div>
 
 {{ form_end(form) }}
-
-<!-- Slug & SEO Scripts -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Character Counters
-        const counters = document.querySelectorAll('.seo-counter');
-        counters.forEach(input => {
-            const max = input.dataset.max;
-            // form_row envolve o campo numa div própria; o contador fica logo depois dela.
-            const row = input.closest('.mb-6') || input.parentNode;
-            const display = (row.parentNode || row).querySelector('.counter-display');
-            if (!display) {
-                return;
-            }
-            
-            const updateCounter = () => {
-                const current = input.value.length;
-                display.textContent = current;
-                if (current > max) {
-                    display.classList.add('text-red-500');
-                } else {
-                    display.classList.remove('text-red-500');
-                }
-            };
-
-            input.addEventListener('input', updateCounter);
-            updateCounter(); // Initial check
-        });
-
-        // Slug Generation Logic
-        const titleInput = document.getElementById('news_title') || document.querySelector('[name="news[title]"]');
-        const slugInput = document.getElementById('news_slug') || document.querySelector('[name="news[slug]"]');
-        const generateBtn = document.getElementById('btn-generate-slug');
-
-        const generateSlug = (text) => {
-             const stopWords = ['o', 'a', 'os', 'as', 'um', 'uns', 'uma', 'umas', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas', 'por', 'pelo', 'pela', 'pelos', 'pelas', 'para', 'pra', 'pro', 'com', 'sem', 'sob', 'sobre', 'entre', 'ante', 'ate', 'contra', 'desde', 'e', 'ou', 'mas', 'nem', 'que', 'se', 'como', 'pois', 'porque', 'eu', 'voce', 'ele', 'ela', 'nos', 'eles', 'elas', 'meu', 'minha', 'teu', 'tua', 'seu', 'sua', 'nosso', 'nossa', 'esse', 'essa', 'isso', 'este', 'esta', 'isto', 'aquele', 'aquela', 'aquilo', 'qual', 'quais', 'quem', 'onde', 'ser', 'e', 'eh', 'foi', 'fom', 'sao', 'era', 'eram', 'estar', 'esta', 'estao', 'estava', 'estavam', 'ter', 'tem', 'tinha', 'tinham', 'teve', 'muito', 'mais', 'menos', 'ja', 'agora', 'tambe', 'so', 'talvez'];
-
-            return text.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-                .replace(/[^a-z0-9\s-]/g, '')
-                .split(/\s+/)
-                .filter(word => !stopWords.includes(word))
-                .join('-');
-        };
-
-        if (titleInput && slugInput) {
-            titleInput.addEventListener('blur', function() {
-                if (!slugInput.value) {
-                    slugInput.value = generateSlug(this.value);
-                }
-            });
-
-            if (generateBtn) {
-                generateBtn.addEventListener('click', function() {
-                    slugInput.value = generateSlug(titleInput.value);
-                });
-            }
-        }
-    });
-</script>
