@@ -4,6 +4,8 @@ twig:
     globals:
         templateService: '@App\Service\TemplateService'
         tinymce_api_key: '%env(TINYMCE)%'
+        # Portal de vagas/currículos ("Trabalhe Conosco"): menu, rodapé e contato.
+        careers_url: 'https://carreiras.procordis.org.br/'
 
 when@test:
     twig:
