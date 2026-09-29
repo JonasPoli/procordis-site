@@ -5,8 +5,8 @@
 O site possui um sistema visual de plano de fundo que simula o batimento de um coração, apresentando 3 círculos (blobs) que pulsam e flutuam suavemente na tela, implementados no Canvas.
 
 ### Arquivos Envolvidos
-- **Script:** `public/js/heartbeat.js`
-- **Elemento HTML:** Um elemento `<canvas>` com um `id="heartbeat-bg"`.
+- **Script:** `assets/controllers/heartbeat_controller.js` (controller Stimulus `heartbeat`; a animação começa quando o canvas entra na página e para quando ele sai)
+- **Elemento HTML:** Um elemento `<canvas>` com `id="heartbeat-bg"` e `data-controller="heartbeat"` (em `templates/layouts/pixel_perfect.html.twig`).
 
 ### Como Funciona
 
