@@ -28,22 +28,18 @@
 					</a>
 				</div>
 				<div class="flex items-center gap-3 ml-4">
-					<a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.facebook %} target="_blank" rel="noopener noreferrer" {% endif %}>
-						<span class="sr-only">Facebook</span>
-						<i data-lucide="facebook" class="w-4 h-4"></i>
-					</a>
-					<a href="#" class="hover:text-primary transition-colors p-2">
-						<span class="sr-only">Twitter</span>
-						<i data-lucide="twitter" class="w-4 h-4"></i>
-					</a>
-					<a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.instagram %} target="_blank" rel="noopener noreferrer" {% endif %}>
-						<span class="sr-only">Instagram</span>
-						<i data-lucide="instagram" class="w-4 h-4"></i>
-					</a>
-					<a href="#" class="hover:text-primary transition-colors p-2">
-						<span class="sr-only">LinkedIn</span>
-						<i data-lucide="linkedin" class="w-4 h-4"></i>
-					</a>
+					{% if generalData.facebook %}
+						<a href="{{ generalData.facebook }}" class="hover:text-primary transition-colors p-2" target="_blank" rel="noopener noreferrer">
+							<span class="sr-only">Facebook</span>
+							{{ include('partials/social_icon.html.twig', {name: 'facebook', class: 'w-4 h-4'}) }}
+						</a>
+					{% endif %}
+					{% if generalData.instagram %}
+						<a href="{{ generalData.instagram }}" class="hover:text-primary transition-colors p-2" target="_blank" rel="noopener noreferrer">
+							<span class="sr-only">Instagram</span>
+							{{ include('partials/social_icon.html.twig', {name: 'instagram', class: 'w-4 h-4'}) }}
+						</a>
+					{% endif %}
 					<span class="w-px h-4 bg-primary-foreground/20"></span>
 					<button class="theme-toggle-btn hover:text-primary transition-colors" aria-label="Toggle theme" data-action="theme-toggle#toggle">
 						<i data-lucide="sun" class="w-4 h-4 theme-toggle-sun hidden"></i>
@@ -192,22 +188,18 @@
 						</button>
 					</form>
 					<div class="flex items-center gap-2">
-						<a href="{{ generalData.facebook|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.facebook %} target="_blank" rel="noopener noreferrer" {% endif %}>
-							<span class="sr-only">Facebook</span>
-							<i data-lucide="facebook" class="w-5 h-5"></i>
-						</a>
-						<a href="#" class="hover:text-primary transition-colors p-2">
-							<span class="sr-only">Twitter</span>
-							<i data-lucide="twitter" class="w-5 h-5"></i>
-						</a>
-						<a href="{{ generalData.instagram|default('#') }}" class="hover:text-primary transition-colors p-2" {% if generalData.instagram %} target="_blank" rel="noopener noreferrer" {% endif %}>
-							<span class="sr-only">Instagram</span>
-							<i data-lucide="instagram" class="w-5 h-5"></i>
-						</a>
-						<a href="#" class="hover:text-primary transition-colors p-2">
-							<span class="sr-only">LinkedIn</span>
-							<i data-lucide="linkedin" class="w-5 h-5"></i>
-						</a>
+						{% if generalData.facebook %}
+							<a href="{{ generalData.facebook }}" class="hover:text-primary transition-colors p-2" target="_blank" rel="noopener noreferrer">
+								<span class="sr-only">Facebook</span>
+								{{ include('partials/social_icon.html.twig', {name: 'facebook', class: 'w-5 h-5'}) }}
+							</a>
+						{% endif %}
+						{% if generalData.instagram %}
+							<a href="{{ generalData.instagram }}" class="hover:text-primary transition-colors p-2" target="_blank" rel="noopener noreferrer">
+								<span class="sr-only">Instagram</span>
+								{{ include('partials/social_icon.html.twig', {name: 'instagram', class: 'w-5 h-5'}) }}
+							</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
