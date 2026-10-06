@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
 	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/atendimentos.css') }}">
 	<link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
 {% endblock %}
 
@@ -31,6 +32,21 @@
 
 	<section class="py-16 bg-background">
 		<div class="container mx-auto px-4">
+			<div class="atd-escopo">{# escopo do public/css/atendimentos.css #}
+			<a href="{{ path('app_atendimentos') }}" class="mb-8 flex flex-col md:flex-row md:items-center gap-5 p-6 md:p-8 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md hover:border-primary transition-all group">
+				<div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 text-primary rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+					<i data-lucide="activity" class="w-7 h-7"></i>
+				</div>
+				<div class="flex-1">
+					<h2 class="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors">Atendimentos realizados</h2>
+					<p class="text-muted-foreground mt-1">Gráficos com a evolução das consultas, ecocardiogramas, eletrocardiogramas, testes ergométricos, Holter e MAPA, atualizados diariamente.</p>
+				</div>
+				<span class="text-sm font-semibold text-primary flex items-center gap-1 shrink-0">
+					Ver os números
+					<i data-lucide="arrow-right" class="w-4 h-4"></i>
+				</span>
+			</a>
+			</div>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{% for item in transparencies %}
 					<a href="{{ path('app_transparency_show', {slug: item.slug}) }}" class="block p-6 bg-card border border-border rounded-xl shadow-sm hover:shadow-md hover:border-primary transition-all group">

@@ -1,0 +1,8 @@
+/*
+ * Utilitários Tailwind só das páginas de atendimentos, complementando public/css/built.css (sem regenerá-lo).
+ * Não gerar direto com o CLI: use `node bin/build-atendimentos-css.mjs`, que restringe as regras ao escopo
+ * .atd-escopo para não interferir no resto do site (a página também carrega o app.css do importmap).
+ */
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" source(none);
+@config "../../tailwind.atendimentos.config.js";

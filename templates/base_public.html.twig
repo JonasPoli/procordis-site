@@ -67,7 +67,7 @@
 
 					<a href="{{ path('app_service_index') }}" class="flex items-center gap-1 transition-colors font-medium {{ app.request.get('_route') starts with 'app_service' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Serviços</a>
 					<a href="{{ path('app_news') }}" class="flex items-center gap-1 transition-colors font-medium {{ app.request.get('_route') starts with 'app_news' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Notícias</a>
-					<a href="{{ path('app_transparency_index') }}" class="flex items-center gap-1 transition-colors font-medium {{ app.request.get('_route') starts with 'app_transparency' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Transparência</a>
+					<a href="{{ path('app_transparency_index') }}" class="flex items-center gap-1 transition-colors font-medium {{ (app.request.get('_route') starts with 'app_transparency' or app.request.get('_route') starts with 'app_atendimentos') ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Transparência</a>
 
 					{% if app.request.get('_route') == 'app_home' %}
 						<a href="#specialists" class="flex items-center gap-1 text-medical-text hover:text-primary transition-colors font-medium">Corpo Clínico</a>
@@ -96,7 +96,7 @@
 					<a href="{{ path('app_about') }}" class="flex items-center justify-between transition-colors font-medium {{ app.request.get('_route') == 'app_about' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Quem Somos</a>
 					<a href="{{ path('app_service_index') }}" class="flex items-center justify-between transition-colors font-medium {{ app.request.get('_route') starts with 'app_service' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Serviços</a>
 					<a href="{{ path('app_news') }}" class="flex items-center justify-between transition-colors font-medium {{ app.request.get('_route') starts with 'app_news' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Notícias</a>
-					<a href="{{ path('app_transparency_index') }}" class="flex items-center justify-between transition-colors font-medium {{ app.request.get('_route') starts with 'app_transparency' ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Transparência</a>
+					<a href="{{ path('app_transparency_index') }}" class="flex items-center justify-between transition-colors font-medium {{ (app.request.get('_route') starts with 'app_transparency' or app.request.get('_route') starts with 'app_atendimentos') ? 'text-primary' : 'text-medical-text hover:text-primary' }}">Transparência</a>
 
 					{% if app.request.get('_route') == 'app_home' %}
 						<a href="#specialists" class="flex items-center justify-between text-medical-text hover:text-primary transition-colors font-medium">Corpo Clínico</a>
