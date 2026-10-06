@@ -1,0 +1,155 @@
+{% extends 'base_public.html.twig' %}
+
+{% block title %}Atendimentos realizados | Portal da Transparência - Procordis{% endblock %}
+{% block description %}Evolução das consultas e exames realizados pela Associação Procordis em Araraquara: consultas, ecocardiogramas, eletrocardiogramas, testes ergométricos, Holter e MAPA.{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/atendimentos.css') }}">
+	<link rel="preload" as="image" href="{{ asset('images/background02.png')|imagine_filter('page_header') }}">
+	<style>
+		.atd-chip[aria-pressed="false"] { opacity: .45; }
+		.atd-chip[aria-pressed="false"] .atd-chip-dot { background: transparent !important; box-shadow: inset 0 0 0 2px currentColor; }
+		.atd-skeleton { background: linear-gradient(90deg, hsl(var(--muted)) 0%, hsl(var(--border)) 50%, hsl(var(--muted)) 100%); background-size: 200% 100%; animation: atd-shimmer 1.4s infinite linear; }
+		@keyframes atd-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+		.atd-tabela th, .atd-tabela td { white-space: nowrap; }
+	</style>
+{% endblock %}
+
+{% block content %}
+<div class="atd-escopo">{# escopo do public/css/atendimentos.css #}
+	{# Hero no padrão do Portal da Transparência #}
+	<div class="bg-[#2993C9] dark:bg-[#031219] text-primary-foreground pt-20 pb-28 text-center relative overflow-hidden">
+		<div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/background02.png')|imagine_filter('page_header') }}'); filter: grayscale(100%);"></div>
+		<div class="container mx-auto px-6 relative z-10 text-center">
+			<nav class="flex justify-center items-center gap-2 text-sm text-primary-foreground/80 mb-6" aria-label="Breadcrumb">
+				<a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+				<span class="opacity-50">/</span>
+				<a href="{{ path('app_transparency_index') }}" class="hover:text-white transition-colors">Transparência</a>
+				<span class="opacity-50">/</span>
+				<span class="font-medium text-white">Atendimentos</span>
+			</nav>
+			<h1 class="font-heading text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">Atendimentos realizados</h1>
+			<p class="text-xl opacity-90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+				A evolução das consultas e dos exames cardiológicos feitos pela Procordis, mês a mês.
+			</p>
+		</div>
+	</div>
+
+	<section class="bg-background pb-16">
+		<div class="container mx-auto px-4">
+
+			{# Números de destaque #}
+			<div class="-mt-16 relative z-10 bg-card border border-border rounded-2xl shadow-lg p-6 md:p-8">
+				{% if resumo and resumo.total > 0 %}
+					<div class="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+						<div class="lg:pr-10 lg:border-r border-border text-center lg:text-left shrink-0">
+							<p class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Atendimentos realizados</p>
+							<p class="font-heading text-5xl md:text-6xl font-bold text-foreground tabular-nums mt-1" data-contador="{{ resumo.total }}">{{ resumo.total|number_format(0, ',', '.') }}</p>
+							<p class="text-sm text-muted-foreground mt-1">
+								desde {{ resumo.historico.primeiraData ? resumo.historico.primeiraData|date('Y') : '—' }}
+							</p>
+						</div>
+						<ul class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-4 flex-1" id="atd-totais">
+							{% for c in resumo.categorias|filter(c => c.total > 0) %}
+								<li class="flex items-start gap-3">
+									<span class="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0" data-cor="{{ c.cor }}" style="background: {{ c.cor }}"></span>
+									<span>
+										<span class="block font-heading text-2xl font-bold text-foreground tabular-nums">{{ c.total|number_format(0, ',', '.') }}</span>
+										<span class="block text-sm text-muted-foreground leading-tight">{{ c.nome }}</span>
+									</span>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<p class="text-center text-muted-foreground py-6">Os números de atendimentos estão sendo atualizados. Volte em instantes.</p>
+				{% endif %}
+			</div>
+
+			{# Gráfico geral #}
+			<div class="mt-10 bg-card border border-border rounded-2xl shadow-sm p-5 md:p-8" id="atd-app"
+				data-endpoint="{{ path('app_atendimentos_dados') }}"
+				data-ultima-data="{{ resumo.historico.ultimaData ?? '' }}">
+
+				<div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 mb-6">
+					<div>
+						<h2 class="font-heading text-2xl md:text-3xl font-bold text-foreground">Evolução dos atendimentos</h2>
+						<p class="text-muted-foreground mt-1" id="atd-subtitulo">Total e cada tipo de atendimento ao longo do tempo.</p>
+					</div>
+					<div class="flex flex-wrap items-center gap-3" role="group" aria-label="Filtros do gráfico">
+						<div class="inline-flex p-1 rounded-xl bg-muted text-sm font-semibold" role="radiogroup" aria-label="Agrupar por">
+							{% for v, l in {dia: 'Dia', mes: 'Mês', ano: 'Ano'} %}
+								<button type="button" role="radio" data-agrupamento="{{ v }}" aria-checked="{{ v == 'mes' ? 'true' : 'false' }}"
+									class="px-4 py-1.5 rounded-lg transition-colors text-muted-foreground aria-checked:bg-card aria-checked:text-foreground aria-checked:shadow-sm">{{ l }}</button>
+							{% endfor %}
+						</div>
+						<label class="sr-only" for="atd-periodo">Período</label>
+						<select id="atd-periodo" class="bg-card border border-border rounded-xl px-3 py-2 text-sm font-semibold text-foreground focus:ring-2 focus:ring-primary focus:outline-none"></select>
+					</div>
+				</div>
+
+				{# Liga/desliga de cada tipo (legenda interativa) #}
+				<div class="flex flex-wrap gap-2 mb-4" id="atd-legenda" aria-label="Tipos de atendimento exibidos"></div>
+
+				<div class="relative h-[380px] md:h-[440px]">
+					<div class="absolute inset-0 rounded-xl atd-skeleton" id="atd-carregando"></div>
+					<canvas id="atd-grafico" role="img" aria-label="Gráfico de linhas com a evolução dos atendimentos realizados"></canvas>
+					<div class="absolute inset-0 hidden items-center justify-center text-center text-muted-foreground p-6" id="atd-erro"></div>
+				</div>
+			</div>
+
+			{# Um gráfico por tipo de atendimento #}
+			<div class="mt-10">
+				<h2 class="font-heading text-2xl font-bold text-foreground">Por tipo de atendimento</h2>
+				<p class="text-muted-foreground mt-1 mb-6">Cada tipo na própria escala, no mesmo período do gráfico acima.</p>
+				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="atd-multiplos"></div>
+			</div>
+
+			{# Tabela de histórico #}
+			<details class="mt-10 bg-card border border-border rounded-2xl shadow-sm group" id="atd-tabela-box">
+				<summary class="cursor-pointer list-none flex items-center justify-between gap-4 p-5 md:px-8">
+					<span>
+						<span class="block font-heading text-xl font-bold text-foreground">Tabela de histórico</span>
+						<span class="block text-sm text-muted-foreground">Os mesmos números dos gráficos, período a período.</span>
+					</span>
+					<span class="flex items-center gap-3">
+						<button type="button" id="atd-csv" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:border-primary hover:text-primary transition-colors">
+							<i data-lucide="download" class="w-4 h-4"></i> Baixar CSV
+						</button>
+						<i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-180"></i>
+					</span>
+				</summary>
+				<div class="overflow-auto max-h-[560px] border-t border-border">
+					<table class="atd-tabela w-full text-sm">
+						<thead class="sticky top-0 bg-card shadow-[0_1px_0_hsl(var(--border))]" id="atd-tabela-cabecalho"></thead>
+						<tbody id="atd-tabela-corpo"></tbody>
+					</table>
+				</div>
+			</details>
+
+			{# Metodologia #}
+			<div class="mt-8 grid md:grid-cols-3 gap-6 text-sm text-muted-foreground">
+				<div class="flex gap-3">
+					<i data-lucide="database" class="w-5 h-5 text-primary shrink-0"></i>
+					<p><strong class="text-foreground">Fonte:</strong> sistema de gestão clínica da Procordis, atualizado automaticamente todos os dias.</p>
+				</div>
+				<div class="flex gap-3">
+					<i data-lucide="check-circle" class="w-5 h-5 text-primary shrink-0"></i>
+					<p><strong class="text-foreground">O que é contado:</strong> consultas e exames concluídos, pela data do agendamento. Faltas e cancelamentos não entram.</p>
+				</div>
+				<div class="flex gap-3">
+					<i data-lucide="shield-check" class="w-5 h-5 text-primary shrink-0"></i>
+					<p><strong class="text-foreground">Privacidade:</strong> só totais são publicados; nenhum paciente é identificado. <span id="atd-atualizado"></span></p>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+	<script src="{{ asset('js/atendimentos.js') }}" defer></script>
+{% endblock %}
