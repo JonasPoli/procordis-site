@@ -12,7 +12,6 @@
 		.atd-chip[aria-pressed="false"] .atd-chip-dot { background: transparent !important; box-shadow: inset 0 0 0 2px currentColor; }
 		.atd-skeleton { background: linear-gradient(90deg, hsl(var(--muted)) 0%, hsl(var(--border)) 50%, hsl(var(--muted)) 100%); background-size: 200% 100%; animation: atd-shimmer 1.4s infinite linear; }
 		@keyframes atd-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-		.atd-tabela th, .atd-tabela td { white-space: nowrap; }
 	</style>
 {% endblock %}
 
@@ -105,23 +104,6 @@
 				<p class="text-muted-foreground mt-1 mb-6">Cada tipo na própria escala, no mesmo período do gráfico acima.</p>
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="atd-multiplos"></div>
 			</div>
-
-			{# Tabela de histórico #}
-			<details class="mt-10 bg-card border border-border rounded-2xl shadow-sm group" id="atd-tabela-box">
-				<summary class="cursor-pointer list-none flex items-center justify-between gap-4 p-5 md:px-8">
-					<span>
-						<span class="block font-heading text-xl font-bold text-foreground">Tabela de histórico</span>
-						<span class="block text-sm text-muted-foreground">Os mesmos números dos gráficos, período a período.</span>
-					</span>
-					<i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-180"></i>
-				</summary>
-				<div class="overflow-auto max-h-[560px] border-t border-border">
-					<table class="atd-tabela w-full text-sm">
-						<thead class="sticky top-0 bg-card shadow-[0_1px_0_hsl(var(--border))]" id="atd-tabela-cabecalho"></thead>
-						<tbody id="atd-tabela-corpo"></tbody>
-					</table>
-				</div>
-			</details>
 
 			{# Metodologia #}
 			<div class="mt-8 grid md:grid-cols-3 gap-6 text-sm text-muted-foreground">

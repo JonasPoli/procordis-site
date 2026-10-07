@@ -33,8 +33,6 @@
         legenda: document.getElementById('atd-legenda'),
         periodo: document.getElementById('atd-periodo'),
         multiplos: document.getElementById('atd-multiplos'),
-        cabecalho: document.getElementById('atd-tabela-cabecalho'),
-        corpo: document.getElementById('atd-tabela-corpo'),
         atualizado: document.getElementById('atd-atualizado'),
         subtitulo: document.getElementById('atd-subtitulo'),
     };
@@ -139,7 +137,6 @@
         legenda(series);
         principal(d, series);
         multiplos(d, series);
-        tabela(d, series);
         el.subtitulo.textContent = `${fmt(d.total.total)} atendimentos realizados entre ${rotuloData(d.de)} e ${rotuloData(d.ate)}.`
             + (estado.parcial ? ` O último ${NOME_PERIODO[d.agrupamento]} ainda está em andamento (trecho tracejado).` : '');
         if (d.atualizadoEm) {
@@ -242,23 +239,6 @@
                 plugins: [crosshair],
             }));
         });
-    }
-
-    function tabela(d, series) {
-        el.cabecalho.innerHTML = `<tr class="text-left text-xs uppercase tracking-wider text-muted-foreground">
-            <th class="py-3 px-5 md:px-8">Período</th>
-            ${series.map((s) => `<th class="py-3 px-3 text-right"><span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:${cor(s.cor)}"></span>${s.nome}</th>`).join('')}
-            <th class="py-3 px-3 text-right text-foreground">Total</th>
-        </tr>`;
-        const linhas = [];
-        for (let i = d.periodos.length - 1; i >= 0; i--) {
-            linhas.push(`<tr class="border-t border-border/60 hover:bg-muted/50">
-                <td class="py-2 px-5 md:px-8 font-semibold text-foreground">${d.rotulos[i]}${estado.parcial && i === d.periodos.length - 1 ? ' <span class="text-xs font-normal text-muted-foreground">(em andamento)</span>' : ''}</td>
-                ${series.map((s) => `<td class="py-2 px-3 text-right tabular-nums text-muted-foreground">${fmt(s.valores[i])}</td>`).join('')}
-                <td class="py-2 px-3 text-right tabular-nums font-bold text-foreground">${fmt(d.total.valores[i])}</td>
-            </tr>`);
-        }
-        el.corpo.innerHTML = linhas.join('');
     }
 
     function tooltip(t, extra, d) {
