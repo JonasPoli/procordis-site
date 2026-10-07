@@ -35,7 +35,6 @@
         multiplos: document.getElementById('atd-multiplos'),
         cabecalho: document.getElementById('atd-tabela-cabecalho'),
         corpo: document.getElementById('atd-tabela-corpo'),
-        csv: document.getElementById('atd-csv'),
         atualizado: document.getElementById('atd-atualizado'),
         subtitulo: document.getElementById('atd-subtitulo'),
     };
@@ -262,23 +261,6 @@
         el.corpo.innerHTML = linhas.join('');
     }
 
-    function csv() {
-        const d = estado.dados;
-        if (!d) {
-            return;
-        }
-        const series = d.series.filter((s) => s.total > 0);
-        const cab = ['Período', ...series.map((s) => s.nome), 'Total'];
-        const linhas = d.periodos.map((p, i) => [d.rotulos[i], ...series.map((s) => s.valores[i]), d.total.valores[i]]);
-        const texto = [cab, ...linhas].map((l) => l.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(';')).join('\r\n');
-        const url = URL.createObjectURL(new Blob(['﻿' + texto], { type: 'text/csv;charset=utf-8' }));
-        const a = Object.assign(document.createElement('a'), { href: url, download: `procordis-atendimentos-${d.agrupamento}-${d.de}-a-${d.ate}.csv` });
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-    }
-
     function tooltip(t, extra, d) {
         const n = d ? d.periodos.length : 0;
         return Object.assign({
@@ -345,11 +327,6 @@
         const grafico = estado.graficos[0];
         grafico.data.datasets.forEach((ds) => { ds.hidden = estado.ocultos.has(ds.slug); });
         grafico.update();
-    });
-    el.csv.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        csv();
     });
 
     /* Redesenha ao trocar o tema claro/escuro. */
