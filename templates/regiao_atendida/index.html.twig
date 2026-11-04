@@ -1,0 +1,607 @@
+{% extends 'base_public.html.twig' %}
+
+{% set t = d.total %}
+{% set e = d.estado %}
+
+{% block title %}Região atendida | Procordis - Cardiologia em Araraquara{% endblock %}
+{% block description %}A Procordis recebe pacientes de {{ t.municipios }} municípios do DRS III – Araraquara, com {{ t.populacao|number_format(0, ',', '.') }} habitantes. Mapas da região atendida, unidades de origem, densidade populacional e perfil etário.{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+	<link rel="stylesheet" href="{{ asset('css/regiao-atendida.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="ra-escopo" id="ra-app"
+	data-drs3="{{ asset('data/regiao-atendida/drs3.json') }}"
+	data-sp="{{ asset('data/regiao-atendida/sp.json') }}">
+
+	{# ===================== Topo ===================== #}
+	<section class="ra-hero relative overflow-hidden text-white">
+		<div class="ra-hero-brilho" aria-hidden="true"></div>
+		<div class="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-14 pb-28 lg:pt-20 lg:pb-32">
+			<div>
+				<nav class="flex items-center gap-2 text-sm text-white/75 mb-6" aria-label="Breadcrumb">
+					<a href="{{ path('app_home') }}" class="hover:text-white transition-colors">Início</a>
+					<span class="opacity-50">/</span>
+					<span class="font-medium text-white">Região atendida</span>
+				</nav>
+				<p class="ra-sobretitulo">DRS III – Araraquara · São Paulo</p>
+				<h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-5 leading-tight" data-aos="fade-up">Região atendida</h1>
+				<p class="text-lg md:text-xl text-white/90 max-w-xl leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+					A Procordis recebe pacientes encaminhados pela rede pública de saúde de
+					<strong class="text-white">{{ t.municipios }} municípios</strong> do interior paulista, organizados em
+					<strong class="text-white">três Regiões de Saúde</strong> do DRS III – Araraquara.
+				</p>
+				<ul class="flex flex-wrap gap-2 mt-7" aria-label="Regiões de Saúde">
+					{% for k, r in d.regioes %}
+						<li class="ra-chip-regiao" data-regiao="{{ k }}"><span class="ra-ponto" aria-hidden="true"></span>{{ r.curto }} · {{ r.municipios }} municípios</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="ra-hero-mapa" data-aos="fade-left">
+				{% include 'regiao_atendida/_mapa_svg.html.twig' with {svg_id: 'ra-svg-topo', svg_classe: 'ra-svg-escuro'} %}
+				<p class="ra-hero-legenda">Anéis a 25, 50 e 75 km da Procordis (linha reta)</p>
+			</div>
+		</div>
+	</section>
+
+	<div class="bg-background">
+		<div class="container mx-auto px-4">
+			{# Números-chave #}
+			<div class="-mt-16 relative z-10 bg-card border border-border rounded-2xl shadow-lg p-6 md:p-8">
+				<dl class="ra-numeros grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-x-6 gap-y-6">
+					<div>
+						<dt>Municípios</dt>
+						<dd>{{ t.municipios }}</dd>
+						<p>em {{ d.regioes|length }} Regiões de Saúde</p>
+					</div>
+					<div>
+						<dt>Habitantes</dt>
+						<dd>{{ t.populacao|number_format(0, ',', '.') }}</dd>
+						<p>Censo 2022 · {{ (t.estimativa2025 / 1000000)|number_format(2, ',', '.') }} milhão estimado em 2025</p>
+					</div>
+					<div>
+						<dt>Área</dt>
+						<dd>{{ t.area|number_format(0, ',', '.') }}<small> km²</small></dd>
+						<p>{{ d.participacaoEstado.area|number_format(1, ',', '.') }}% do território paulista</p>
+					</div>
+					<div>
+						<dt>Densidade</dt>
+						<dd>{{ t.densidade|number_format(1, ',', '.') }}</dd>
+						<p>hab/km² · estado: {{ e.densidade|number_format(1, ',', '.') }}</p>
+					</div>
+					<div>
+						<dt>60 anos ou mais</dt>
+						<dd>{{ t.pct60|number_format(1, ',', '.') }}%</dd>
+						<p>{{ t.pop60|number_format(0, ',', '.') }} pessoas · estado: {{ e.pct60|number_format(1, ',', '.') }}%</p>
+					</div>
+					<div>
+						<dt>Unidades básicas</dt>
+						<dd>{{ t.unidadesBasicas }}</dd>
+						<p>de saúde no CNES, nos {{ t.municipios }} municípios</p>
+					</div>
+				</dl>
+			</div>
+
+			{# Atalhos #}
+			<nav class="ra-atalhos" aria-label="Nesta página">
+				<a href="#no-estado"><i data-lucide="map" class="w-4 h-4"></i>No estado de SP</a>
+				<a href="#mapa-drs3"><i data-lucide="map-pinned" class="w-4 h-4"></i>Mapa DRS III</a>
+				<a href="#araraquara"><i data-lucide="list" class="w-4 h-4"></i>Unidades em Araraquara</a>
+				<a href="#densidade"><i data-lucide="layers" class="w-4 h-4"></i>Densidade</a>
+				<a href="#municipios"><i data-lucide="bar-chart-3" class="w-4 h-4"></i>Municípios</a>
+				<a href="#regioes"><i data-lucide="pie-chart" class="w-4 h-4"></i>Regiões de Saúde</a>
+				<a href="#perfil-etario"><i data-lucide="users" class="w-4 h-4"></i>Perfil etário</a>
+				<a href="#tabela"><i data-lucide="table" class="w-4 h-4"></i>Tabela</a>
+				<a href="#fontes"><i data-lucide="book-open" class="w-4 h-4"></i>Fontes</a>
+			</nav>
+		</div>
+
+		{# ===================== 1. Estado de SP ===================== #}
+		<section id="no-estado" class="ra-secao">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>01</span> Visão estadual</p>
+					<h2>Região atendida no estado de São Paulo</h2>
+					<p>Os {{ t.municipios }} municípios do DRS III – Araraquara ficam no centro do estado. As cores mostram a Região de Saúde de cada município; o restante do estado aparece em cinza.</p>
+				</header>
+
+				<div class="grid lg:grid-cols-3 gap-6">
+					<div class="lg:col-span-2 ra-cartao p-2 md:p-3 flex flex-col">
+						<div class="ra-mapa ra-mapa-estado" id="ra-mapa-estado" role="region" aria-label="Mapa do estado de São Paulo com os municípios da região atendida destacados">
+							<div class="ra-carregando" aria-hidden="true"></div>
+						</div>
+						<ul class="ra-legenda ra-legenda-linha px-3 pt-3 pb-1" aria-label="Legenda do mapa">
+							{% for k, r in d.regioes %}
+								<li data-regiao="{{ k }}"><span class="ra-quadrado" aria-hidden="true"></span>{{ r.nome }} <span class="text-muted-foreground">({{ r.municipios }})</span></li>
+							{% endfor %}
+							<li><span class="ra-marcador-procordis" aria-hidden="true"></span>Procordis</li>
+						</ul>
+					</div>
+					<div class="flex flex-col gap-6">
+						<div class="ra-destaque-escuro">
+							<p class="ra-destaque-numero">{{ t.municipios }}</p>
+							<p class="ra-destaque-rotulo">municípios atendidos</p>
+							<p class="ra-destaque-numero mt-5">3 regiões</p>
+							<p class="ra-destaque-rotulo">{% for r in d.regioes %}{{ r.curto }}{{ not loop.last ? ' • ' }}{% endfor %}</p>
+						</div>
+						<div class="ra-cartao p-6">
+							<h3 class="font-heading font-bold text-lg text-foreground mb-4">O peso da região no estado</h3>
+							<ul class="ra-proporcoes">
+								<li>
+									<span>População</span>
+									<strong>{{ d.participacaoEstado.populacao|number_format(1, ',', '.') }}%</strong>
+									<span class="ra-barrinha"><i style="width: {{ d.participacaoEstado.populacao * 10 }}%"></i></span>
+								</li>
+								<li>
+									<span>Território</span>
+									<strong>{{ d.participacaoEstado.area|number_format(1, ',', '.') }}%</strong>
+									<span class="ra-barrinha"><i style="width: {{ d.participacaoEstado.area * 10 }}%"></i></span>
+								</li>
+								<li>
+									<span>Municípios</span>
+									<strong>{{ d.participacaoEstado.municipios|number_format(1, ',', '.') }}%</strong>
+									<span class="ra-barrinha"><i style="width: {{ d.participacaoEstado.municipios * 10 }}%"></i></span>
+								</li>
+							</ul>
+							<p class="text-xs text-muted-foreground mt-3">Escala das barras: 0 a 10% do estado.</p>
+							<p class="text-sm text-muted-foreground mt-4 flex gap-2"><i data-lucide="navigation" class="w-4 h-4 text-primary shrink-0 mt-0.5"></i>A Procordis fica a cerca de {{ d.distanciaCapitalKm }} km da capital, em linha reta.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 2. Mapa DRS III Procordis ===================== #}
+		<section id="mapa-drs3" class="ra-secao ra-secao-alt">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>02</span> Mapa DRS III Procordis</p>
+					<h2>Unidades de origem dos exames de cardiologia</h2>
+					<p>Rede de unidades que encaminham pacientes à Procordis para ecocardiograma, eletrocardiograma (ECG), Holter 24 h, MAPA e teste ergométrico. Coordenadas do CNES/DataSUS e limites municipais do IBGE.</p>
+				</header>
+
+				<div class="ra-cartao ra-drs3">
+					<div class="ra-drs3-mapa">
+						<div class="ra-mapa" id="ra-mapa-drs3" role="region" aria-label="Mapa interativo das unidades de saúde do DRS III e da Procordis">
+							<div class="ra-carregando" aria-hidden="true"></div>
+						</div>
+						<div class="ra-coordenadas" id="ra-coordenadas" aria-hidden="true">—</div>
+					</div>
+					<aside class="ra-drs3-painel" aria-label="Controles do mapa">
+						<div>
+							<h3 class="ra-painel-titulo">Ver</h3>
+							<div class="flex flex-wrap gap-1.5" id="ra-vistas">
+								<button type="button" class="ra-botao" data-vista="drs">DRS III inteiro</button>
+								<button type="button" class="ra-botao" data-vista="municipio">Araraquara (município)</button>
+								<button type="button" class="ra-botao" data-vista="cidade">Araraquara (cidade)</button>
+								<button type="button" class="ra-botao" data-vista="procordis">Procordis</button>
+								<button type="button" class="ra-botao" data-vista="estado">Estado de SP</button>
+							</div>
+						</div>
+						<div>
+							<h3 class="ra-painel-titulo">Regiões de Saúde</h3>
+							<div class="grid gap-3" id="ra-regioes-mapa">
+								{% for k, r in d.regioes %}
+									<div data-regiao="{{ k }}">
+										<label class="flex items-center gap-2 font-semibold text-sm text-foreground cursor-pointer">
+											<input type="checkbox" checked data-filtro-regiao="{{ k }}" class="ra-check">
+											<span class="ra-quadrado" aria-hidden="true"></span>{{ r.nome }}
+										</label>
+										<div class="flex flex-wrap gap-1 mt-1.5 pl-6">
+											{% for nome in r.lista %}
+												<button type="button" class="ra-municipio" data-municipio="{{ nome }}">{{ nome }}</button>
+											{% endfor %}
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+						<div>
+							<h3 class="ra-painel-titulo">Camadas</h3>
+							<div class="grid gap-1.5 text-sm text-foreground">
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="ruas" checked> Mapa de ruas (OpenStreetMap)</label>
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="origem" checked> Unidades de origem em Araraquara <span class="ra-num-exemplo" aria-hidden="true">1</span></label>
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="outrasAraraquara" checked> Outras UBS/USF de Araraquara</label>
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="outras" checked> UBS/USF dos demais municípios</label>
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="areas"> Área estimada de cada unidade</label>
+								<label class="ra-camada"><input type="checkbox" class="ra-check" data-camada="aneis" checked> Distância da Procordis (5, 10, 25 e 50 km)</label>
+							</div>
+						</div>
+						<div class="min-h-0">
+							<h3 class="ra-painel-titulo">Unidades de origem em Araraquara · distância da Procordis</h3>
+							<ol class="ra-lista-unidades" id="ra-lista-unidades">
+								{% for u in d.unidadesOrigem %}
+									<li>
+										<button type="button" data-cnes="{{ u.cnes }}">
+											<span class="ra-num" data-tipo="{{ u.tipo }}">{{ u.n }}</span>
+											<span class="min-w-0"><span class="block text-sm leading-snug text-foreground">{{ u.nome }}</span><span class="block text-xs text-muted-foreground">{{ u.bairro }}{% if u.estimada %} · <span class="ra-alerta">posição estimada</span>{% endif %}</span></span>
+											<span class="ra-km">{{ u.km|number_format(1, ',', '.') }} km</span>
+										</button>
+									</li>
+								{% endfor %}
+							</ol>
+						</div>
+					</aside>
+				</div>
+
+				{# Como ler este mapa #}
+				<div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5 mt-8">
+					<div class="ra-nota">
+						<i data-lucide="palette" class="w-5 h-5"></i>
+						<p><strong>Cor = Região de Saúde.</strong> Azul é a Região Central, laranja a Coração e verde a Noroeste. Os números identificam as unidades de origem de Araraquara, na ordem da distância até a Procordis.</p>
+					</div>
+					<div class="ra-nota">
+						<i data-lucide="crosshair" class="w-5 h-5"></i>
+						<p><strong>Precisão.</strong> Os pontos usam a latitude e a longitude cadastradas no CNES. CDIP e Ambulatório de Ortopedia não têm coordenada confiável no CNES e foram posicionados pelo endereço, com margem de cerca de 100 m.</p>
+					</div>
+					<div class="ra-nota">
+						<i data-lucide="hexagon" class="w-5 h-5"></i>
+						<p><strong>Área estimada</strong> (camada opcional): divisão de cada município pela unidade básica mais próxima. O território oficial de cada UBS/USF não é publicado em formato aberto; use como aproximação.</p>
+					</div>
+					<div class="ra-nota">
+						<i data-lucide="ruler" class="w-5 h-5"></i>
+						<p><strong>Distâncias</strong> em linha reta a partir da Av. Queiroz Filho, 685. Nos demais municípios, a origem dos encaminhamentos é a Secretaria Municipal de Saúde (SMS); o mapa mostra as unidades básicas de cada um.</p>
+					</div>
+				</div>
+				<details class="ra-detalhes mt-5">
+					<summary>Unidades sem localização confiável no CNES ({{ d.semCoordenada|length }})</summary>
+					<ul>
+						{% for u in d.semCoordenada %}
+							<li>{{ u.nome }} — {{ u.municipio }} (CNES {{ u.cnes }})</li>
+						{% endfor %}
+					</ul>
+				</details>
+			</div>
+		</section>
+
+		{# ===================== 3. Diretório de Araraquara ===================== #}
+		<section id="araraquara" class="ra-secao">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>03</span> Araraquara</p>
+					<h2>Diretório das unidades de origem em Araraquara</h2>
+					<p>{{ d.unidadesOrigem|length }} unidades da cidade-sede encaminham pacientes à Procordis: {{ origem.primaria|length }} de atenção primária (CMSC, UBS e USF) e {{ origem.especializada|length }} serviços especializados. Os números são os mesmos do mapa; endereços e coordenadas do CNES.</p>
+				</header>
+
+				{% for tipo, titulo in {primaria: 'Atenção primária', especializada: 'Serviços especializados e hospital'} %}
+					<h3 class="ra-subtitulo">{{ titulo }} <span>{{ origem[tipo]|length }}</span></h3>
+					<ul class="ra-diretorio">
+						{% for u in origem[tipo] %}
+							<li>
+								<span class="ra-num" data-tipo="{{ u.tipo }}">{{ u.n }}</span>
+								<div class="min-w-0 flex-1">
+									<p class="font-semibold text-foreground leading-snug">{{ u.nome }}</p>
+									<p class="text-sm text-muted-foreground">{{ u.endereco }}{% if u.bairro %} – {{ u.bairro }}{% endif %}</p>
+									<p class="ra-diretorio-meta">
+										<span>{{ u.km|number_format(1, ',', '.') }} km da Procordis</span>
+										<span class="ra-mono">CNES {{ u.cnes }}</span>
+										{% if u.estimada %}<span class="ra-alerta">posição estimada pelo endereço</span>{% endif %}
+									</p>
+								</div>
+								<div class="flex flex-col gap-1.5 shrink-0">
+									<button type="button" class="ra-link" data-ver-no-mapa="{{ u.cnes }}"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>Ver no mapa</button>
+									<a class="ra-link" href="https://www.google.com/maps/search/?api=1&query={{ u.lat }},{{ u.lon }}" target="_blank" rel="noopener"><i data-lucide="external-link" class="w-3.5 h-3.5"></i>Google Maps</a>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% endfor %}
+
+				<div class="ra-procordis-cartao mt-8">
+					<span class="ra-marcador-procordis ra-marcador-grande" aria-hidden="true"></span>
+					<div>
+						<p class="font-heading font-bold text-lg text-foreground">Associação Procordis Araraquara</p>
+						<p class="text-sm text-muted-foreground">{{ d.procordis.endereco }} – {{ d.procordis.cidade }} · CNES {{ d.procordis.cnes }} · destino dos encaminhamentos</p>
+					</div>
+					<a class="ra-link ml-auto" href="https://www.google.com/maps/search/?api=1&query={{ d.procordis.lat }},{{ d.procordis.lon }}" target="_blank" rel="noopener"><i data-lucide="external-link" class="w-3.5 h-3.5"></i>Como chegar</a>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 4. Densidade ===================== #}
+		<section id="densidade" class="ra-secao ra-secao-alt">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>04</span> Densidade populacional</p>
+					<h2>Densidade populacional da região atendida</h2>
+					<p>Habitantes por km² em cada município (Censo 2022). A região tem em média {{ t.densidade|number_format(1, ',', '.') }} hab/km², pouco mais da metade da média do estado ({{ e.densidade|number_format(1, ',', '.') }}): poucos polos urbanos e muitos municípios pequenos e rurais.</p>
+				</header>
+
+				<div class="grid lg:grid-cols-5 gap-6">
+					<div class="lg:col-span-3 ra-cartao p-2 md:p-3">
+						<div class="ra-mapa ra-mapa-densidade" id="ra-mapa-densidade" role="region" aria-label="Mapa coroplético da densidade populacional dos municípios da região atendida">
+							<div class="ra-carregando" aria-hidden="true"></div>
+						</div>
+						<div class="ra-escala" id="ra-escala-densidade" aria-label="Legenda: habitantes por km²"></div>
+					</div>
+					<div class="lg:col-span-2 ra-cartao p-5 md:p-6">
+						<h3 class="font-heading font-bold text-lg text-foreground">Ranking de densidade</h3>
+						<p class="text-sm text-muted-foreground mb-4">hab/km² · passe o mouse para destacar no mapa</p>
+						<div class="ra-barras ra-barras-compactas" id="ra-ranking-densidade" role="list"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 5. Comparativo dos municípios ===================== #}
+		<section id="municipios" class="ra-secao">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>05</span> Municípios</p>
+					<h2>Compare os municípios</h2>
+					<p>Escolha um indicador. As barras seguem a cor da Região de Saúde; a linha tracejada marca a média do estado de São Paulo, quando existe.</p>
+				</header>
+
+				<div class="ra-cartao p-5 md:p-8">
+					<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-6">
+						<div class="ra-abas" role="tablist" aria-label="Indicador" id="ra-abas-indicador">
+							<button type="button" role="tab" data-indicador="populacao" aria-selected="true">População</button>
+							<button type="button" role="tab" data-indicador="densidade" aria-selected="false">Densidade</button>
+							<button type="button" role="tab" data-indicador="pct60" aria-selected="false">60 anos ou mais</button>
+							<button type="button" role="tab" data-indicador="crescimento" aria-selected="false">Crescimento 2010–2022</button>
+							<button type="button" role="tab" data-indicador="km" aria-selected="false">Distância</button>
+							<button type="button" role="tab" data-indicador="unidadesBasicas" aria-selected="false">Unidades básicas</button>
+						</div>
+						<ul class="ra-legenda ra-legenda-linha" aria-label="Regiões de Saúde">
+							{% for k, r in d.regioes %}
+								<li data-regiao="{{ k }}"><span class="ra-quadrado" aria-hidden="true"></span>{{ r.curto }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<p class="text-sm text-muted-foreground mb-4" id="ra-indicador-descricao"></p>
+					<div class="ra-barras" id="ra-comparativo" role="list"></div>
+				</div>
+
+				<div class="grid sm:grid-cols-3 gap-5 mt-6">
+					<div class="ra-mini">
+						<p class="ra-mini-rotulo">Censo 2010</p>
+						<p class="ra-mini-valor">{{ t.populacao2010|number_format(0, ',', '.') }}</p>
+						<p class="ra-mini-nota">habitantes nos {{ t.municipios }} municípios</p>
+					</div>
+					<div class="ra-mini">
+						<p class="ra-mini-rotulo">Censo 2022</p>
+						<p class="ra-mini-valor">{{ t.populacao|number_format(0, ',', '.') }}</p>
+						<p class="ra-mini-nota">{{ t.crescimento >= 0 ? '+' : '' }}{{ t.crescimento|number_format(1, ',', '.') }}% em 12 anos (estado: {{ e.crescimento >= 0 ? '+' : '' }}{{ e.crescimento|number_format(1, ',', '.') }}%)</p>
+					</div>
+					<div class="ra-mini">
+						<p class="ra-mini-rotulo">Estimativa IBGE 2025</p>
+						<p class="ra-mini-valor">{{ t.estimativa2025|number_format(0, ',', '.') }}</p>
+						<p class="ra-mini-nota">a região passa de 1 milhão de habitantes</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 6. Regiões de Saúde ===================== #}
+		<section id="regioes" class="ra-secao ra-secao-alt">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>06</span> Regiões de Saúde</p>
+					<h2>As três Regiões de Saúde do DRS III</h2>
+					<p>Divisão da população atendida entre as Regiões de Saúde Central, Coração e Noroeste (Censo 2022).</p>
+				</header>
+
+				<div class="ra-cartao p-5 md:p-8">
+					<div class="ra-segmentos" role="img" aria-label="População por Região de Saúde: {% for r in d.regioes %}{{ r.curto }} {{ r.pctPopulacao|number_format(1, ',', '.') }}%{{ not loop.last ? ', ' }}{% endfor %}">
+						{% for k, r in d.regioes %}
+							<div data-regiao="{{ k }}" style="flex-grow: {{ r.populacao }}" title="{{ r.nome }}: {{ r.populacao|number_format(0, ',', '.') }} habitantes ({{ r.pctPopulacao|number_format(1, ',', '.') }}%)">
+								<span>{{ r.pctPopulacao|number_format(1, ',', '.') }}%</span>
+							</div>
+						{% endfor %}
+					</div>
+					<ul class="ra-legenda ra-legenda-linha mt-3" aria-hidden="true">
+						{% for k, r in d.regioes %}
+							<li data-regiao="{{ k }}"><span class="ra-quadrado"></span>{{ r.curto }}</li>
+						{% endfor %}
+					</ul>
+
+					<div class="grid md:grid-cols-3 gap-6 mt-8">
+						{% for k, r in d.regioes %}
+							<article class="ra-regiao" data-regiao="{{ k }}">
+								<h3><span class="ra-quadrado" aria-hidden="true"></span>{{ r.nome }}</h3>
+								<dl>
+									<div><dt>População</dt><dd>{{ r.populacao|number_format(0, ',', '.') }}</dd></div>
+									<div><dt>Municípios</dt><dd>{{ r.municipios }}</dd></div>
+									<div><dt>Área</dt><dd>{{ r.area|number_format(0, ',', '.') }} km²</dd></div>
+									<div><dt>Densidade</dt><dd>{{ r.densidade|number_format(1, ',', '.') }} hab/km²</dd></div>
+									<div><dt>60 anos ou mais</dt><dd>{{ r.pct60|number_format(1, ',', '.') }}%</dd></div>
+									<div><dt>Unidades básicas</dt><dd>{{ r.unidadesBasicas }}</dd></div>
+								</dl>
+								<p class="ra-regiao-lista">{{ r.lista|join(' · ') }}</p>
+							</article>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 7. Perfil etário ===================== #}
+		<section id="perfil-etario" class="ra-secao">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>07</span> Perfil etário</p>
+					<h2>Uma população que envelhece</h2>
+					<p>As doenças cardiovasculares são mais frequentes com o avanço da idade. Na região atendida, {{ t.pct60|number_format(1, ',', '.') }}% dos moradores têm 60 anos ou mais, acima da média do estado ({{ e.pct60|number_format(1, ',', '.') }}%).</p>
+				</header>
+
+				<div class="grid lg:grid-cols-5 gap-6">
+					<div class="lg:col-span-3 ra-cartao p-5 md:p-8">
+						<div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+							<h3 class="font-heading font-bold text-lg text-foreground">Pirâmide etária da região (Censo 2022)</h3>
+							<ul class="ra-legenda ra-legenda-linha text-xs">
+								<li><span class="ra-quadrado ra-q-jovem" aria-hidden="true"></span>Até 59 anos</li>
+								<li><span class="ra-quadrado ra-q-idoso" aria-hidden="true"></span>60 anos ou mais</li>
+								<li><span class="ra-traco" aria-hidden="true"></span>Estado de SP</li>
+							</ul>
+						</div>
+						<div class="ra-piramide" id="ra-piramide" role="img" aria-label="Pirâmide etária da população da região atendida, por sexo e faixa de idade, em percentual da população total, comparada ao estado de São Paulo"></div>
+						<p class="text-xs text-muted-foreground mt-4">Percentual da população total em cada faixa de 5 anos. O traço mostra o mesmo percentual no estado de São Paulo.</p>
+					</div>
+					<div class="lg:col-span-2 flex flex-col gap-6">
+						<div class="ra-destaque-escuro">
+							<p class="ra-destaque-numero">{{ t.pop60|number_format(0, ',', '.') }}</p>
+							<p class="ra-destaque-rotulo">pessoas com 60 anos ou mais na região ({{ t.pct60|number_format(1, ',', '.') }}%)</p>
+						</div>
+						<div class="ra-cartao p-6">
+							<h3 class="font-heading font-bold text-lg text-foreground mb-3">Municípios mais envelhecidos</h3>
+							<ol class="ra-top">
+								{% for m in maisIdosos %}
+									<li data-regiao="{{ m.regiao }}">
+										<span class="ra-quadrado" aria-hidden="true"></span>
+										<span class="flex-1">{{ m.nome }}</span>
+										<strong>{{ m.pct60|number_format(1, ',', '.') }}%</strong>
+									</li>
+								{% endfor %}
+							</ol>
+							<p class="text-sm text-muted-foreground mt-4">Parcela da população com 60 anos ou mais. Idade mediana e índice de envelhecimento de cada município estão na tabela abaixo.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{# ===================== 8. Tabela ===================== #}
+		<section id="tabela" class="ra-secao ra-secao-alt">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>08</span> Dados completos</p>
+					<h2>Tabela por município</h2>
+					<p>Todos os números desta página. Clique no título de uma coluna para ordenar.</p>
+				</header>
+
+				<div class="ra-cartao overflow-hidden">
+					<div class="overflow-x-auto">
+						<table class="ra-tabela" id="ra-tabela">
+							<thead>
+								<tr>
+									<th scope="col" data-ordenar="texto">Município</th>
+									<th scope="col" data-ordenar="texto">Região</th>
+									<th scope="col" data-ordenar="numero" aria-sort="descending">População 2022</th>
+									<th scope="col" data-ordenar="numero">Estimativa 2025</th>
+									<th scope="col" data-ordenar="numero">Crescimento 2010–2022</th>
+									<th scope="col" data-ordenar="numero">Área (km²)</th>
+									<th scope="col" data-ordenar="numero">Densidade (hab/km²)</th>
+									<th scope="col" data-ordenar="numero">60 anos ou mais</th>
+									<th scope="col" data-ordenar="numero">Idade mediana</th>
+									<th scope="col" data-ordenar="numero">Índice de envelhecimento</th>
+									<th scope="col" data-ordenar="numero">Unidades básicas</th>
+									<th scope="col" data-ordenar="numero">Distância (km)</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for m in municipios %}
+									<tr>
+										<th scope="row" data-valor="{{ m.nome }}">{{ m.nome }}</th>
+										<td data-valor="{{ d.regioes[m.regiao].curto }}"><span class="ra-celula-regiao" data-regiao="{{ m.regiao }}"><span class="ra-quadrado" aria-hidden="true"></span>{{ d.regioes[m.regiao].curto }}</span></td>
+										<td data-valor="{{ m.populacao }}">{{ m.populacao|number_format(0, ',', '.') }}</td>
+										<td data-valor="{{ m.estimativa2025 }}">{{ m.estimativa2025|number_format(0, ',', '.') }}</td>
+										<td data-valor="{{ m.crescimento }}">{{ m.crescimento > 0 ? '+' : '' }}{{ m.crescimento|number_format(1, ',', '.') }}%</td>
+										<td data-valor="{{ m.area }}">{{ m.area|number_format(1, ',', '.') }}</td>
+										<td data-valor="{{ m.densidade }}">{{ m.densidade|number_format(1, ',', '.') }}</td>
+										<td data-valor="{{ m.pct60 }}">{{ m.pct60|number_format(1, ',', '.') }}%</td>
+										<td data-valor="{{ m.idadeMediana }}">{{ m.idadeMediana }} anos</td>
+										<td data-valor="{{ m.indiceEnvelhecimento }}">{{ m.indiceEnvelhecimento|number_format(1, ',', '.') }}</td>
+										<td data-valor="{{ m.unidadesBasicas }}">{{ m.unidadesBasicas }}</td>
+										<td data-valor="{{ m.km }}">{{ m.km|number_format(1, ',', '.') }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+							<tfoot>
+								<tr>
+									<th scope="row">Região atendida</th>
+									<td>{{ t.municipios }} municípios</td>
+									<td>{{ t.populacao|number_format(0, ',', '.') }}</td>
+									<td>{{ t.estimativa2025|number_format(0, ',', '.') }}</td>
+									<td>+{{ t.crescimento|number_format(1, ',', '.') }}%</td>
+									<td>{{ t.area|number_format(1, ',', '.') }}</td>
+									<td>{{ t.densidade|number_format(1, ',', '.') }}</td>
+									<td>{{ t.pct60|number_format(1, ',', '.') }}%</td>
+									<td>—</td>
+									<td>—</td>
+									<td>{{ t.unidadesBasicas }}</td>
+									<td>—</td>
+								</tr>
+								<tr class="ra-linha-estado">
+									<th scope="row">Estado de São Paulo</th>
+									<td>{{ e.municipios }} municípios</td>
+									<td>{{ e.populacao|number_format(0, ',', '.') }}</td>
+									<td>{{ e.estimativa2025|number_format(0, ',', '.') }}</td>
+									<td>+{{ e.crescimento|number_format(1, ',', '.') }}%</td>
+									<td>{{ e.area|number_format(1, ',', '.') }}</td>
+									<td>{{ e.densidade|number_format(1, ',', '.') }}</td>
+									<td>{{ e.pct60|number_format(1, ',', '.') }}%</td>
+									<td>{{ e.idadeMediana }} anos</td>
+									<td>{{ e.indiceEnvelhecimento|number_format(1, ',', '.') }}</td>
+									<td>—</td>
+									<td>—</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<p class="text-xs text-muted-foreground mt-3">Índice de envelhecimento: pessoas de 60 anos ou mais para cada 100 com até 14 anos. Unidades básicas: postos e centros de saúde/UBS cadastrados no CNES. Distância em linha reta da Procordis até o centro do município.</p>
+			</div>
+		</section>
+
+		{# ===================== 9. Fontes ===================== #}
+		<section id="fontes" class="ra-secao">
+			<div class="container mx-auto px-4">
+				<header class="ra-cabecalho" data-aos="fade-up">
+					<p class="ra-sobretitulo-secao"><span>09</span> Metodologia</p>
+					<h2>Precisão, escopo e fontes</h2>
+					<p>Como interpretar corretamente as áreas e os pontos dos mapas.</p>
+				</header>
+
+				<div class="grid lg:grid-cols-2 gap-6">
+					<div class="ra-cartao p-6 md:p-8 ra-texto">
+						<h3>O que é a área atendida</h3>
+						<p>Os polígonos coloridos são os limites municipais oficiais do IBGE e representam a abrangência territorial de cada Região de Saúde do DRS III – Araraquara. Não são territórios de equipes de Saúde da Família.</p>
+						<p>Não há uma base pública oficial com os polígonos de microárea de cada UBS. Por isso as unidades aparecem como pontos georreferenciados, e a camada “Área estimada” é apenas uma aproximação (cada ponto do município ligado à unidade básica mais próxima).</p>
+						<h3>Precisão dos pontos</h3>
+						<p>As unidades e a Procordis usam a latitude e a longitude do CNES aberto (consulta em {{ d.consultaCnes|date('d/m/Y') }}). Unidades sem coordenada confiável foram posicionadas pelo endereço ou ficaram fora do mapa, como indicado na seção do mapa DRS III.</p>
+						<h3>Itens da relação que não aparecem como UBS</h3>
+						<p>Ambulatório de Atenção à Saúde Integral da Mulher, Ambulatório de Ortopedia, CDIP – Centro de Diagnóstico e Intervenção Precoce, NGA 3, Santa Casa de Araraquara, SESA e Umed aparecem no mapa como serviços especializados. A Secretaria Municipal de Saúde de cada município é a própria gestora e não aparece como ponto.</p>
+					</div>
+					<div class="ra-cartao p-6 md:p-8 ra-texto">
+						<h3>Fontes</h3>
+						<ul class="ra-fontes">
+							<li><strong>CNES/DataSUS</strong> – Cadastro Nacional de Estabelecimentos de Saúde, base aberta (<a href="https://apidadosabertos.saude.gov.br" target="_blank" rel="noopener">apidadosabertos.saude.gov.br</a>): endereços, tipos e coordenadas das unidades.</li>
+							<li><strong>IBGE – Malha Municipal Digital</strong>: limites dos municípios de São Paulo (SIRGAS 2000).</li>
+							<li><strong>IBGE – Censo Demográfico 2022</strong>: população, área e densidade (<a href="https://sidra.ibge.gov.br/tabela/4714" target="_blank" rel="noopener">tabela 4714</a>), população por sexo e idade (<a href="https://sidra.ibge.gov.br/tabela/9514" target="_blank" rel="noopener">tabela 9514</a>), índice de envelhecimento e idade mediana (<a href="https://sidra.ibge.gov.br/tabela/9515" target="_blank" rel="noopener">tabela 9515</a>).</li>
+							<li><strong>IBGE – Censo Demográfico 2010</strong>: população residente (<a href="https://sidra.ibge.gov.br/tabela/1378" target="_blank" rel="noopener">tabela 1378</a>).</li>
+							<li><strong>IBGE – Estimativas de População 2025</strong> (<a href="https://sidra.ibge.gov.br/tabela/6579" target="_blank" rel="noopener">tabela 6579</a>).</li>
+							<li><strong>Natural Earth</strong>: rodovias e manchas urbanas do mapa sem ruas.</li>
+							<li><strong>OpenStreetMap</strong> (colaboradores do OpenStreetMap): mapa de ruas do mapa DRS III.</li>
+							<li><strong>Associação Procordis</strong>: relação das unidades de origem dos encaminhamentos, por Região de Saúde e município.</li>
+						</ul>
+						<p class="text-sm text-muted-foreground mt-6">Dados consolidados em {{ d.atualizadoEm|date('d/m/Y') }}.</p>
+					</div>
+				</div>
+
+				{# Chamada final #}
+				<div class="ra-cta mt-10">
+					<div>
+						<p class="font-heading text-2xl font-bold text-white">Mora em um destes municípios?</p>
+						<p class="text-white/85 mt-1">O encaminhamento para os exames é feito pela unidade de saúde do seu município. Fale com a Procordis para tirar dúvidas.</p>
+					</div>
+					<div class="flex flex-wrap gap-3">
+						<a href="{{ path('app_home') }}#contact" class="ra-cta-botao">Fale conosco</a>
+						<a href="{{ path('app_service_index') }}" class="ra-cta-botao ra-cta-botao-contorno">Nossos serviços</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<script type="application/json" id="ra-dados">{{ d|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+	<script src="{{ asset('js/regiao-atendida.js') }}" defer></script>
+{% endblock %}

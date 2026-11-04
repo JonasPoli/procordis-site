@@ -39,6 +39,7 @@
 
 {% block stylesheets %}
 	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/regiao-atendida.css') }}">
 	{% if banners|length > 0 %}
 		{% set firstBanner = banners|first %}
 		<link rel="preload" as="image" href="{{ firstBanner.imageName ? vich_uploader_asset(firstBanner, 'imageFile')|imagine_filter('hero') : asset('assets/images/replica/hero-doctor.jpg')|imagine_filter('hero') }}">
@@ -291,6 +292,46 @@
 			</div>
 		</div>
 	</section>
+
+	{# Área atendida: chamada para a página /regiao-atendida #}
+	{% if regiaoAtendida %}
+		{% set ra = regiaoAtendida %}
+		<section id="area-atendida" class="ra-home py-16 lg:py-24">
+			<div class="ra-hero-brilho" aria-hidden="true"></div>
+			<div class="container mx-auto relative z-10">
+				<div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+					<div data-aos="fade-right">
+						<div class="flex items-center gap-3 mb-4">
+							<div class="w-8 h-0.5 bg-[#8fd3f7]"></div>
+							<span class="text-[#8fd3f7] font-semibold uppercase tracking-wider text-sm">Área atendida</span>
+						</div>
+						<h2 class="text-3xl md:text-4xl font-heading font-bold mb-5 leading-tight text-white">Cuidamos do coração de {{ ra.total.municipios }} municípios da região</h2>
+						<p class="text-white/80 text-lg leading-relaxed mb-8">
+							A Procordis recebe pacientes encaminhados pela rede pública de saúde de todo o DRS III – Araraquara para exames cardiológicos: são quase 1 milhão de pessoas em três Regiões de Saúde.
+						</p>
+						<div class="ra-home-numeros mb-8">
+							<div><strong>{{ ra.total.municipios }}</strong><span>municípios</span></div>
+							<div><strong>{{ (ra.total.populacao / 1000)|round }} mil</strong><span>habitantes (Censo 2022)</span></div>
+							<div><strong>{{ ra.regioes|length }}</strong><span>Regiões de Saúde</span></div>
+							<div><strong>{{ ra.total.unidadesBasicas }}</strong><span>unidades básicas de saúde</span></div>
+						</div>
+						<a href="{{ path('app_regiao_atendida') }}" class="ra-home-botao">
+							Conheça a região atendida
+							<i data-lucide="arrow-right" class="w-4 h-4"></i>
+						</a>
+					</div>
+					<a href="{{ path('app_regiao_atendida') }}" class="ra-home-mapa block" data-aos="fade-left" aria-label="Ver os mapas da região atendida">
+						{% include 'regiao_atendida/_mapa_svg.html.twig' with {svg_id: 'ra-svg-home', svg_classe: 'ra-svg-escuro'} %}
+						<ul class="ra-home-legenda">
+							{% for k, r in ra.regioes %}
+								<li data-regiao="{{ k }}"><span class="ra-quadrado" aria-hidden="true"></span>{{ r.curto }} · {{ r.municipios }}</li>
+							{% endfor %}
+						</ul>
+					</a>
+				</div>
+			</div>
+		</section>
+	{% endif %}
 
 	{# Departments / Especialidades #}
 	<section id="specialties" class="py-16 lg:py-24 bg-background">
