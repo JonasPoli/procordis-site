@@ -1,0 +1,74 @@
+schema: spec-driven
+
+# Contexto do projeto: só restrições que um agente não descobre lendo o código.
+# O projeto não tem CLAUDE.md; os documentos em docs/ são o blueprint original (Tailwind 3, SQLite, só ROLE_ADMIN)
+# e estão desatualizados. O código e a produção decidem.
+context: |
+  Language: pt-BR
+  All artifacts must be written in pt-BR.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Projeto: site institucional e painel /admin da Associação Procordis Araraquara (ambulatório cardiológico
+  filantrópico): notícias com galeria, serviços, especialidades, equipe, Portal da Transparência (documentos,
+  atendimentos realizados), Região atendida, contato e newsletter.
+  Cliente WAB 212 "Associação Procordis Araraquara", projeto 81 "Site". Não há contrato de plano de horas:
+  o trabalho é lançado sem contrato (ex.: #13312, horas não faturáveis). Contato sugerido
+  secretaria@procordis.org.br (Karine), Cc suporte@wab.com.br. Os pedidos do site costumam chegar por e-mail
+  direto ao Jonas (ex.: documentos da Transparência em 23/09/2026), não por ticket.
+  Sistemas irmãos no mesmo servidor: procordis-painel (painel.procordis.org.br, fonte da API de atendimentos),
+  procordis-documentos e wab-curriculos (carreiras.procordis.org.br, link "Trabalhe Conosco").
+
+  Produção (conferida em 09/11/2026)
+  - Servidor wab001 (67.205.162.23, DigitalOcean + RunCloud, 1 vCPU, 2 GB), webapp app-procordis-producao em
+    /home/runcloud/webapps/app-procordis-producao, domínio procordis.org.br (www redireciona com 301), branch main.
+    Acesso: ssh runcloud@67.205.162.23 (o runcloud é o dono do webapp; sem sudo). Servidor compartilhado com
+    cerca de 19 apps: nada pesado em horário comercial e nada fora deste app.
+  - Homologação: webapp app-procordis (procordis.wab.com.br), mesmo repositório e branch, banco próprio. Em
+    09/11/2026 estava parado em c510dc2 (06/10) e com o composer.lock alterado no servidor.
+  - PHP só por /RunCloud/Packages/php83rc/bin/php (8.3.36). Symfony 7.2.9, MariaDB 11.1.6. O PHP de linha de
+    comando roda em UTC; o fuso do pool FPM não é legível pelo runcloud.
+  - Leitura em produção é livre; qualquer escrita (deploy, banco, arquivos) exige aprovação explícita do Jonas.
+    Valores do .env.local nunca são exibidos (nomes: APP_ENV, DATABASE_URL, MAILER_DSN, EMAIL_FROM,
+    EMAIL_CONTACT_TO, TINYMCE; os dois EMAIL_* não são lidos pelo código). PAINEL_ATENDIMENTOS_API vem do .env do git.
+  - Não há cron nem worker do Messenger: o e-mail sai na hora pelo WMailer (wab-ninjas/wmailer-transport).
+  - Os logs do Monolog vão para o stderr do PHP-FPM, que o runcloud não lê. var/log/dev.log (14 MB) é sobra de
+    fev/2026. O nginx loga em /home/runcloud/logs/nginx/app-procordis-producao_*.log.
+  - Uploads fora do git: public/images (130 MB, inclusive news-gallery/{id da notícia}) e public/files
+    (documentos da Transparência, 24 MB). public/files NÃO está no .gitignore: aparece como não rastreado no
+    servidor; nunca rodar git clean nem git add nele. O arquivo .env.local.bak-20261006213159 na raiz do servidor
+    não é apagado sem confirmação.
+
+  Deploy
+  - Fluxo: branch → PR no GitHub (JonasPoli/procordis-site) → merge na main. No servidor, como runcloud, em
+    ~/webapps/app-procordis-producao: git pull e ./build.sh.
+  - O build.sh apaga var/cache inteiro (inclusive o cache de reserva de 7 dias dos atendimentos), roda
+    tailwind:build e depois asset-map:compile, nessa ordem. As linhas "symfony console" do fim do arquivo são
+    para uso local e falham no servidor (não há o binário symfony): o erro é esperado.
+  - vendor/ fica fora do git: se o composer.lock mudar, composer install é um passo à parte (com aprovação).
+  - Em 09/11/2026 o doctrine:migrations:status falha em produção ("metadata storage is not up to date"): o
+    .env.local usa serverVersion=8.0 e o banco é MariaDB 11.1. As migrations até Version20260928120100 já estão
+    gravadas. Mudança com migration precisa resolver isso antes do deploy.
+  - CSS: o public/css/built.css e o app.css do importmap são builds diferentes. Páginas novas com classes próprias
+    usam um CSS com escopo gerado localmente e commitado (bin/build-atendimentos-css.mjs → public/css/atendimentos.css;
+    o mesmo para regiao-atendida.css), para não mexer no resto do site.
+  - Dados da Região atendida são estáticos (public/data/regiao-atendida/*.json, gerados por
+    bin/regiao-atendida/gerar_dados.py com a API do IBGE) e vão no git.
+
+  Decisões que não se revertem
+  - Dois perfis no painel: Administrador (tudo) e Jornalista (só notícias, categorias e galeria). Sempre deve
+    existir ao menos um administrador.
+  - A página de atendimentos mostra só totais agregados do procordis-painel, nunca dados de pacientes. O download
+    em CSV da tabela de histórico foi retirado em 07/10/2026 e não volta sem pedido.
+  - Notícia inativa ou com data futura não aparece em nenhuma consulta pública: toda consulta pública parte de
+    NewsRepository::createPublicQueryBuilder()/applyPublicCriteria().
+
+rules:
+  design:
+    - Quando tocar em produção, dizer se a ação é leitura ou escrita.
+    - Consulta pública nova de notícias, categorias ou itens da galeria parte do createPublicQueryBuilder() do repositório.
+  tasks:
+    - Toda tarefa que muda servidor ou banco de produção tem uma tarefa de backup antes e uma de conferência depois.
+    - Rota nova do painel diz qual perfil acessa (access_control do security.yaml) e ganha caso no AccessControlTest.
+    - Regra de negócio nova ou alterada tem teste PHPUnit (APP_ENV=test ./vendor/bin/phpunit, SQLite) sem e-mail real.
+    - A tarefa de deploy diz quais passos se aplicam (git pull, ./build.sh, composer install, migrations) e termina com a conferência em procordis.org.br.
+    - Quando for pedido do cliente, registrar o resultado num ticket do sistema WAB (cliente 212, projeto 81).
