@@ -45,9 +45,9 @@ context: |
     tailwind:build e depois asset-map:compile, nessa ordem. As linhas "symfony console" do fim do arquivo são
     para uso local e falham no servidor (não há o binário symfony): o erro é esperado.
   - vendor/ fica fora do git: se o composer.lock mudar, composer install é um passo à parte (com aprovação).
-  - Em 09/11/2026 o doctrine:migrations:status falha em produção ("metadata storage is not up to date"): o
-    .env.local usa serverVersion=8.0 e o banco é MariaDB 11.1. As migrations até Version20260928120100 já estão
-    gravadas. Mudança com migration precisa resolver isso antes do deploy.
+  - Em 09/11/2026 o serverVersion do .env.local foi corrigido de 8.0 para 11.1.6-MariaDB na produção e na
+    homologação (backup .env.local.bak-20261109-serverversion), e o doctrine:migrations:status voltou a funcionar.
+    As migrations até Version20260928120100 estão gravadas.
   - CSS: o public/css/built.css e o app.css do importmap são builds diferentes. Páginas novas com classes próprias
     usam um CSS com escopo gerado localmente e commitado (bin/build-atendimentos-css.mjs → public/css/atendimentos.css;
     o mesmo para regiao-atendida.css), para não mexer no resto do site.
