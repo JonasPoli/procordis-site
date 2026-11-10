@@ -2,11 +2,14 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\News;
 use App\Entity\User;
+use App\Repository\NewsRepository;
 use App\Tests\Support\AppWebTestCase;
 
 /**
  * Campo "Ativo": notícias, categorias e itens de galeria inativos não aparecem no site público.
+ * Data de publicação: vale a meia-noite do dia no horário de Brasília (fuso fixado no Kernel).
  */
 final class PublicNewsVisibilityTest extends AppWebTestCase
 {
@@ -159,5 +162,61 @@ final class PublicNewsVisibilityTest extends AppWebTestCase
         self::assertResponseIsSuccessful();
         self::assertCount(1, $crawler->filter('link[rel="stylesheet"][href*="news_gallery"]'));
         self::assertGreaterThan(0, $crawler->filter('link[rel="modulepreload"][href*="swiper"]')->count());
+    }
+
+    public function testPublicQueryComparesWithBrasiliaTime(): void
+    {
+        $repository = static::getContainer()->get(NewsRepository::class);
+
+        $now = $repository->createPublicQueryBuilder()->getParameter('public_news_now')?->getValue();
+
+        self::assertInstanceOf(\DateTimeImmutable::class, $now);
+        self::assertSame('America/Sao_Paulo', $now->getTimezone()->getName());
+    }
+
+    public function testNewsCreatedInPanelStoresTheDateAtMidnight(): void
+    {
+        $this->loginAs(User::ROLE_JORNALISTA);
+        $crawler = $this->client->request('GET', '/admin/news/new');
+        self::assertResponseIsSuccessful();
+
+        $form = $crawler->selectButton('Salvar Notícia')->form([
+            'news[title]' => 'Campanha de novembro',
+            'news[slug]' => 'campanha-de-novembro',
+            'news[publishedAt]' => '2026-11-10',
+            'news[summary]' => 'Resumo da campanha',
+            'news[content]' => '<p>Conteúdo da campanha</p>',
+        ]);
+        $this->client->submit($form);
+        self::assertResponseStatusCodeSame(303);
+
+        $stored = $this->em()->getConnection()->fetchOne(
+            'SELECT published_at FROM news WHERE slug = ?',
+            ['campanha-de-novembro'],
+        );
+        self::assertSame('2026-11-10 00:00:00', $stored);
+    }
+
+    public function testNewsBecomesVisibleAtMidnightInBrasilia(): void
+    {
+        $news = $this->createNews('Notícia do dia 10', publishedAt: new \DateTimeImmutable('2026-11-10 00:00:00'));
+        $this->em()->clear();
+        $news = $this->em()->find(News::class, $news->getId());
+        $brasilia = new \DateTimeZone('America/Sao_Paulo');
+
+        self::assertFalse($news->isPubliclyVisible(new \DateTimeImmutable('2026-11-09 21:30:00', $brasilia)));
+        self::assertFalse($news->isPubliclyVisible(new \DateTimeImmutable('2026-11-09 23:59:59', $brasilia)));
+        self::assertTrue($news->isPubliclyVisible(new \DateTimeImmutable('2026-11-10 00:00:00', $brasilia)));
+    }
+
+    public function testNewNewsFormDefaultsToTodayInBrasilia(): void
+    {
+        $this->loginAs(User::ROLE_JORNALISTA);
+
+        $crawler = $this->client->request('GET', '/admin/news/new');
+
+        self::assertResponseIsSuccessful();
+        $today = (new \DateTimeImmutable('now', new \DateTimeZone('America/Sao_Paulo')))->format('Y-m-d');
+        self::assertSame($today, $crawler->filter('input[name="news[publishedAt]"]')->attr('value'));
     }
 }

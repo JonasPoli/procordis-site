@@ -28,6 +28,11 @@ when@test:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
+            # Guarda os registros em memória para os testes conferirem avisos e erros (ex.: envio do contato).
+            test:
+                type: test
+                level: debug
+                channels: ["!event"]
 
 when@prod:
     monolog:

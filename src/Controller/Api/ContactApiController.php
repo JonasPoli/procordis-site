@@ -49,24 +49,18 @@ class ContactApiController extends AbstractController
 
             // Send Email Notification
             try {
-                $recipientsStr = $systemVariableRepository->getValue('contact_email_recipients');
-                if ($recipientsStr) {
-                    $recipientList = array_map('trim', preg_split('/\r\n|\r|\n|,/', $recipientsStr));
-                    foreach ($recipientList as $rcpt) {
-                        if (filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
-                            $email = (new TemplatedEmail())
-                                ->from('noreply@wab.com.br')
-                                ->to($rcpt)
-                                ->subject('[Procordis] Novo Contato: ' . $message->getSubject())
-                                ->htmlTemplate('emails/contact.html.twig')
-                                ->context([
-                                    'contact' => $message
-                                ]);
+                foreach ($systemVariableRepository->getEmailList('contact_email_recipients') as $rcpt) {
+                    $email = (new TemplatedEmail())
+                        ->from('noreply@wab.com.br')
+                        ->to($rcpt)
+                        ->subject('[Procordis] Novo Contato: ' . $message->getSubject())
+                        ->htmlTemplate('emails/contact.html.twig')
+                        ->context([
+                            'contact' => $message
+                        ]);
 
-                            $mailer->send($email);
-                            $logger->info("Email enviado via wmailer para: {$rcpt}");
-                        }
-                    }
+                    $mailer->send($email);
+                    $logger->info("Email enviado via wmailer para: {$rcpt}");
                 }
             } catch (\Exception $emailEx) {
                 $logger->warning("Erro ao enviar email ou recuperar destinatarios: " . $emailEx->getMessage());

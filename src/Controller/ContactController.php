@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
+use App\Repository\SystemVariableRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ use Psr\Log\LoggerInterface;
 class ContactController extends AbstractController
 {
     #[Route('/contato', name: 'app_contact')]
-    public function index(Request $request, MailerInterface $mailer, LoggerInterface $logger, \Doctrine\ORM\EntityManagerInterface $entityManager): Response
+    public function index(Request $request, MailerInterface $mailer, LoggerInterface $logger, \Doctrine\ORM\EntityManagerInterface $entityManager, SystemVariableRepository $systemVariableRepository): Response
     {
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
@@ -45,28 +46,38 @@ class ContactController extends AbstractController
                 return $this->redirectToRoute('app_contact');
             }
 
-            // 2. Send Email (Best Effort)
-            try {
-                $email = (new Email())
-                    ->from('no-reply@procordis.org.br') // System email
-                    ->replyTo($data['email']) // User email for reply
-                    ->to('contato@procordis.com.br')
-                    ->subject('Novo contato pelo site: ' . $data['subject'])
-                    ->html(sprintf(
-                        '<p><strong>Nome:</strong> %s</p>
-                         <p><strong>Email:</strong> %s</p>
-                         <p><strong>Assunto:</strong> %s</p>
-                         <p><strong>Mensagem:</strong><br>%s</p>',
-                        htmlspecialchars($data['name']),
-                        htmlspecialchars($data['email']),
-                        htmlspecialchars($data['subject']),
-                        nl2br(htmlspecialchars($data['message']))
-                    ));
+            // 2. Send Email (Best Effort): um e-mail por destinatário cadastrado no painel
+            // (variável contact_email_recipients, a mesma do formulário da home).
+            $recipients = $systemVariableRepository->getEmailList('contact_email_recipients');
+            if ([] === $recipients) {
+                $logger->warning('Contato gravado sem envio de e-mail: a variável contact_email_recipients não tem destinatário válido.');
+            }
 
-                $mailer->send($email);
-            } catch (\Exception $e) {
-                // Log email error but don't fail the user request since data is safe in DB
-                $logger->error('Erro ao enviar email de contato (mas salvo no banco): ' . $e->getMessage());
+            $body = sprintf(
+                '<p><strong>Nome:</strong> %s</p>
+                 <p><strong>Email:</strong> %s</p>
+                 <p><strong>Assunto:</strong> %s</p>
+                 <p><strong>Mensagem:</strong><br>%s</p>',
+                htmlspecialchars($data['name']),
+                htmlspecialchars($data['email']),
+                htmlspecialchars($data['subject']),
+                nl2br(htmlspecialchars($data['message']))
+            );
+
+            foreach ($recipients as $recipient) {
+                try {
+                    $email = (new Email())
+                        ->from('no-reply@procordis.org.br') // System email
+                        ->replyTo($data['email']) // User email for reply
+                        ->to($recipient)
+                        ->subject('Novo contato pelo site: ' . $data['subject'])
+                        ->html($body);
+
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    // Log email error but don't fail the user request since data is safe in DB
+                    $logger->error(sprintf('Erro ao enviar email de contato para %s (mas salvo no banco): %s', $recipient, $e->getMessage()));
+                }
             }
 
             $this->addFlash('success', 'Sua mensagem foi enviada com sucesso! Em breve entraremos em contato.');
