@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define o fuso horário único da aplicação: toda data criada, gravada, comparada ou exibida no site, no painel e no console vale no horário de Brasília (America/Sao_Paulo), qualquer que seja a configuração do PHP do servidor.
+Define o fuso horário único da aplicação: toda data criada, gravada, comparada ou exibida no site, no painel e no console vale no horário de Brasília (America/Sao_Paulo), qualquer que seja a configuração do PHP do servidor. Define também a conversão única, na implantação, dos carimbos de data e hora já gravados.
 
 ## ADDED Requirements
 
@@ -22,12 +22,20 @@ O sistema SHALL usar o fuso `America/Sao_Paulo` para criar, comparar e exibir da
 - **THEN** o registro é gravado com a hora de Brasília, igual à de um pedido web no mesmo instante
 
 ### Requirement: Datas gravadas valem como horário de Brasília
-O sistema SHALL ler as datas gravadas no banco, que não guardam fuso, como horário de Brasília. Os valores gravados antes desta regra MUST NOT ser convertidos: a data de publicação das notícias (sempre 00:00) passa a valer como meia-noite de Brasília, e os carimbos de criação e alteração antigos continuam exibidos com os números gravados.
+O sistema SHALL ler as datas gravadas no banco, que não guardam fuso, como horário de Brasília. Na implantação desta regra, os carimbos de criação e alteração gravados antes do momento da implantação SHALL ser convertidos uma única vez, subtraindo 3 horas, com backup das tabelas antes da conversão. As datas escolhidas no formulário sem horário (data de publicação das notícias e data da avaliação dos depoimentos) e as tabelas internas do Messenger e das migrations MUST NOT ser convertidas.
+
+#### Scenario: Mensagem de contato antiga
+- **WHEN** uma mensagem de contato foi gravada antes da implantação com `created_at` às 13:00
+- **THEN** depois da implantação a lista de mensagens do painel mostra a mensagem às 10:00
+
+#### Scenario: Mensagem recebida depois do momento da implantação
+- **WHEN** um visitante envia o formulário de contato às 10h00 de Brasília, depois do momento da implantação e antes de a conversão terminar
+- **THEN** a mensagem não é convertida e a lista de mensagens do painel mostra 10:00
 
 #### Scenario: Notícia gravada antes da mudança
 - **WHEN** uma notícia ativa tem a data de publicação `2026-11-10 00:00:00` gravada antes da mudança
 - **THEN** o site mostra "10 de novembro de 2026" e a notícia fica pública a partir de 00:00 de 10/11/2026 no horário de Brasília
 
-#### Scenario: Mensagem de contato antiga
-- **WHEN** uma mensagem de contato foi gravada antes da mudança com `created_at` às 13:00 (10:00 em Brasília, gravado em UTC)
-- **THEN** a lista de mensagens do painel continua mostrando 13:00
+#### Scenario: Depoimento com data da avaliação
+- **WHEN** um depoimento tem a data da avaliação 13/02/2018 gravada antes da implantação
+- **THEN** depois da implantação o painel continua mostrando 13/02/2018
