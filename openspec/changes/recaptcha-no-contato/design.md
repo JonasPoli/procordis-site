@@ -98,6 +98,7 @@
 
 - [Visitante real com nota baixa, como VPN ou navegador muito restrito] → Ele vê a mensagem para tentar de novo, e o formulário de `/contato` volta preenchido. Se aparecerem recusas de gente real no log, a nota mínima pode baixar pelo `RECAPTCHA_SCORE_MIN` sem deploy de código.
 - [Chave errada ou de outro domínio no deploy] → É tratada como `UNAVAILABLE` (`invalid-input-secret`): o contato passa e o log avisa. A conferência do deploy envia um contato de teste e confere que o log não tem o aviso.
+- [Bloqueador de anúncios ou rede que barra `www.google.com/recaptcha`] → O script não carrega, o envio sai sem token e é recusado (sem token não é falha do Google). Na home, o aviso de recusa é o mesmo; no `/contato`, o formulário volta preenchido. Quem cair nesse caso pode usar telefone ou WhatsApp, que já estão na página de contato.
 - [Spam feito à mão por pessoa] → O reCAPTCHA não barra. Fica fora do escopo e pode virar campo-isca ou limite por IP num change futuro.
 - [Integração antiga chamando `/api/contact` sem token] → Não se conhece nenhuma além da home. A recusa com 400 fica no log, com o IP.
 - [Logs no stderr do FPM, ilegíveis para o runcloud] → A conferência usa o teste automatizado e o resultado visível (gravou ou não gravou), e não depende do log de produção.
